@@ -164,5 +164,6 @@ $pedidos = $consulta->fetchAll(PDO::FETCH_ASSOC);
             </table>
         </div>
     </main>
+    <script src="../assets/js/tema.js" defer></script>
 </body>
 </html>
