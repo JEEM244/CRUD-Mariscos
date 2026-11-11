@@ -15,8 +15,7 @@ require_once "../config/conexion.php";
 $buscar = trim($_GET["buscar"] ?? "");
 $mensaje = $_GET["mensaje"] ?? "";
 
-// Consultar platillos. Si se escribió algo, filtrar por nombre.
-// Consulta base: obtiene platillos y el nombre de su categoría.
+// Consultar los platillos y el nombre de su categoría. Si se escribió algo, también se filtra por nombre.
 $sql = "SELECT
             platillos.*,
             categorias.nombre AS nombre_categoria
@@ -38,6 +37,7 @@ if ($buscar !== "") {
 }
 
 // Ejecutar la consulta y recuperar todos los platillos que coinciden.
+// Ejecutar la consulta y recuperar los platillos encontrados.
 $consulta->execute();
 $platillos = $consulta->fetchAll(PDO::FETCH_ASSOC);
 ?>
