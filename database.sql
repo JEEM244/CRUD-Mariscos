@@ -1,22 +1,32 @@
 -- Base de datos para Mariscos El Puerto.
 -- Este archivo se utiliza cuando se instala el proyecto desde cero.
 
+-- Crear la base de datos solo si todavía no existe.
+-- utf8mb4 permite guardar correctamente acentos y otros caracteres.
 CREATE DATABASE IF NOT EXISTS mariscos_db
 CHARACTER SET utf8mb4
 COLLATE utf8mb4_unicode_ci;
 
+-- Indicar que las siguientes tablas se crearán dentro de mariscos_db.
 USE mariscos_db;
 
 -- CLIENTES
+-- Guarda los datos de las personas que pueden hacer pedidos.
 CREATE TABLE clientes (
+    -- ID único que MySQL asigna automáticamente a cada registro.
     id INT AUTO_INCREMENT PRIMARY KEY,
+    -- Nombre del cliente o proveedor. NOT NULL significa que es obligatorio.
     nombre VARCHAR(120) NOT NULL,
+    -- Teléfono de contacto. Puede quedar vacío.
     telefono VARCHAR(20),
+    -- Correo electrónico de contacto.
     correo VARCHAR(120),
+    -- Dirección del cliente.
     direccion VARCHAR(180)
 ) ENGINE=InnoDB;
 
 -- PROVEEDORES
+-- Guarda los datos de los negocios o personas que suministran productos.
 CREATE TABLE proveedores (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(120) NOT NULL,
@@ -26,91 +36,131 @@ CREATE TABLE proveedores (
 ) ENGINE=InnoDB;
 
 -- PRODUCTOS QUE HAY EN EL ALMACÉN
+-- Guarda las existencias y el costo de cada producto.
 CREATE TABLE almacen (
     id INT AUTO_INCREMENT PRIMARY KEY,
+    -- Nombre del producto registrado o suministrado.
     producto VARCHAR(120) NOT NULL,
+    -- Categoría del producto dentro del almacén.
     categoria VARCHAR(80),
+    -- Cantidad disponible. Si no se indica, comienza en cero.
     existencia INT NOT NULL DEFAULT 0,
+    -- Unidad en la que se cuenta, por ejemplo kg o piezas.
     unidad VARCHAR(30),
+    -- Costo del producto con dos decimales.
     costo DECIMAL(10,2) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB;
 
 -- MESAS DEL RESTAURANTE
+-- Cada mesa tiene un número y un estado: Libre u Ocupada.
 CREATE TABLE mesas (
     id INT AUTO_INCREMENT PRIMARY KEY,
+    -- Número visible de la mesa. UNIQUE evita repetir números.
     numero INT NOT NULL UNIQUE,
+    -- ENUM limita el estado a estas dos opciones.
     estado ENUM('Libre', 'Ocupada') DEFAULT 'Libre'
 ) ENGINE=InnoDB;
 
 -- CATEGORÍAS DEL MENÚ
+-- Sirven para agrupar los platillos, por ejemplo Bebidas o Pescados.
 CREATE TABLE categorias (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(80) NOT NULL
 ) ENGINE=InnoDB;
 
 -- PLATILLOS QUE PUEDEN AGREGARSE A UN PEDIDO
+-- Aquí se guarda el nombre, precio, descripción, imagen y categoría de cada platillo.
 CREATE TABLE platillos (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(120) NOT NULL,
+    -- Texto breve para describir el platillo.
     descripcion VARCHAR(255),
+    -- Precio de venta. DECIMAL permite guardar cantidades con centavos.
     precio DECIMAL(10,2) NOT NULL,
+    -- Dirección de la imagen del platillo. Puede quedar sin imagen.
     imagen VARCHAR(255) DEFAULT NULL,
+    -- ID de la categoría a la que pertenece el platillo.
     categoria_id INT NULL,
+    -- 1 significa que aparece en el menú; 0 significa que está oculto.
     disponible TINYINT(1) DEFAULT 1,
+    -- Relacionar el platillo con una categoría. Si se borra la categoría, el campo queda vacío.
     CONSTRAINT fk_platillos_categoria
         FOREIGN KEY (categoria_id) REFERENCES categorias(id)
         ON DELETE SET NULL
 ) ENGINE=InnoDB;
 
 -- PEDIDOS QUE REGISTRAN LOS MESEROS
+-- Esta tabla guarda los datos generales de cada pedido.
 CREATE TABLE pedidos (
     id INT AUTO_INCREMENT PRIMARY KEY,
+    -- ID de la mesa donde se realizó el pedido.
     mesa_id INT NOT NULL,
+    -- ID del cliente. Puede quedar vacío si no se registró uno.
     cliente_id INT NULL,
+    -- Estado por el que va pasando el pedido.
     estado ENUM('Pendiente', 'Preparando', 'Entregado', 'Pagado') DEFAULT 'Pendiente',
+    -- Importe total de todos los platillos del pedido.
     total DECIMAL(10,2) NOT NULL DEFAULT 0,
+    -- Fecha y hora que MySQL guarda al crear el pedido.
     fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    -- Relacionar cada pedido con una mesa existente.
     CONSTRAINT fk_pedidos_mesa
         FOREIGN KEY (mesa_id) REFERENCES mesas(id),
+    -- Relacionar el pedido con un cliente; si se elimina, el pedido se conserva sin cliente.
     CONSTRAINT fk_pedidos_cliente
         FOREIGN KEY (cliente_id) REFERENCES clientes(id)
         ON DELETE SET NULL
 ) ENGINE=InnoDB;
 
 -- CADA PEDIDO PUEDE TENER UNO O VARIOS PLATILLOS
+-- Esta tabla conecta un pedido con los platillos que incluye.
 CREATE TABLE detalle_pedido (
     id INT AUTO_INCREMENT PRIMARY KEY,
+    -- ID del pedido al que pertenece este detalle.
     pedido_id INT NOT NULL,
+    -- ID del platillo que se agregó al pedido.
     platillo_id INT NOT NULL,
+    -- Número de unidades de ese platillo.
     cantidad INT NOT NULL,
     precio DECIMAL(10,2) NOT NULL,
+    -- Si se elimina un pedido, también se eliminan sus detalles.
     CONSTRAINT fk_detalle_pedido
         FOREIGN KEY (pedido_id) REFERENCES pedidos(id)
         ON DELETE CASCADE,
+    -- Comprobar que el platillo agregado exista en la tabla platillos.
     CONSTRAINT fk_detalle_platillo
         FOREIGN KEY (platillo_id) REFERENCES platillos(id)
 ) ENGINE=InnoDB;
 
 -- DATOS PARA EL SEGUIMIENTO DE FACTURACIÓN
+-- Guarda la información fiscal y el estado de cada solicitud.
 CREATE TABLE facturacion (
     id INT AUTO_INCREMENT PRIMARY KEY,
     cliente_id INT NOT NULL,
     pedido_id INT NULL,
+    -- RFC capturado para preparar la solicitud de facturación.
     rfc VARCHAR(13),
+    -- Nombre fiscal de la persona o empresa.
     razon_social VARCHAR(150),
+    -- Código postal relacionado con los datos fiscales.
     codigo_postal VARCHAR(5),
+    -- Clave que indica el uso que se daría al CFDI.
     uso_cfdi VARCHAR(30),
     total DECIMAL(10,2) NOT NULL DEFAULT 0,
+    -- Estado de seguimiento de la solicitud de facturación.
     estado ENUM('Pendiente', 'Solicitada', 'Emitida') DEFAULT 'Pendiente',
     fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    -- Relacionar la solicitud con el cliente al que pertenece.
     CONSTRAINT fk_facturacion_cliente
         FOREIGN KEY (cliente_id) REFERENCES clientes(id),
+    -- Relacionar la solicitud con el pedido, si se capturó uno.
     CONSTRAINT fk_facturacion_pedido
         FOREIGN KEY (pedido_id) REFERENCES pedidos(id)
         ON DELETE SET NULL
 ) ENGINE=InnoDB;
 
 -- REGISTROS DE EJEMPLO PARA CLIENTES
+-- Se agregan diez clientes para poder probar el módulo desde el inicio.
 INSERT INTO clientes (nombre, telefono, correo, direccion) VALUES
 ('Ana López', '8110000001', 'ana@mail.com', 'Centro'),
 ('Luis Pérez', '8110000002', 'luis@mail.com', 'Guadalupe'),
@@ -124,6 +174,7 @@ INSERT INTO clientes (nombre, telefono, correo, direccion) VALUES
 ('Diego Ramos', '8110000010', 'diego@mail.com', 'Jardines');
 
 -- REGISTROS DE EJEMPLO PARA PROVEEDORES
+-- Se agregan diez proveedores de muestra.
 INSERT INTO proveedores (nombre, telefono, correo, producto) VALUES
 ('Pescados del Norte', '8181000001', 'ventas@pescadosnorte.mx', 'Pescado'),
 ('Mariscos La Costa', '8181000002', 'ventas@lacosta.mx', 'Camarón'),
@@ -137,6 +188,7 @@ INSERT INTO proveedores (nombre, telefono, correo, producto) VALUES
 ('Distribuidora Pacífico', '8181000010', 'pacifico@mail.com', 'Pulpo');
 
 -- REGISTROS DE EJEMPLO PARA ALMACÉN
+-- Cada registro contiene producto, categoría, cantidad, unidad y costo.
 INSERT INTO almacen (producto, categoria, existencia, unidad, costo) VALUES
 ('Camarón mediano', 'Mariscos', 25, 'kg', 180),
 ('Filete de pescado', 'Mariscos', 30, 'kg', 120),
@@ -150,11 +202,13 @@ INSERT INTO almacen (producto, categoria, existencia, unidad, costo) VALUES
 ('Aceite', 'Abarrotes', 10, 'litros', 48);
 
 -- MESAS DISPONIBLES
+-- Crear diez mesas y dejarlas libres para los primeros pedidos.
 INSERT INTO mesas (numero, estado) VALUES
 (1, 'Libre'), (2, 'Libre'), (3, 'Libre'), (4, 'Libre'), (5, 'Libre'),
 (6, 'Libre'), (7, 'Libre'), (8, 'Libre'), (9, 'Libre'), (10, 'Libre');
 
 -- CATEGORÍAS DEL MENÚ
+-- Estas categorías se relacionan con platillos mediante categoria_id.
 INSERT INTO categorias (nombre) VALUES
 ('Ceviches'),
 ('Cócteles'),
@@ -164,6 +218,7 @@ INSERT INTO categorias (nombre) VALUES
 ('Bebidas');
 
 -- PLATILLOS DE EJEMPLO
+-- Los números de categoria_id corresponden al orden de las categorías anteriores.
 INSERT INTO platillos (nombre, descripcion, precio, categoria_id, disponible) VALUES
 ('Ceviche de pescado', 'Pescado fresco con limón y verduras.', 115, 1, 1),
 ('Cóctel de camarón', 'Camarones con salsa coctelera.', 145, 2, 1),
@@ -177,6 +232,7 @@ INSERT INTO platillos (nombre, descripcion, precio, categoria_id, disponible) VA
 ('Caldo de mariscos', 'Caldo con selección del mar.', 160, 4, 1);
 
 -- SOLICITUDES DE FACTURACIÓN DE EJEMPLO
+-- Son datos de práctica, no representan facturas fiscales reales.
 INSERT INTO facturacion
     (cliente_id, rfc, razon_social, codigo_postal, uso_cfdi, total, estado)
 VALUES
