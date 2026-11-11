@@ -1,21 +1,21 @@
 <?php
-// Iniciar la sesión para proteger la administración del menú.
+// Primero inicio la sesión para proteger la administración del menú.
 session_start();
 
-// Evitar que una persona sin acceso pueda modificar los platillos.
+// Aquí evito que una persona sin acceso pueda modificar los platillos.
 if (empty($_SESSION["admin"])) {
     header("Location: index.php");
     exit;
 }
 
-// Cargar la conexión con MySQL.
+// Ahora cargo la conexión con MySQL.
 require_once "../config/conexion.php";
 
-// Leer el texto de búsqueda y quitar espacios al inicio y al final.
+// Aquí leo el texto de búsqueda y quitar espacios al inicio y al final.
 $buscar = trim($_GET["buscar"] ?? "");
 $mensaje = $_GET["mensaje"] ?? "";
 
-// Consultar los platillos y el nombre de su categoría. Si se escribió algo, también se filtra por nombre.
+// Ahora consulto los platillos y el nombre de su categoría. Si se escribió algo, también se filtra por nombre.
 $sql = "SELECT
             platillos.*,
             categorias.nombre AS nombre_categoria
@@ -29,19 +29,19 @@ if ($buscar !== "") {
 
 $sql .= " ORDER BY platillos.id DESC";
 
-// Preparar la consulta para poder incluir el texto de búsqueda de forma segura.
+// Aquí preparo la consulta para poder incluir el texto de búsqueda de forma segura.
 $consulta = $conexion->prepare($sql);
 
-// Enviar el texto de búsqueda como parámetro para evitar unirlo directamente al SQL.
+// Aquí envío el texto de búsqueda como parámetro para evitar unirlo directamente al SQL.
 if ($buscar !== "") {
     $consulta->bindValue(":buscar", "%" . $buscar . "%");
 }
 
-// Ejecutar la consulta y recuperar los platillos encontrados.
+// Aquí ejecuto la consulta y recuperar los platillos encontrados.
 $consulta->execute();
 $platillos = $consulta->fetchAll(PDO::FETCH_ASSOC);
 ?>
-<!-- Comienza la parte de HTML que muestra el listado de platillos. -->
+<!-- Aquí comienza la parte de HTML que muestra el listado de platillos. -->
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -51,7 +51,7 @@ $platillos = $consulta->fetchAll(PDO::FETCH_ASSOC);
     <link rel="stylesheet" href="../assets/css/estilos.css">
 </head>
 <body>
-        <!-- Barra superior con enlaces al panel, menú público y salida. -->
+        <!-- Aquí barra superior con enlaces al panel, menú público y salida. -->
     <header class="barra">
         <a class="marca" href="../index.php">
             <span>EL PUERTO</span>
@@ -65,7 +65,7 @@ $platillos = $consulta->fetchAll(PDO::FETCH_ASSOC);
         </nav>
     </header>
 
-        <!-- Área donde se muestran el título, la búsqueda y la tabla. -->
+        <!-- Aquí área donde se muestran el título, la búsqueda y la tabla. -->
     <main class="admin-contenido">
         <div class="encabezado-seccion">
             <div>
@@ -81,7 +81,7 @@ $platillos = $consulta->fetchAll(PDO::FETCH_ASSOC);
             <p class="mensaje-ok"><?= htmlspecialchars($mensaje) ?></p>
         <?php endif; ?>
 
-                <!-- GET permite que el texto de búsqueda aparezca en la dirección de la página. -->
+                <!-- Aquí gET permite que el texto de búsqueda aparezca en la dirección de la página. -->
         <form class="buscador" method="GET">
             <input
                 type="search"
@@ -93,7 +93,7 @@ $platillos = $consulta->fetchAll(PDO::FETCH_ASSOC);
             <a class="volver" href="platillos.php">Limpiar</a>
         </form>
 
-                <!-- Contenedor con desplazamiento horizontal para tablas en pantallas pequeñas. -->
+                <!-- Aquí contenedor con desplazamiento horizontal para tablas en pantallas pequeñas. -->
         <div class="tabla-contenedor">
             <table>
                 <thead>
@@ -107,7 +107,7 @@ $platillos = $consulta->fetchAll(PDO::FETCH_ASSOC);
                 </thead>
 
                 <tbody>
-                                        <!-- Crear una fila por cada platillo encontrado. -->
+                                        <!-- Aquí crear una fila por cada platillo encontrado. -->
                     <?php foreach ($platillos as $platillo): ?>
                         <tr>
                             <td><strong><?= htmlspecialchars($platillo["nombre"]) ?></strong></td>
@@ -117,7 +117,7 @@ $platillos = $consulta->fetchAll(PDO::FETCH_ASSOC);
                             <td class="acciones">
                                 <a href="editar.php?id=<?= (int) $platillo["id"] ?>">Editar</a>
 
-                                                                <!-- La eliminación se envía por POST para no ejecutarla desde un enlace GET. -->
+                                                                <!-- Aquí la eliminación se envía por POST para no ejecutarla desde un enlace GET. -->
                                 <form
                                     method="POST"
                                     action="eliminar.php"
