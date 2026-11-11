@@ -1,140 +1,177 @@
 <?php
-// Primero inicio la sesión para revisar si el usuario tiene permiso de entrar.
+// Inicio la sesión para comprobar que el administrador tenga acceso.
 session_start();
 
-// Si todavía no inició sesión, lo regreso al formulario de acceso.
+// Si no hay una sesión activa, regreso al formulario de acceso.
 if (empty($_SESSION["admin"])) {
     header("Location: index.php");
     exit;
 }
 
-// Ahora cargo la conexión con la base de datos para consultar los totales.
+// Cargo la conexión para consultar los datos que se muestran en el panel.
 require_once "../config/conexion.php";
 
-// Primero cuento cuántas mesas están registradas en el restaurante.
+// Consulto cuántas mesas están registradas.
 $consulta = $conexion->query("SELECT COUNT(*) FROM mesas");
-$totalMesas = $consulta->fetchColumn();
+$totalMesas = (int) $consulta->fetchColumn();
 
-// Después cuento los pedidos que todavía no se han marcado como pagados.
-$consulta = $conexion->query(
-    "SELECT COUNT(*) FROM pedidos WHERE estado <> 'Pagado'"
-);
-$pedidosPendientes = $consulta->fetchColumn();
+// Cuento los pedidos que todavía no se han pagado.
+$consulta = $conexion->query("SELECT COUNT(*) FROM pedidos WHERE estado <> 'Pagado'");
+$pedidosPendientes = (int) $consulta->fetchColumn();
 
-// Después cuento los platillos que están disponibles en el menú.
-$consulta = $conexion->query(
-    "SELECT COUNT(*) FROM platillos WHERE disponible = 1"
-);
-$platillosDisponibles = $consulta->fetchColumn();
+// Cuento los platillos que están disponibles.
+$consulta = $conexion->query("SELECT COUNT(*) FROM platillos WHERE disponible = 1");
+$platillosDisponibles = (int) $consulta->fetchColumn();
+
+// Consulto los últimos movimientos para mostrar actividad reciente.
+$sql = "SELECT pedidos.id, pedidos.fecha, pedidos.estado, pedidos.total,
+               mesas.numero AS numero_mesa
+        FROM pedidos
+        INNER JOIN mesas ON pedidos.mesa_id = mesas.id
+        ORDER BY pedidos.id DESC
+        LIMIT 5";
+$consulta = $conexion->query($sql);
+$pedidosRecientes = $consulta->fetchAll(PDO::FETCH_ASSOC);
 ?>
-<!-- Aquí comienza la estructura que se muestra al entrar al panel. -->
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Panel principal | El Puerto</title>
+    <title>Panel de operaciones | MARISCOS PIPE</title>
     <link rel="stylesheet" href="../assets/css/estilos.css">
 </head>
 <body>
-        <!-- Aquí barra superior para identificar el sistema y navegar entre secciones. -->
+    <!-- La navegación lateral queda fija y separada del área de trabajo. -->
     <header class="topbar">
         <a class="logo-admin" href="panel.php">
-            EL PUERTO
-            <small>ADMINISTRACIÓN</small>
+            MARISCOS PIPE
+            <small>SISTEMA DE OPERACIONES</small>
         </a>
 
         <nav>
-            <a href="../index.php">Ver menú</a>
-            <a href="index.php?salir=1">Cerrar sesión</a>
+            <a href="panel.php">Resumen general</a>
+            <a href="pedidos.php">Pedidos</a>
+            <a href="cobros.php">Cobros</a>
+            <a href="platillos.php">Menú y platillos</a>
+            <a href="modulo.php?tabla=clientes">Clientes</a>
+            <a href="modulo.php?tabla=proveedores">Proveedores</a>
+            <a href="modulo.php?tabla=almacen">Almacén</a>
+            <a href="modulo.php?tabla=facturacion">Facturación</a>
         </nav>
+
+        <div class="sidebar-note">
+            <div>Administración local</div>
+            <a href="index.php?salir=1">Cerrar sesión</a>
+        </div>
     </header>
 
-        <!-- Aquí contenido principal: resumen de actividad y accesos a los módulos. -->
     <main class="wrap">
-        <p class="eyebrow">ADMINISTRACIÓN</p>
-        <h1>Panel principal</h1>
-        <p class="intro">
-            Desde aquí puedes administrar los pedidos, los cobros y la información del restaurante.
-        </p>
+        <p class="eyebrow">MARISCOS PIPE / OPERACIONES</p>
+        <div class="dashboard-heading">
+            <div>
+                <h1>Resumen general</h1>
+                <p class="intro">Información del restaurante y acceso a las operaciones principales.</p>
+            </div>
+            <span class="dashboard-date">PANEL ADMINISTRATIVO</span>
+        </div>
 
-                <!-- Aquí tarjetas con los datos que se consultaron desde la base de datos. -->
+        <!-- Los indicadores se muestran como una sola franja de datos. -->
         <section class="stats">
             <article>
                 <small>Mesas registradas</small>
-                <strong><?= (int) $totalMesas ?></strong>
+                <strong><?= $totalMesas ?></strong>
             </article>
-
             <article>
                 <small>Pedidos pendientes</small>
-                <strong><?= (int) $pedidosPendientes ?></strong>
+                <strong><?= $pedidosPendientes ?></strong>
             </article>
-
             <article>
                 <small>Platillos disponibles</small>
-                <strong><?= (int) $platillosDisponibles ?></strong>
+                <strong><?= $platillosDisponibles ?></strong>
             </article>
         </section>
 
-        <h2 class="section-title">Módulos</h2>
+        <section class="dashboard">
+            <div class="dashboard-main">
+                <p class="eyebrow">SEGUIMIENTO</p>
+                <h2 class="section-title" style="margin-top:0">Actividad reciente</h2>
 
-                <!-- Aquí cada tarjeta abre una función distinta del sistema. -->
-        <section class="module-grid">
-            <a class="module-card highlight" href="pedidos.php">
-                <span>01</span>
-                <h2>Nuevo pedido</h2>
-                <p>Seleccionar mesa, platillos y cantidades.</p>
-                <b>Abrir módulo</b>
-            </a>
+                <div class="activity-list">
+                    <?php foreach ($pedidosRecientes as $pedido): ?>
+                        <div class="activity-row">
+                            <div>
+                                <strong>Pedido #<?= (int) $pedido["id"] ?> · Mesa <?= (int) $pedido["numero_mesa"] ?></strong>
+                                <small>
+                                    <?= htmlspecialchars($pedido["fecha"]) ?>
+                                    · <?= htmlspecialchars($pedido["estado"]) ?>
+                                </small>
+                            </div>
+                            <span class="activity-value">
+                                $<?= number_format((float) $pedido["total"], 2) ?>
+                            </span>
+                        </div>
+                    <?php endforeach; ?>
 
-            <a class="module-card" href="cobros.php">
-                <span>02</span>
-                <h2>Cobros</h2>
-                <p>Consultar cuentas y registrar pagos.</p>
-                <b>Abrir módulo</b>
-            </a>
+                    <?php if (count($pedidosRecientes) === 0): ?>
+                        <p class="nota-admin">Todavía no hay pedidos registrados.</p>
+                    <?php endif; ?>
+                </div>
 
-            <a class="module-card" href="platillos.php">
-                <span>03</span>
-                <h2>Menú y precios</h2>
-                <p>Administrar los platillos disponibles.</p>
-                <b>Abrir módulo</b>
-            </a>
+                <h2 class="section-title">Administración de datos</h2>
+                <section class="module-grid">
+                    <a class="module-card" href="platillos.php">
+                        <span>01 / CATÁLOGO</span>
+                        <h2>Platillos</h2>
+                        <p>Precios, categorías y disponibilidad.</p>
+                        <b>Administrar →</b>
+                    </a>
+                    <a class="module-card" href="modulo.php?tabla=clientes">
+                        <span>02 / REGISTROS</span>
+                        <h2>Clientes</h2>
+                        <p>Información de los clientes.</p>
+                        <b>Administrar →</b>
+                    </a>
+                    <a class="module-card" href="modulo.php?tabla=proveedores">
+                        <span>03 / REGISTROS</span>
+                        <h2>Proveedores</h2>
+                        <p>Contactos y productos suministrados.</p>
+                        <b>Administrar →</b>
+                    </a>
+                    <a class="module-card" href="modulo.php?tabla=almacen">
+                        <span>04 / INVENTARIO</span>
+                        <h2>Almacén</h2>
+                        <p>Existencias, unidades y costos.</p>
+                        <b>Administrar →</b>
+                    </a>
+                    <a class="module-card" href="modulo.php?tabla=facturacion">
+                        <span>05 / DOCUMENTOS</span>
+                        <h2>Facturación</h2>
+                        <p>Datos y solicitudes de facturación.</p>
+                        <b>Administrar →</b>
+                    </a>
+                    <a class="module-card" href="cobros.php">
+                        <span>06 / CAJA</span>
+                        <h2>Cobros</h2>
+                        <p>Consulta de cuentas y registro de pagos.</p>
+                        <b>Administrar →</b>
+                    </a>
+                </section>
+            </div>
 
-            <a class="module-card" href="modulo.php?tabla=clientes">
-                <span>04</span>
-                <h2>Clientes</h2>
-                <p>Registrar y consultar clientes.</p>
-                <b>Abrir módulo</b>
-            </a>
-
-            <a class="module-card" href="modulo.php?tabla=proveedores">
-                <span>05</span>
-                <h2>Proveedores</h2>
-                <p>Guardar los datos de los proveedores.</p>
-                <b>Abrir módulo</b>
-            </a>
-
-            <a class="module-card" href="modulo.php?tabla=almacen">
-                <span>06</span>
-                <h2>Almacén</h2>
-                <p>Revisar productos, existencias y costos.</p>
-                <b>Abrir módulo</b>
-            </a>
-
-            <a class="module-card" href="modulo.php?tabla=facturacion">
-                <span>07</span>
-                <h2>Facturación</h2>
-                <p>Consultar los datos de facturación.</p>
-                <b>Abrir módulo</b>
-            </a>
+            <aside class="dashboard-side">
+                <p class="eyebrow">ACCESO RÁPIDO</p>
+                <h2>Operaciones del día</h2>
+                <p>Accesos directos para atender las mesas.</p>
+                <div class="quick-links">
+                    <a href="pedidos.php">Registrar un pedido <span>01 →</span></a>
+                    <a href="cobros.php">Consultar cobros <span>02 →</span></a>
+                    <a href="../index.php">Ver menú público <span>03 →</span></a>
+                </div>
+            </aside>
         </section>
     </main>
 
-    <footer class="pie-pagina">
-        <span>Mariscos El Puerto © <?= date("Y") ?></span>
-        <span>Panel de administración</span>
-    </footer>
     <script src="../assets/js/tema.js" defer></script>
 </body>
 </html>
