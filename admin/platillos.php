@@ -47,14 +47,14 @@ $platillos = $consulta->fetchAll(PDO::FETCH_ASSOC);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Platillos | El Puerto</title>
+    <title>Platillos | MARISCOS PIPE</title>
     <link rel="stylesheet" href="../assets/css/estilos.css">
 </head>
 <body>
         <!-- Aquí barra superior con enlaces al panel, menú público y salida. -->
     <header class="barra">
         <a class="marca" href="../index.php">
-            <span>EL PUERTO</span>
+            <span>MARISCOS PIPE</span>
             <small>ADMINISTRACIÓN</small>
         </a>
 
