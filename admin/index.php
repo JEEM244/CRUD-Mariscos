@@ -81,5 +81,6 @@ if (!empty($_SESSION["admin"])) {
 
         <a class="volver" href="../index.php">Volver al menú</a>
     </main>
+    <script src="../assets/js/tema.js" defer></script>
 </body>
 </html>
