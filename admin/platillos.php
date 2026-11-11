@@ -36,7 +36,6 @@ if ($buscar !== "") {
     $consulta->bindValue(":buscar", "%" . $buscar . "%");
 }
 
-// Ejecutar la consulta y recuperar todos los platillos que coinciden.
 // Ejecutar la consulta y recuperar los platillos encontrados.
 $consulta->execute();
 $platillos = $consulta->fetchAll(PDO::FETCH_ASSOC);
