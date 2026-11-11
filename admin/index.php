@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-// Acceso inicial para pruebas locales. Cambia estos datos antes de publicar.
+// Datos de acceso para probar el sistema en local.
 $usuarioCorrecto = "admin";
 $contrasenaCorrecta = "mariscos123";
 
@@ -11,19 +11,23 @@ if (isset($_POST["entrar"])) {
 
     if ($usuario === $usuarioCorrecto && $contrasena === $contrasenaCorrecta) {
         $_SESSION["admin"] = true;
+
         header("Location: panel.php");
         exit;
     }
 
-    $error = "Usuario o contraseña incorrectos.";
+    $error = "El usuario o la contraseña no son correctos.";
 }
 
+// Cerrar la sesión cuando se presiona el enlace de salida.
 if (isset($_GET["salir"])) {
     session_destroy();
+
     header("Location: index.php");
     exit;
 }
 
+// Si ya se inició sesión, no hace falta mostrar el formulario.
 if (!empty($_SESSION["admin"])) {
     header("Location: panel.php");
     exit;
@@ -39,18 +43,35 @@ if (!empty($_SESSION["admin"])) {
 </head>
 <body class="fondo-admin">
     <main class="login">
-        <a class="marca" href="../index.php"><span>EL PUERTO</span><small>ADMINISTRACIÓN</small></a>
+        <a class="marca" href="../index.php">
+            <span>EL PUERTO</span>
+            <small>ADMINISTRACIÓN</small>
+        </a>
+
         <h1>Bienvenido</h1>
         <p>Ingresa para administrar los pedidos y la información del restaurante.</p>
-        <?php if (isset($error)): ?><p class="mensaje-error"><?= htmlspecialchars($error) ?></p><?php endif; ?>
+
+        <?php if (isset($error)): ?>
+            <p class="mensaje-error"><?= htmlspecialchars($error) ?></p>
+        <?php endif; ?>
+
         <form method="POST">
-            <label>Usuario</label>
-            <input type="text" name="usuario" required>
-            <label>Contraseña</label>
-            <input type="password" name="contrasena" required>
-            <button class="boton boton-coral ancho" type="submit" name="entrar">Entrar al panel</button>
+            <label>
+                Usuario
+                <input type="text" name="usuario" autocomplete="username" required>
+            </label>
+
+            <label>
+                Contraseña
+                <input type="password" name="contrasena" autocomplete="current-password" required>
+            </label>
+
+            <button class="boton boton-coral ancho" type="submit" name="entrar">
+                Entrar al panel
+            </button>
         </form>
-        <a class="volver" href="../index.php">Volver al sitio</a>
+
+        <a class="volver" href="../index.php">Volver al menú</a>
     </main>
 </body>
 </html>
