@@ -27,6 +27,7 @@ if ($mesaId <= 0 || !is_array($platillos) || count($platillos) === 0) {
     exit;
 }
 
+// Intentar registrar el pedido. Si algún paso falla, se deshacen los cambios.
 try {
     // Empezar una transacción. Así, si una parte falla, se pueden cancelar todos los cambios.
     $conexion->beginTransaction();
@@ -76,6 +77,7 @@ try {
         $buscarPlatillo->execute([$idPlatillo]);
         $precio = $buscarPlatillo->fetchColumn();
 
+        // Si no se encontró el platillo o ya no está disponible, cancelar el pedido.
         if ($precio === false) {
             throw new Exception("Uno de los platillos ya no está disponible.");
         }
@@ -92,6 +94,7 @@ try {
         $total += (float) $precio * $cantidad;
     }
 
+    // Evitar guardar un pedido si no se pudo agregar ningún platillo válido.
     if ($total <= 0) {
         throw new Exception("El pedido no tiene platillos válidos.");
     }
@@ -116,6 +119,7 @@ try {
 
 // Si ocurre un error, cancelar todos los cambios de la transacción.
 } catch (Throwable $error) {
+    // Solo ejecutar ROLLBACK si todavía hay una transacción abierta.
     if ($conexion->inTransaction()) {
         $conexion->rollBack();
     }
