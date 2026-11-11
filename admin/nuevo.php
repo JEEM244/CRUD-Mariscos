@@ -1,33 +1,42 @@
 <?php
+// Iniciar la sesión para comprobar que el usuario puede administrar el menú.
 session_start();
 
+// Si no existe una sesión activa, regresar al acceso.
 if (empty($_SESSION["admin"])) {
     header("Location: index.php");
     exit;
 }
 
+// Cargar la conexión para consultar las categorías y guardar el nuevo platillo.
 require_once "../config/conexion.php";
 
 // Cargar las categorías para mostrarlas en la lista.
+// Consultar las categorías para llenar el selector del formulario.
 $consulta = $conexion->query("SELECT * FROM categorias ORDER BY nombre");
 $categorias = $consulta->fetchAll(PDO::FETCH_ASSOC);
 
 $error = "";
 
+// Leer los datos solamente cuando el formulario se haya enviado.
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
+    // Recibir cada campo y quitar espacios innecesarios del texto.
     $nombre = trim($_POST["nombre"] ?? "");
     $descripcion = trim($_POST["descripcion"] ?? "");
     $precio = $_POST["precio"] ?? "";
     $imagen = trim($_POST["imagen"] ?? "");
     $categoriaId = $_POST["categoria"] ?? "";
 
+    // Revisar que el nombre no esté vacío y que el precio sea un número válido.
     if ($nombre === "" || !is_numeric($precio) || (float) $precio < 0) {
         $error = "Escribe el nombre del platillo y un precio válido.";
     } else {
+        // Preparar la consulta para crear el nuevo platillo en la tabla.
         $sql = "INSERT INTO platillos
                     (nombre, descripcion, precio, imagen, categoria_id, disponible)
                 VALUES (?, ?, ?, ?, ?, 1)";
 
+        // Preparar el INSERT y después enviar los valores del formulario.
         $guardar = $conexion->prepare($sql);
         $guardar->execute([
             $nombre,
@@ -42,6 +51,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     }
 }
 ?>
+<!-- Formulario que permite registrar un platillo nuevo. -->
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -63,6 +73,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         </nav>
     </header>
 
+        <!-- El formulario se muestra dentro de un contenedor para mantenerlo ordenado. -->
     <main class="formulario-admin">
         <p class="etiqueta">MENÚ</p>
         <h1>Agregar platillo</h1>
@@ -71,6 +82,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             <p class="mensaje-error"><?= htmlspecialchars($error) ?></p>
         <?php endif; ?>
 
+                <!-- Los datos se envían a este mismo archivo mediante POST. -->
         <form method="POST">
             <label>
                 Nombre del platillo
@@ -87,6 +99,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 <input type="number" name="precio" min="0" step="0.01" required>
             </label>
 
+                        <!-- El selector muestra las categorías que se consultaron al inicio del archivo. -->
             <label>
                 Categoría
                 <select name="categoria">
