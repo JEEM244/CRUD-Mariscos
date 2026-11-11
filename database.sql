@@ -1,16 +1,16 @@
--- Base de datos para Mariscos El Puerto.
--- Este archivo se utiliza cuando se instala el proyecto desde cero.
+-- Aquí preparo la base de datos para Mariscos El Puerto.
+-- Este archivo lo voy a utilizar se utiliza cuando se instala el proyecto desde cero.
 
--- Crear la base de datos solo si todavía no existe.
--- utf8mb4 permite guardar correctamente acentos y otros caracteres.
+-- Primero creo la base de datos solo si todavía no existe.
+-- Uso utf8mb4 porque permite guardar correctamente acentos y otros caracteres.
 CREATE DATABASE IF NOT EXISTS mariscos_db
 CHARACTER SET utf8mb4
 COLLATE utf8mb4_unicode_ci;
 
--- Indicar que las siguientes tablas se crearán dentro de mariscos_db.
+-- Después indico que las siguientes tablas se crearán dentro de mariscos_db.
 USE mariscos_db;
 
--- CLIENTES
+-- Primero preparo la tabla donde voy a guardar los clientes.
 -- Guarda los datos de las personas que pueden hacer pedidos.
 CREATE TABLE clientes (
     -- ID único que MySQL asigna automáticamente a cada registro.
@@ -30,7 +30,7 @@ CREATE TABLE clientes (
     direccion VARCHAR(180)
 ) ENGINE=InnoDB;
 
--- PROVEEDORES
+-- Después preparo la tabla para registrar los proveedores.
 -- Guarda los datos de los negocios o personas que suministran productos.
 CREATE TABLE proveedores (
     -- Identificador único que MySQL genera automáticamente. Cada tabla tiene su propio ID.
@@ -67,7 +67,7 @@ CREATE TABLE almacen (
     costo DECIMAL(10,2) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB;
 
--- MESAS DEL RESTAURANTE
+-- Ahora creo la tabla de mesas para poder relacionar cada pedido con su lugar. DEL RESTAURANTE
 -- Cada mesa tiene un número y un estado: Libre u Ocupada.
 CREATE TABLE mesas (
     -- Identificador único que MySQL genera automáticamente. Cada tabla tiene su propio ID.
@@ -80,7 +80,7 @@ CREATE TABLE mesas (
     estado ENUM('Libre', 'Ocupada') DEFAULT 'Libre'
 ) ENGINE=InnoDB;
 
--- CATEGORÍAS DEL MENÚ
+-- Después creo las categorías que voy a utilizar para organizar el menú. DEL MENÚ
 -- Sirven para agrupar los platillos, por ejemplo Bebidas o Pescados.
 CREATE TABLE categorias (
     -- Identificador único que MySQL genera automáticamente. Cada tabla tiene su propio ID.
@@ -89,7 +89,7 @@ CREATE TABLE categorias (
     nombre VARCHAR(80) NOT NULL
 ) ENGINE=InnoDB;
 
--- PLATILLOS QUE PUEDEN AGREGARSE A UN PEDIDO
+-- En esta parte preparo el catálogo de platillos que se mostrarán en el menú. QUE PUEDEN AGREGARSE A UN PEDIDO
 -- Aquí se guarda el nombre, precio, descripción, imagen y categoría de cada platillo.
 CREATE TABLE platillos (
     -- Identificador único que MySQL genera automáticamente. Cada tabla tiene su propio ID.
@@ -118,7 +118,7 @@ CREATE TABLE platillos (
         ON DELETE SET NULL
 ) ENGINE=InnoDB;
 
--- PEDIDOS QUE REGISTRAN LOS MESEROS
+-- Ahora preparo la tabla principal de pedidos. QUE REGISTRAN LOS MESEROS
 -- Esta tabla guarda los datos generales de cada pedido.
 CREATE TABLE pedidos (
     -- Identificador único que MySQL genera automáticamente. Cada tabla tiene su propio ID.
@@ -149,7 +149,7 @@ CREATE TABLE pedidos (
         ON DELETE SET NULL
 ) ENGINE=InnoDB;
 
--- CADA PEDIDO PUEDE TENER UNO O VARIOS PLATILLOS
+-- Como un pedido puede incluir varios platillos, preparo otra tabla para guardar ese detalle. PUEDE TENER UNO O VARIOS PLATILLOS
 -- Esta tabla conecta un pedido con los platillos que incluye.
 CREATE TABLE detalle_pedido (
     -- Identificador único que MySQL genera automáticamente. Cada tabla tiene su propio ID.
@@ -215,7 +215,7 @@ CREATE TABLE facturacion (
         ON DELETE SET NULL
 ) ENGINE=InnoDB;
 
--- REGISTROS DE EJEMPLO PARA CLIENTES
+-- Al final agrego registros de ejemplo para poder probar el sistema sin capturar todo desde cero. PARA CLIENTES
 -- Se agregan diez clientes para poder probar el módulo desde el inicio.
 INSERT INTO clientes (nombre, telefono, correo, direccion) VALUES
 ('Ana López', '8110000001', 'ana@mail.com', 'Centro'),
@@ -229,7 +229,7 @@ INSERT INTO clientes (nombre, telefono, correo, direccion) VALUES
 ('Valeria Cruz', '8110000009', 'valeria@mail.com', 'Azteca'),
 ('Diego Ramos', '8110000010', 'diego@mail.com', 'Jardines');
 
--- REGISTROS DE EJEMPLO PARA PROVEEDORES
+-- Al final agrego registros de ejemplo para poder probar el sistema sin capturar todo desde cero. PARA PROVEEDORES
 -- Se agregan diez proveedores de muestra.
 INSERT INTO proveedores (nombre, telefono, correo, producto) VALUES
 ('Pescados del Norte', '8181000001', 'ventas@pescadosnorte.mx', 'Pescado'),
@@ -243,7 +243,7 @@ INSERT INTO proveedores (nombre, telefono, correo, producto) VALUES
 ('Limpieza Total', '8181000009', 'limpieza@mail.com', 'Limpieza'),
 ('Distribuidora Pacífico', '8181000010', 'pacifico@mail.com', 'Pulpo');
 
--- REGISTROS DE EJEMPLO PARA ALMACÉN
+-- Al final agrego registros de ejemplo para poder probar el sistema sin capturar todo desde cero. PARA ALMACÉN
 -- Cada registro contiene producto, categoría, cantidad, unidad y costo.
 INSERT INTO almacen (producto, categoria, existencia, unidad, costo) VALUES
 ('Camarón mediano', 'Mariscos', 25, 'kg', 180),
@@ -257,13 +257,13 @@ INSERT INTO almacen (producto, categoria, existencia, unidad, costo) VALUES
 ('Agua natural', 'Bebidas', 36, 'piezas', 9),
 ('Aceite', 'Abarrotes', 10, 'litros', 48);
 
--- MESAS DISPONIBLES
+-- Ahora creo la tabla de mesas para poder relacionar cada pedido con su lugar. DISPONIBLES
 -- Crear diez mesas y dejarlas libres para los primeros pedidos.
 INSERT INTO mesas (numero, estado) VALUES
 (1, 'Libre'), (2, 'Libre'), (3, 'Libre'), (4, 'Libre'), (5, 'Libre'),
 (6, 'Libre'), (7, 'Libre'), (8, 'Libre'), (9, 'Libre'), (10, 'Libre');
 
--- CATEGORÍAS DEL MENÚ
+-- Después creo las categorías que voy a utilizar para organizar el menú. DEL MENÚ
 -- Estas categorías se relacionan con platillos mediante categoria_id.
 INSERT INTO categorias (nombre) VALUES
 ('Ceviches'),
@@ -273,7 +273,7 @@ INSERT INTO categorias (nombre) VALUES
 ('Camarones'),
 ('Bebidas');
 
--- PLATILLOS DE EJEMPLO
+-- En esta parte preparo el catálogo de platillos que se mostrarán en el menú. DE EJEMPLO
 -- Los números de categoria_id corresponden al orden de las categorías anteriores.
 INSERT INTO platillos (nombre, descripcion, precio, categoria_id, disponible) VALUES
 ('Ceviche de pescado', 'Pescado fresco con limón y verduras.', 115, 1, 1),
