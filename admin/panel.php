@@ -1,27 +1,34 @@
 <?php
+// Iniciar la sesión para revisar si el usuario tiene permiso de entrar.
 session_start();
 
+// Si no se ha iniciado sesión, regresar al formulario de acceso.
 if (empty($_SESSION["admin"])) {
     header("Location: index.php");
     exit;
 }
 
+// Cargar la conexión con la base de datos para consultar los totales.
 require_once "../config/conexion.php";
 
 // Consultar algunos datos para el resumen del panel.
+// Contar cuántas mesas están registradas en el restaurante.
 $consulta = $conexion->query("SELECT COUNT(*) FROM mesas");
 $totalMesas = $consulta->fetchColumn();
 
+// Contar los pedidos que todavía no se han marcado como pagados.
 $consulta = $conexion->query(
     "SELECT COUNT(*) FROM pedidos WHERE estado <> 'Pagado'"
 );
 $pedidosPendientes = $consulta->fetchColumn();
 
+// Contar los platillos que están disponibles en el menú.
 $consulta = $conexion->query(
     "SELECT COUNT(*) FROM platillos WHERE disponible = 1"
 );
 $platillosDisponibles = $consulta->fetchColumn();
 ?>
+<!-- Comienza la estructura que se muestra al entrar al panel. -->
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -31,6 +38,7 @@ $platillosDisponibles = $consulta->fetchColumn();
     <link rel="stylesheet" href="../assets/css/estilos.css">
 </head>
 <body>
+        <!-- Barra superior para identificar el sistema y navegar entre secciones. -->
     <header class="topbar">
         <a class="logo-admin" href="panel.php">
             EL PUERTO
@@ -43,6 +51,7 @@ $platillosDisponibles = $consulta->fetchColumn();
         </nav>
     </header>
 
+        <!-- Contenido principal: resumen de actividad y accesos a los módulos. -->
     <main class="wrap">
         <p class="eyebrow">ADMINISTRACIÓN</p>
         <h1>Panel principal</h1>
@@ -50,6 +59,7 @@ $platillosDisponibles = $consulta->fetchColumn();
             Desde aquí puedes administrar los pedidos, los cobros y la información del restaurante.
         </p>
 
+                <!-- Tarjetas con los datos que se consultaron desde la base de datos. -->
         <section class="stats">
             <article>
                 <small>Mesas registradas</small>
@@ -69,6 +79,7 @@ $platillosDisponibles = $consulta->fetchColumn();
 
         <h2 class="section-title">Módulos</h2>
 
+                <!-- Cada tarjeta abre una función distinta del sistema. -->
         <section class="module-grid">
             <a class="module-card highlight" href="pedidos.php">
                 <span>01</span>
