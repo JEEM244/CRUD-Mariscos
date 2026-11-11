@@ -3,12 +3,12 @@
     Aquí se define cómo se ven las páginas públicas y el panel de administración.
     Los nombres de las clases coinciden con los que se escriben en los archivos HTML y PHP.
 */
-/* Hace que el ancho y alto incluyan también el relleno y los bordes de cada elemento. */
+/* Primero hago que el ancho y el alto incluyan el relleno y los bordes; así puedo controlar mejor el tamaño de cada elemento. */
 * {
     box-sizing: border-box;
 }
 
-/* Variables de color: se declaran una vez y se reutilizan en el resto del archivo. */
+/* Antes de empezar con los componentes, dejo aquí los colores que voy a reutilizar para mantener el mismo estilo en toda la página. */
 :root {
     --fondo: #f6f7f5;
     --blanco: #ffffff;
