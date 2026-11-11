@@ -73,7 +73,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     <link rel="stylesheet" href="../assets/css/estilos.css">
 </head>
 <body>
-    <header class="barra barra-admin">
+    <header class="barra">
         <a class="marca" href="../index.php">
             <span>EL PUERTO</span>
             <small>ADMINISTRACIÓN</small>
