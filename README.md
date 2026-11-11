@@ -1,75 +1,148 @@
-# Mariscos El Puerto
+# MARISCOS PIPE
 
-Sistema web para administrar un restaurante de mariscos. Permite consultar el menú, registrar pedidos por mesa y llevar el control de clientes, proveedores, almacén y facturación.
+Sistema web para la administración de un restaurante de mariscos. Está pensado para facilitar el trabajo diario: consultar el menú, registrar pedidos por mesa, realizar cobros y mantener organizados los datos del restaurante.
 
-## Herramientas utilizadas
+El proyecto utiliza PHP y MySQL. Su interfaz está hecha con HTML, CSS y JavaScript, sin depender de frameworks de diseño.
 
-- PHP para la parte del servidor.
-- MySQL para guardar la información.
-- HTML para la estructura de las páginas.
-- CSS para el diseño.
-- JavaScript para calcular el total de los pedidos.
-- PDO para conectar PHP con MySQL.
+## Características principales
 
-El proyecto está hecho con PHP directo, sin utilizar un framework.
+- Registro de pedidos relacionados con una mesa.
+- Selección de platillos y cantidades.
+- Cálculo del total de cada pedido.
+- Consulta de pedidos pendientes y registro de cobros.
+- Administración de platillos, categorías y disponibilidad.
+- Registro de clientes y proveedores.
+- Control de productos y existencias del almacén.
+- Registro y consulta de información de facturación.
 
-## Cómo instalarlo en XAMPP
+## Tecnologías utilizadas
 
-1. Copia la carpeta del proyecto en `C:\xampp\htdocs\CRUD-Mariscos`.
+- **PHP:** procesa formularios y realiza las operaciones del sistema.
+- **MySQL:** almacena los datos del restaurante.
+- **PDO:** permite conectar PHP con MySQL mediante consultas preparadas.
+- **HTML:** organiza el contenido de las páginas.
+- **CSS:** define la distribución, los colores y la adaptación a diferentes pantallas.
+- **JavaScript:** permite realizar acciones en la interfaz y calcular importes.
+
+El proyecto está desarrollado con PHP directo, sin utilizar un framework de backend.
+
+## Diseño de la interfaz
+
+La identidad visual del sistema se llama **MARISCOS PIPE**. Su diseño toma como referencia el minimalismo editorial japonés, pero no pretende representar un restaurante japonés.
+
+La interfaz busca ser clara, ordenada y profesional. Para lograrlo utiliza:
+
+- Una paleta de colores neutros y cálidos.
+- Tipografía serif para algunos títulos y sans-serif para los datos y controles.
+- Espacios y líneas divisorias para separar la información.
+- Una navegación lateral en el panel administrativo.
+- Distribuciones diferentes según la función de cada sección, en lugar de repetir tarjetas en todas las páginas.
+- Tema claro y tema oscuro. La preferencia se guarda en el navegador.
+
+Los estilos están escritos en CSS propio. No se utiliza Bootstrap ni W3.CSS. La documentación de W3Schools puede servir como referencia para las propiedades y conceptos de CSS, pero el diseño del proyecto se programa directamente en sus archivos.
+
+## Requisitos
+
+Para ejecutar el proyecto en local se necesita:
+
+- XAMPP.
+- Apache.
+- MySQL o MariaDB.
+- Un navegador web.
+
+## Instalación en XAMPP
+
+1. Copia la carpeta del proyecto en:
+
+   `C:\xampp\htdocs\CRUD-Mariscos`
+
 2. Abre el panel de XAMPP e inicia Apache y MySQL.
-3. Entra a phpMyAdmin.
-4. Si es la primera instalación, crea la base de datos importando el archivo `database.sql`.
-5. Si ya tenías una base de datos y solo necesitas agregar las funciones de pedidos, selecciona `mariscos_db` e importa `actualizar_bd.sql`.
-6. Revisa los datos de conexión en `config/conexion.php`.
-7. Abre `http://localhost:8080/CRUD-Mariscos/` para ver el menú si Apache está configurado en el puerto 8080. Si utilizas el puerto 80, entra a `http://localhost/CRUD-Mariscos/`.
 
-El archivo `database.sql` se utiliza para una instalación desde cero. No lo importes encima de una base de datos que ya tenga información, porque sus tablas se crearán nuevamente y pueden aparecer errores de tablas existentes.
+3. Entra a phpMyAdmin:
 
-El archivo `actualizar_bd.sql` agrega las tablas que necesita el módulo de pedidos y el campo de imagen de los platillos, sin borrar los registros que ya están guardados. Se puede ejecutar otra vez si necesitas completar la actualización.
+   `http://localhost:8080/phpmyadmin`
 
-## Acceso al panel
+   Si Apache utiliza otro puerto, ajusta la dirección.
 
-- Usuario: `admin`
-- Contraseña: `mariscos123`
+4. Para una instalación desde cero, importa el archivo `database.sql`. Este archivo crea la estructura inicial de la base de datos e incluye registros de ejemplo.
 
-Son datos de acceso para trabajar en local. Antes de publicar el sistema en internet se necesita mejorar el inicio de sesión y agregar permisos.
+5. Si ya tienes una base de datos del proyecto y necesitas aplicar cambios, selecciona `mariscos_db` e importa `actualizar_bd.sql`.
 
-## Módulos del sistema
+6. Revisa la configuración de conexión en `config/conexion.php`.
 
-- **Pedidos:** permite elegir una mesa, seleccionar platillos y registrar cantidades.
-- **Cobros:** muestra los pedidos pendientes y permite marcarlos como pagados.
-- **Menú y precios:** permite agregar, editar, buscar y eliminar platillos.
-- **Clientes:** guarda los datos de los clientes.
-- **Proveedores:** lleva un registro de los proveedores.
-- **Almacén:** guarda productos, existencias y costos.
-- **Facturación:** almacena datos fiscales y el estado de las solicitudes.
+7. Abre el sistema en el navegador:
+
+   `http://localhost:8080/CRUD-Mariscos/`
+
+   Si Apache utiliza el puerto 80, la dirección será:
+
+   `http://localhost/CRUD-Mariscos/`
+
+### Importante sobre los archivos SQL
+
+- **`database.sql`:** se utiliza para crear la base de datos desde cero. No lo importes encima de una instalación que ya contiene información, porque puede ocasionar conflictos con las tablas existentes.
+- **`actualizar_bd.sql`:** sirve para aplicar cambios a una instalación existente sin tener que reinstalar todo el proyecto. Revisa el contenido del archivo antes de ejecutarlo y conserva una copia de seguridad de tu base de datos.
+
+## Acceso al panel administrativo
+
+En la configuración de demostración local:
+
+- **Usuario:** `admin`
+- **Contraseña:** `mariscos123`
+
+Estas credenciales son únicamente para pruebas locales. No deben conservarse al publicar el sistema en internet. Antes de utilizarlo en producción se deben implementar medidas adicionales de seguridad, permisos y protección de cuentas.
+
+## Módulos
+
+| Módulo | Función |
+|---|---|
+| Pedidos | Seleccionar una mesa, agregar platillos y registrar cantidades. |
+| Cobros | Consultar pedidos pendientes y registrar su pago. |
+| Platillos | Agregar, editar, buscar y eliminar platillos. |
+| Clientes | Guardar y consultar información de clientes. |
+| Proveedores | Mantener los datos de los proveedores. |
+| Almacén | Registrar productos, existencias y costos. |
+| Facturación | Guardar información fiscal y consultar solicitudes. |
 
 ## Base de datos
 
-Las tablas principales son `clientes`, `proveedores`, `almacen` y `facturacion`.
+La base de datos utilizada por el proyecto se llama `mariscos_db`.
 
-También se utilizan tablas para las mesas, categorías, platillos y pedidos. El archivo de instalación incluye registros de ejemplo para poder probar los módulos.
+Entre sus tablas se encuentran:
 
-## Funciones que podrían agregarse después
+- `clientes`
+- `proveedores`
+- `almacen`
+- `facturacion`
+- `mesas`
+- `categorias`
+- `platillos`
+- `pedidos`
+- `detalle_pedido`
 
-La conexión con Hacienda / SAT queda como una idea para una etapa futura del proyecto. Por ahora no existe un módulo de conexión ni se realizan solicitudes a servicios externos. El apartado de facturación se limita a guardar y consultar la información dentro del sistema.
+Las tablas se relacionan para asociar los pedidos con sus mesas, los detalles con sus platillos y los registros administrativos con la información correspondiente.
 
-## Organización de carpetas
+## Facturación
 
-- `admin/`: páginas para administrar el restaurante.
-- `assets/css/`: estilos del sitio.
-- `config/`: conexión con la base de datos.
-- `database.sql`: creación inicial de la base de datos.
-- `actualizar_bd.sql`: actualización para agregar las tablas de pedidos.
+El módulo de facturación permite guardar y consultar información dentro del sistema. Actualmente no existe una conexión con el SAT ni se generan comprobantes fiscales digitales. Una integración con servicios externos sería una función para una etapa futura.
 
-## Cómo está explicado el código
+## Organización del proyecto
 
-Se agregaron comentarios dentro de los archivos para seguir el orden de trabajo:
+- `admin/`: páginas del panel administrativo y sus módulos.
+- `assets/css/`: hojas de estilo de la interfaz.
+- `assets/js/`: funciones JavaScript, incluido el selector de tema.
+- `config/`: configuración de la conexión con la base de datos.
+- `database.sql`: instalación inicial de la base de datos.
+- `actualizar_bd.sql`: actualización de la estructura y datos de una instalación existente.
 
-- En PHP se explica cómo se reciben los datos, se validan, se consultan y se guardan.
-- En los formularios HTML se indica para qué sirve cada sección y a qué archivo se envían los datos.
-- En JavaScript se explica cómo se agregan o quitan platillos y cómo se calcula el total.
-- En CSS se describe qué parte de la página modifica cada grupo de reglas y qué cambia en pantallas pequeñas.
-- En SQL se explica para qué sirve cada tabla, qué representa cada campo y cómo se relacionan las tablas.
+## Comentarios y explicación del código
 
-Los comentarios buscan explicar el motivo de cada paso con palabras sencillas. No cambian lo que hace el programa.
+El código contiene comentarios para explicar qué hace cada parte y facilitar su lectura:
+
+- **PHP:** recepción y validación de datos, consultas y operaciones de registro.
+- **HTML:** estructura de los formularios, tablas y secciones.
+- **CSS:** distribución de los elementos, colores, tipografía, estados de los controles y ajustes para pantallas pequeñas.
+- **JavaScript:** acciones de la interfaz y cálculo de los importes.
+- **SQL:** creación de tablas, campos, relaciones y registros de ejemplo.
+
+Los comentarios están escritos con palabras sencillas y sirven como guía para entender el funcionamiento del programa.
