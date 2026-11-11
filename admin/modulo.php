@@ -133,8 +133,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         // Empezar suponiendo que no faltan datos y revisar los campos obligatorios del módulo.
         $faltanDatos = false;
         foreach ($obligatorios as $campo) {
-            // Si un campo obligatorio llegó vacío, marcar que faltan datos.
-            // Si el campo está vacío, indicar que hace falta información.
+            // Si un campo obligatorio está vacío, indicar que faltan datos.
             if (trim($_POST[$campo] ?? "") === "") {
                 $faltanDatos = true;
                 break;
