@@ -135,5 +135,6 @@ $platillosDisponibles = $consulta->fetchColumn();
         <span>Mariscos El Puerto © <?= date("Y") ?></span>
         <span>Panel de administración</span>
     </footer>
+    <script src="../assets/js/tema.js" defer></script>
 </body>
 </html>
