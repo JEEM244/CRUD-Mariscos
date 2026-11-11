@@ -22,8 +22,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         // Abrir una transacción para actualizar el pedido y liberar la mesa como una sola operación.
         $conexion->beginTransaction();
 
-        // Consultar la mesa del pedido y bloquear ese registro mientras se procesa el pago.
-        // Buscar el ID de la mesa y comprobar que el pedido siga pendiente.
+        // Buscar el ID de la mesa y bloquear el pedido mientras se comprueba que siga pendiente.
         $consulta = $conexion->prepare(
             "SELECT mesa_id
              FROM pedidos
