@@ -204,11 +204,11 @@ $pedidos = $consulta->fetchAll(PDO::FETCH_ASSOC);
 
             const lineas = contenedorLineas.querySelectorAll(".order-line");
 
-            // Aquí revisar cada fila del formulario para obtener el precio y la cantidad.
+            // Ahora reviso cada fila del formulario para obtener el precio y la cantidad.
             lineas.forEach(function (linea) {
                 // Ahora obtengo el selector del platillo que está en esta fila.
                 const selector = linea.querySelector("select");
-                // Aquí leo la cantidad y la opción que está seleccionada en esta fila.
+                // Ahora leo la cantidad y la opción que está seleccionada en esta fila.
                 const cantidad = linea.querySelector("input").value;
                 const opcion = selector.options[selector.selectedIndex];
 
