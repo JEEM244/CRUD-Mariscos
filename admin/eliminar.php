@@ -1,22 +1,29 @@
 <?php
+// Iniciar la sesión para proteger esta acción.
 session_start();
 
+// Solo un administrador que inició sesión puede eliminar platillos.
 if (empty($_SESSION["admin"])) {
     header("Location: index.php");
     exit;
 }
 
+// Cargar la conexión a MySQL para poder borrar el registro.
 require_once "../config/conexion.php";
 
 // Este archivo solo recibe la petición de eliminar desde platillos.php.
+// Comprobar que la solicitud se haya enviado mediante POST.
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
+    // Leer el ID enviado por el formulario y validar que sea un entero.
     $id = filter_input(INPUT_POST, "id", FILTER_VALIDATE_INT);
 
     if ($id) {
+        // Preparar la consulta que elimina únicamente el platillo con ese ID.
         $consulta = $conexion->prepare("DELETE FROM platillos WHERE id = ?");
         $consulta->execute([$id]);
     }
 }
 
+// Al terminar, regresar al listado para que el usuario vea el resultado.
 header("Location: platillos.php?mensaje=" . urlencode("Operación terminada."));
 exit;
