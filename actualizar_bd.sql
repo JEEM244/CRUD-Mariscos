@@ -1,20 +1,24 @@
 -- Actualización para agregar las funciones de pedidos.
 -- Este archivo no borra los clientes, proveedores ni productos existentes.
 
+-- Seleccionar la base de datos que ya utiliza el proyecto.
 USE mariscos_db;
 
 -- Crear las tablas que todavía no existan.
+-- Crear la tabla de mesas únicamente si todavía no existe.
 CREATE TABLE IF NOT EXISTS mesas (
     id INT AUTO_INCREMENT PRIMARY KEY,
     numero INT NOT NULL UNIQUE,
     estado ENUM('Libre', 'Ocupada') DEFAULT 'Libre'
 ) ENGINE=InnoDB;
 
+-- Crear el catálogo de categorías si hace falta.
 CREATE TABLE IF NOT EXISTS categorias (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(80) NOT NULL
 ) ENGINE=InnoDB;
 
+-- Crear la tabla del menú si todavía no existe.
 CREATE TABLE IF NOT EXISTS platillos (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(120) NOT NULL,
@@ -28,6 +32,7 @@ CREATE TABLE IF NOT EXISTS platillos (
         ON DELETE SET NULL
 ) ENGINE=InnoDB;
 
+-- Crear la tabla que guarda los datos generales de cada pedido.
 CREATE TABLE IF NOT EXISTS pedidos (
     id INT AUTO_INCREMENT PRIMARY KEY,
     mesa_id INT NOT NULL,
@@ -42,6 +47,7 @@ CREATE TABLE IF NOT EXISTS pedidos (
         ON DELETE SET NULL
 ) ENGINE=InnoDB;
 
+-- Crear la tabla que guarda los platillos y cantidades de cada pedido.
 CREATE TABLE IF NOT EXISTS detalle_pedido (
     id INT AUTO_INCREMENT PRIMARY KEY,
     pedido_id INT NOT NULL,
@@ -57,6 +63,8 @@ CREATE TABLE IF NOT EXISTS detalle_pedido (
 
 -- En algunas instalaciones anteriores, la tabla de platillos ya existía
 -- pero no tenía el campo para guardar la dirección de la imagen.
+-- Consultar information_schema para saber si la columna imagen ya está creada.
+-- El resultado será 1 si existe y 0 si todavía falta.
 SET @imagen_existe = (
     SELECT COUNT(*)
     FROM information_schema.COLUMNS
@@ -65,22 +73,29 @@ SET @imagen_existe = (
       AND COLUMN_NAME = 'imagen'
 );
 
+-- Elegir la instrucción SQL que se va a ejecutar.
+-- Si falta la columna, se prepara un ALTER TABLE; si ya existe, no se modifica nada.
 SET @consulta_sql = IF(
     @imagen_existe = 0,
     'ALTER TABLE platillos ADD COLUMN imagen VARCHAR(255) DEFAULT NULL',
     'SELECT 1'
 );
 
+-- PREPARE prepara la instrucción que se guardó como texto.
 PREPARE consulta FROM @consulta_sql;
+-- EXECUTE ejecuta la instrucción preparada.
 EXECUTE consulta;
+-- Liberar la instrucción preparada porque ya se utilizó.
 DEALLOCATE PREPARE consulta;
 
 -- Agregar las mesas de ejemplo sin repetir las que ya están creadas.
+-- INSERT IGNORE agrega las mesas sin repetir los números que ya existen.
 INSERT IGNORE INTO mesas (numero, estado) VALUES
 (1, 'Libre'), (2, 'Libre'), (3, 'Libre'), (4, 'Libre'), (5, 'Libre'),
 (6, 'Libre'), (7, 'Libre'), (8, 'Libre'), (9, 'Libre'), (10, 'Libre');
 
 -- Agregar las categorías que hagan falta.
+-- En cada categoría se usa NOT EXISTS para no agregar nombres repetidos.
 INSERT INTO categorias (nombre)
 SELECT 'Ceviches' WHERE NOT EXISTS (
     SELECT 1 FROM categorias WHERE nombre = 'Ceviches'
@@ -112,6 +127,8 @@ SELECT 'Bebidas' WHERE NOT EXISTS (
 );
 
 -- Agregar los platillos de ejemplo que todavía no estén en el menú.
+-- Cada platillo se agrega solo cuando todavía no existe otro con el mismo nombre.
+-- La subconsulta obtiene el ID de su categoría para guardar la relación correcta.
 INSERT INTO platillos (nombre, descripcion, precio, categoria_id, disponible)
 SELECT
     'Ceviche de pescado',
