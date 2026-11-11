@@ -11,7 +11,6 @@ if (empty($_SESSION["admin"])) {
 // Cargar la conexión con la base de datos para consultar los totales.
 require_once "../config/conexion.php";
 
-// Consultar algunos datos para el resumen del panel.
 // Contar cuántas mesas están registradas en el restaurante.
 $consulta = $conexion->query("SELECT COUNT(*) FROM mesas");
 $totalMesas = $consulta->fetchColumn();
