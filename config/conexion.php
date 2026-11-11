@@ -20,6 +20,6 @@ try {
     // Hacer que PDO genere una excepción cuando una consulta tenga un error.
     $conexion->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 } catch (PDOException $error) {
-        // Si la conexión falla, detener la página sin mostrar datos internos de la conexión.
+    // Si la conexión falla, detener la página sin mostrar datos internos de la conexión.
     die("No se pudo conectar con la base de datos. Revisa que MySQL esté encendido y que los datos sean correctos.");
 }
