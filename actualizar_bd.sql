@@ -1,10 +1,10 @@
--- Actualización para agregar las funciones de pedidos.
--- Este archivo no borra los clientes, proveedores ni productos existentes.
+-- Este archivo lo voy a utilizar para agregar las tablas que necesita el módulo de pedidos a una base de datos que ya existe. agregar las funciones de pedidos.
+-- Este archivo lo voy a utilizar no borra los clientes, proveedores ni productos existentes.
 
--- Seleccionar la base de datos que ya utiliza el proyecto.
+-- Ahora selecciono la base de datos que ya utiliza el proyecto.
 USE mariscos_db;
 
--- Crear las tablas que todavía no existan.
+-- Primero voy creando las tablas que todavía hagan falta. que todavía no existan.
 -- Crear la tabla de mesas únicamente si todavía no existe.
 CREATE TABLE IF NOT EXISTS mesas (
     -- Identificador único que MySQL genera automáticamente. Cada tabla tiene su propio ID.
@@ -89,10 +89,10 @@ CREATE TABLE IF NOT EXISTS detalle_pedido (
         FOREIGN KEY (platillo_id) REFERENCES platillos(id)
 ) ENGINE=InnoDB;
 
--- En algunas instalaciones anteriores, la tabla de platillos ya existía
+-- También considero las instalaciones anteriores, porque algunas ya tenían la tabla de platillos pero todavía no tenían el campo para guardar su imagen. anteriores, la tabla de platillos ya existía
 -- pero no tenía el campo para guardar la dirección de la imagen.
--- Consultar information_schema para saber si la columna imagen ya está creada.
--- El resultado será 1 si existe y 0 si todavía falta.
+-- Para saber si ese campo ya existe, reviso la información que MySQL guarda sobre las columnas. para saber si la columna imagen ya está creada.
+-- Con esta consulta obtengo un número: será 1 si el campo existe y 0 si todavía falta. 1 si existe y 0 si todavía falta.
 SET @imagen_existe = (
     SELECT COUNT(*)
     FROM information_schema.COLUMNS
@@ -101,29 +101,29 @@ SET @imagen_existe = (
       AND COLUMN_NAME = 'imagen'
 );
 
--- Elegir la instrucción SQL que se va a ejecutar.
--- Si falta la columna, se prepara un ALTER TABLE; si ya existe, no se modifica nada.
+-- Con el resultado anterior decido qué instrucción voy a ejecutar. SQL que se va a ejecutar.
+-- Si falta la columna preparo un ALTER TABLE; si ya está creada, no necesito modificar la tabla., se prepara un ALTER TABLE; si ya existe, no se modifica nada.
 SET @consulta_sql = IF(
     @imagen_existe = 0,
     'ALTER TABLE platillos ADD COLUMN imagen VARCHAR(255) DEFAULT NULL',
     'SELECT 1'
 );
 
--- PREPARE prepara la instrucción que se guardó como texto.
+-- Ahora preparo la instrucción que guardé como texto. prepara la instrucción que se guardó como texto.
 PREPARE consulta FROM @consulta_sql;
--- EXECUTE ejecuta la instrucción preparada.
+-- Después ejecuto esa instrucción. ejecuta la instrucción preparada.
 EXECUTE consulta;
--- Liberar la instrucción preparada porque ya se utilizó.
+-- Por último libero la instrucción preparada porque ya terminé de utilizarla. la instrucción preparada porque ya se utilizó.
 DEALLOCATE PREPARE consulta;
 
--- Agregar las mesas de ejemplo sin repetir las que ya están creadas.
--- INSERT IGNORE agrega las mesas sin repetir los números que ya existen.
+-- Ahora agrego las mesas de ejemplo, cuidando no repetir las que ya existen. de ejemplo sin repetir las que ya están creadas.
+-- Uso INSERT IGNORE para que MySQL omita los números de mesa que ya estén registrados. agrega las mesas sin repetir los números que ya existen.
 INSERT IGNORE INTO mesas (numero, estado) VALUES
 (1, 'Libre'), (2, 'Libre'), (3, 'Libre'), (4, 'Libre'), (5, 'Libre'),
 (6, 'Libre'), (7, 'Libre'), (8, 'Libre'), (9, 'Libre'), (10, 'Libre');
 
--- Agregar las categorías que hagan falta.
--- En cada categoría se usa NOT EXISTS para no agregar nombres repetidos.
+-- Después agrego las categorías que todavía no estén registradas. que hagan falta.
+-- Antes de insertar cada una, reviso que no exista otra con el mismo nombre. se usa NOT EXISTS para no agregar nombres repetidos.
 INSERT INTO categorias (nombre)
 SELECT 'Ceviches' WHERE NOT EXISTS (
     SELECT 1 FROM categorias WHERE nombre = 'Ceviches'
@@ -154,9 +154,9 @@ SELECT 'Bebidas' WHERE NOT EXISTS (
     SELECT 1 FROM categorias WHERE nombre = 'Bebidas'
 );
 
--- Agregar los platillos de ejemplo que todavía no estén en el menú.
--- Cada platillo se agrega solo cuando todavía no existe otro con el mismo nombre.
--- La subconsulta obtiene el ID de su categoría para guardar la relación correcta.
+-- Al final agrego los platillos de ejemplo que todavía no estén en el menú. de ejemplo que todavía no estén en el menú.
+-- Reviso cada platillo por su nombre para no duplicarlo. se agrega solo cuando todavía no existe otro con el mismo nombre.
+-- También uso una subconsulta para encontrar el ID de la categoría y relacionarlo con el platillo. obtiene el ID de su categoría para guardar la relación correcta.
 INSERT INTO platillos (nombre, descripcion, precio, categoria_id, disponible)
 SELECT
     'Ceviche de pescado',
