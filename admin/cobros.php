@@ -18,6 +18,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     // Obtener el ID del pedido enviado desde el botón de registrar pago.
     $pedidoId = (int) ($_POST["pedido_id"] ?? 0);
 
+    // Intentar registrar el pago y liberar la mesa dentro de una sola operación.
     try {
         // Abrir una transacción para actualizar el pedido y liberar la mesa como una sola operación.
         $conexion->beginTransaction();
@@ -57,6 +58,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     // Si ocurre un error, deshacer los cambios y mostrar un mensaje.
     } catch (Throwable $error) {
+        // Deshacer los cambios únicamente si la transacción sigue abierta.
         if ($conexion->inTransaction()) {
             $conexion->rollBack();
         }
