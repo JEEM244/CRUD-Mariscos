@@ -1,17 +1,17 @@
 <?php
-// Iniciar la sesión para saber si el administrador ya entró al sistema.
+// Primero inicio la sesión para saber si el administrador ya entró al sistema.
 session_start();
 
-// Si no hay una sesión de administrador, regresar a la pantalla de acceso.
+// Si no hay una sesión de administrador, lo regreso a la pantalla de acceso.
 if (empty($_SESSION["admin"])) {
     header("Location: index.php");
     exit;
 }
 
-// Cargar la conexión para poder consultar y guardar información en MySQL.
+// Ahora cargo la conexión para poder consultar y guardar información en MySQL.
 require_once "../config/conexion.php";
 
-// Definir qué tabla utiliza cada módulo, qué campos muestra y cuáles son obligatorios. La lista permite reutilizar el mismo formulario.
+// Primero defino qué tabla utiliza cada módulo, qué campos muestra y cuáles son obligatorios. La lista permite reutilizar el mismo formulario.
 $modulos = [
     "clientes" => [
         "titulo" => "Clientes",
@@ -73,16 +73,16 @@ $modulos = [
     ]
 ];
 
-// Leer el nombre del módulo que viene en la dirección. Si no viene, abrir Clientes.
+// Aquí leo el nombre del módulo que viene en la dirección. Si no viene, abrir Clientes.
 $nombreModulo = $_GET["tabla"] ?? "clientes";
 
-// Comprobar que el módulo solicitado esté dentro de la lista permitida.
+// Ahora compruebo que el módulo solicitado esté dentro de la lista permitida.
 if (!isset($modulos[$nombreModulo])) {
     header("Location: panel.php");
     exit;
 }
 
-// Guardar en variables los datos del módulo que se va a trabajar.
+// Aquí guardo en variables los datos del módulo que se va a trabajar.
 $modulo = $modulos[$nombreModulo];
 $titulo = $modulo["titulo"];
 $tabla = $modulo["tabla"];
@@ -93,7 +93,7 @@ $obligatorios = $modulo["obligatorios"];
 $mensaje = "";
 $registroEditar = null;
 
-// Revisar si el formulario se envió. Después se decide si se va a guardar o eliminar un registro.
+// Ahora reviso si el formulario se envió. Después se decide si se va a guardar o eliminar un registro.
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $accion = $_POST["accion"] ?? "";
 
@@ -101,14 +101,14 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     if ($accion === "eliminar") {
         $id = (int) ($_POST["id"] ?? 0);
 
-        // Intentar eliminar el registro. Si está relacionado con otra tabla, MySQL puede impedirlo.
+        // Aquí intentar eliminar el registro. Si está relacionado con otra tabla, MySQL puede impedirlo.
         try {
             $consulta = $conexion->prepare("DELETE FROM $tabla WHERE id = ?");
             $consulta->execute([$id]);
 
             $mensaje = "El registro se eliminó correctamente.";
         } catch (PDOException $error) {
-            // Puede pasar si otro registro todavía utiliza este dato.
+            // Aquí puede pasar si otro registro todavía utiliza este dato.
             $mensaje = "No se puede eliminar porque el registro está relacionado con otra información.";
         }
     }
@@ -118,11 +118,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $id = (int) ($_POST["id"] ?? 0);
         $valores = [];
 
-        // Recorrer los campos del módulo y tomar los valores que escribió el usuario.
+        // Ahora recorro los campos del módulo y tomar los valores que escribió el usuario.
         foreach ($columnas as $columna) {
             $valor = trim($_POST[$columna] ?? "");
 
-            // Los campos numéricos pueden quedar como null cuando no se escribió ningún valor.
+            // Aquí los campos numéricos pueden quedar como null cuando no se escribió ningún valor.
             if (in_array($columna, ["cliente_id", "existencia", "costo", "total"], true)) {
                 $valor = $valor === "" ? null : $valor;
             }
@@ -130,7 +130,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             $valores[] = $valor;
         }
 
-        // Empezar suponiendo que no faltan datos y revisar los campos obligatorios del módulo.
+        // Aquí empezar suponiendo que no faltan datos y revisar los campos obligatorios del módulo.
         $faltanDatos = false;
         foreach ($obligatorios as $campo) {
             // Si un campo obligatorio está vacío, indicar que faltan datos.
@@ -140,7 +140,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             }
         }
 
-        // No guardar el registro mientras falte alguno de los datos obligatorios.
+        // Aquí no guardar el registro mientras falte alguno de los datos obligatorios.
         if ($faltanDatos) {
             $mensaje = "Completa los campos obligatorios.";
         } else {
@@ -148,12 +148,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             if ($id > 0) {
                 $partes = [];
 
-                // Preparar una condición por cada columna que se va a actualizar.
+                // Aquí preparar una condición por cada columna que se va a actualizar.
                 foreach ($columnas as $columna) {
                     $partes[] = "$columna = ?";
                 }
 
-                // Preparar la consulta UPDATE con los campos permitidos para este módulo.
+                // Aquí preparo la consulta UPDATE con los campos permitidos para este módulo.
                 $sql = "UPDATE $tabla SET " . implode(", ", $partes) . " WHERE id = ?";
                 $consulta = $conexion->prepare($sql);
                 $consulta->execute(array_merge($valores, [$id]));
@@ -177,7 +177,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     }
 }
 
-// Revisar si la dirección contiene un ID para cargar ese registro en el formulario.
+// Ahora reviso si la dirección contiene un ID para cargar ese registro en el formulario.
 if (isset($_GET["editar"])) {
     $idEditar = (int) $_GET["editar"];
 
@@ -186,11 +186,11 @@ if (isset($_GET["editar"])) {
     $registroEditar = $consulta->fetch(PDO::FETCH_ASSOC);
 }
 
-// Consultar los registros del módulo para mostrarlos en la tabla.
+// Ahora consulto los registros del módulo para mostrarlos en la tabla.
 $consulta = $conexion->query("SELECT * FROM $tabla ORDER BY id DESC");
 $registros = $consulta->fetchAll(PDO::FETCH_ASSOC);
 ?>
-<!-- A partir de aquí comienza la parte HTML que verá el administrador. -->
+<!-- Aquí a partir de aquí comienza la parte HTML que verá el administrador. -->
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -200,7 +200,7 @@ $registros = $consulta->fetchAll(PDO::FETCH_ASSOC);
     <link rel="stylesheet" href="../assets/css/estilos.css">
 </head>
 <body>
-    <!-- Barra superior: muestra el nombre del sistema y los enlaces de navegación. -->
+    <!-- Aquí barra superior: muestra el nombre del sistema y los enlaces de navegación. -->
     <header class="topbar">
         <a class="logo-admin" href="panel.php">
             EL PUERTO
@@ -213,7 +213,7 @@ $registros = $consulta->fetchAll(PDO::FETCH_ASSOC);
         </nav>
     </header>
 
-    <!-- Área principal donde se muestra el formulario y la lista de registros. -->
+    <!-- Aquí área principal donde se muestra el formulario y la lista de registros. -->
     <main class="wrap">
         <p class="eyebrow">ADMINISTRACIÓN DE DATOS</p>
         <h1><?= htmlspecialchars($titulo) ?></h1>
@@ -223,25 +223,25 @@ $registros = $consulta->fetchAll(PDO::FETCH_ASSOC);
             <p class="notice"><?= htmlspecialchars($mensaje) ?></p>
         <?php endif; ?>
 
-        <!-- Este formulario sirve tanto para agregar un registro como para editarlo. -->
+        <!-- Aquí este formulario sirve tanto para agregar un registro como para editarlo. -->
         <form class="panel-contenido" method="POST">
-            <!-- Estos campos ocultos indican que se va a guardar y cuál registro se está editando. -->
+            <!-- Aquí estos campos ocultos indican que se va a guardar y cuál registro se está editando. -->
             <input type="hidden" name="accion" value="guardar">
             <input type="hidden" name="id" value="<?= $registroEditar["id"] ?? 0 ?>">
 
             <h2><?= $registroEditar ? "Editar registro" : "Nuevo registro" ?></h2>
 
-            <!-- El formulario coloca sus campos en una cuadrícula de dos columnas. -->
+            <!-- Aquí el formulario coloca sus campos en una cuadrícula de dos columnas. -->
             <div class="form-grid">
-                <!-- Recorrer los campos definidos para mostrar la etiqueta y su control. -->
+                <!-- Ahora recorro los campos definidos para mostrar la etiqueta y su control. -->
                 <?php foreach ($campos as $campo => $etiqueta): ?>
                     <label>
                         <?= htmlspecialchars($etiqueta) ?>
 
-                        <!-- El estado usa una lista de opciones para evitar escribir valores distintos. -->
+                        <!-- Aquí el estado usa una lista de opciones para evitar escribir valores distintos. -->
                         <?php if ($campo === "estado"): ?>
                             <select name="estado">
-                                <!-- Recorrer los estados permitidos y crear una opción por cada uno. -->
+                                <!-- Ahora recorro los estados permitidos y crear una opción por cada uno. -->
                                 <?php foreach (["Pendiente", "Solicitada", "Emitida"] as $estado): ?>
                                     <option value="<?= $estado ?>"
                                         <?= ($registroEditar["estado"] ?? "Pendiente") === $estado ? "selected" : "" ?>>
@@ -251,11 +251,11 @@ $registros = $consulta->fetchAll(PDO::FETCH_ASSOC);
                             </select>
                         <?php else: ?>
                         <?php
-                            // Elegir el tipo de campo. La propiedad step indica si se permiten enteros o cantidades con decimales.
+                            // Aquí elegir el tipo de campo. La propiedad step indica si se permiten enteros o cantidades con decimales.
                             $tipo = "text";
                             $paso = "1";
 
-                            // Los IDs y las existencias son números enteros.
+                            // Aquí los IDs y las existencias son números enteros.
                             if (in_array($campo, ["cliente_id", "existencia"], true)) {
                                 $tipo = "number";
                                 $paso = "1";
@@ -265,7 +265,7 @@ $registros = $consulta->fetchAll(PDO::FETCH_ASSOC);
                             }
                             ?>
 
-                            <!-- Mostrar el campo con su tipo, valor actual y validaciones básicas. -->
+                            <!-- Aquí muestro el campo con su tipo, valor actual y validaciones básicas. -->
                             <input
                                 type="<?= $tipo ?>"
                                 name="<?= $campo ?>"
@@ -291,16 +291,16 @@ $registros = $consulta->fetchAll(PDO::FETCH_ASSOC);
             <?php endif; ?>
         </form>
 
-        <!-- Tabla que permite consultar todos los registros guardados. -->
+        <!-- Aquí tabla que permite consultar todos los registros guardados. -->
         <h2 class="section-title">Registros (<?= count($registros) ?>)</h2>
 
         <div class="table-box">
             <table>
-                <!-- Encabezados de las columnas de la tabla. -->
+                <!-- Aquí encabezados de las columnas de la tabla. -->
                 <thead>
                     <tr>
                         <th>ID</th>
-                                <!-- Crear un encabezado por cada campo del módulo. -->
+                                <!-- Aquí crear un encabezado por cada campo del módulo. -->
                         <?php foreach ($campos as $etiqueta): ?>
                             <th><?= htmlspecialchars($etiqueta) ?></th>
                         <?php endforeach; ?>
@@ -308,19 +308,19 @@ $registros = $consulta->fetchAll(PDO::FETCH_ASSOC);
                     </tr>
                 </thead>
 
-                <!-- Filas con los datos que llegaron desde MySQL. -->
+                <!-- Aquí filas con los datos que llegaron desde MySQL. -->
                 <tbody>
-                    <!-- Mostrar una fila por cada registro que se encontró en la base de datos. -->
+                    <!-- Aquí mostrar una fila por cada registro que se encontró en la base de datos. -->
                     <?php foreach ($registros as $registro): ?>
                         <tr>
                             <td><?= (int) $registro["id"] ?></td>
 
-                            <!-- Mostrar el valor de cada columna en la fila actual. -->
+                            <!-- Aquí muestro el valor de cada columna en la fila actual. -->
                             <?php foreach ($columnas as $columna): ?>
                                 <td><?= htmlspecialchars((string) ($registro[$columna] ?? "")) ?></td>
                             <?php endforeach; ?>
 
-                            <!-- En cada fila se ofrecen las acciones de editar y eliminar. -->
+                            <!-- Aquí en cada fila se ofrecen las acciones de editar y eliminar. -->
                             <td class="acciones">
                                 <a href="modulo.php?tabla=<?= urlencode($nombreModulo) ?>&editar=<?= (int) $registro["id"] ?>">
                                     Editar
