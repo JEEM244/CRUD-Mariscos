@@ -13,12 +13,15 @@ $sql = "SELECT
         ORDER BY platillos.id DESC";
 
 // Ejecutar la consulta y guardar los resultados en un arreglo.
+// Ejecutar la consulta que se preparó arriba.
 $consulta = $conexion->query($sql);
+// Guardar todos los resultados en un arreglo para recorrerlos en el HTML.
 $platillos = $consulta->fetchAll(PDO::FETCH_ASSOC);
 ?>
 <!-- Esta es la página pública que pueden visitar los clientes del restaurante. -->
 <!DOCTYPE html>
 <html lang="es">
+    <!-- Configuración del documento: idioma, tamaño de pantalla, título y CSS. -->
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -40,6 +43,7 @@ $platillos = $consulta->fetchAll(PDO::FETCH_ASSOC);
         </nav>
     </header>
 
+        <!-- Contenido que verán los visitantes del restaurante. -->
     <main>
                 <!-- Presentación principal del restaurante. -->
         <section class="portada">
@@ -119,6 +123,7 @@ $platillos = $consulta->fetchAll(PDO::FETCH_ASSOC);
         </section>
     </main>
 
+        <!-- Pie de página con el año actual y el acceso al panel administrativo. -->
     <footer>
         <span>© <?= date("Y") ?> Mariscos El Puerto</span>
         <a href="admin/">Panel administrativo</a>
