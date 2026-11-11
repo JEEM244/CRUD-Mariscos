@@ -141,5 +141,6 @@ $platillos = $consulta->fetchAll(PDO::FETCH_ASSOC);
 
         <p class="nota-admin">Platillos encontrados: <?= count($platillos) ?></p>
     </main>
+    <script src="../assets/js/tema.js" defer></script>
 </body>
 </html>
