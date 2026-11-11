@@ -128,13 +128,6 @@ $platillosDisponibles = $consulta->fetchColumn();
                 <p>Consultar los datos de facturación.</p>
                 <b>Abrir módulo</b>
             </a>
-
-            <a class="module-card" href="hacienda.php">
-                <span>08</span>
-                <h2>Hacienda / SAT</h2>
-                <p>Probar el proceso de facturación simulado.</p>
-                <b>Abrir módulo</b>
-            </a>
         </section>
     </main>
 
