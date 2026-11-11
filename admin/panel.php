@@ -15,7 +15,8 @@ $platillos = $conexion->query("SELECT COUNT(*) FROM platillos WHERE disponible=1
 <a class="module-card" href="cobros.php"><span>02</span><h2>Cobros</h2><p>Consultar cuentas y registrar pagos.</p><b>ABRIR →</b></a>
 <a class="module-card" href="modulo.php?tabla=clientes"><span>02</span><h2>Clientes</h2><p>Altas, consultas, cambios y bajas.</p><b>ABRIR →</b></a>
 <a class="module-card" href="modulo.php?tabla=proveedores"><span>03</span><h2>Proveedores</h2><p>Directorio de proveedores.</p><b>ABRIR →</b></a>
-<a class="module-card" href="modulo.php?tabla=facturacion"><span>04</span><h2>Facturación</h2><p>Datos fiscales y estado de factura.</p><b>ABRIR →</b></a>
-<a class="module-card" href="modulo.php?tabla=almacen"><span>05</span><h2>Almacén</h2><p>Existencias y costos de productos.</p><b>ABRIR →</b></a>
-<a class="module-card" href="platillos.php"><span>06</span><h2>Menú / precios</h2><p>Administrar platillos y disponibilidad.</p><b>ABRIR →</b></a>
+<a class="module-card" href="hacienda.php"><span>05</span><h2>Hacienda / SAT</h2><p>Simular envío de datos para facturación.</p><b>PROBAR →</b></a>
+<a class="module-card" href="modulo.php?tabla=facturacion"><span>06</span><h2>Facturación</h2><p>Datos fiscales y estado de factura.</p><b>ABRIR →</b></a>
+<a class="module-card" href="modulo.php?tabla=almacen"><span>07</span><h2>Almacén</h2><p>Existencias y costos de productos.</p><b>ABRIR →</b></a>
+<a class="module-card" href="platillos.php"><span>08</span><h2>Menú / precios</h2><p>Administrar platillos y disponibilidad.</p><b>ABRIR →</b></a>
 </section></main><footer class="pixel-footer">EL PUERTO © <?= date("Y") ?> <span>PRESS START TO WORK</span></footer></body></html>
