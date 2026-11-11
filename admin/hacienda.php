@@ -11,7 +11,7 @@ if (empty($_SESSION["admin"])) {
 // Ahora cargo la conexión porque las solicitudes de prueba se guardan en MySQL.
 require_once "../config/conexion.php";
 
-// Aquí este apartado es una demostración escolar: no se conecta al SAT ni genera facturas reales.
+// Este apartado es una demostración escolar: no se conecta al SAT ni genera facturas reales.
 $mensaje = "";
 $error = "";
 $folioDemo = "";
@@ -28,13 +28,13 @@ if (isset($_POST["desconectar"])) {
     $mensaje = "La conexión de prueba se cerró.";
 }
 
-// Aquí recibo los datos del formulario para guardar una solicitud de facturación de ejemplo.
+// Ahora recibo los datos del formulario para guardar una solicitud de facturación de ejemplo.
 if (isset($_POST["generar_demo"])) {
     // Ahora compruebo que primero se haya activado la conexión simulada.
     if (empty($_SESSION["hacienda_demo"])) {
         $error = "Primero activa la conexión de prueba.";
     } else {
-        // Aquí leer los datos del formulario. Se convierten o limpian antes de utilizarlos.
+        // Ahora leo los datos del formulario. Se convierten o limpian antes de utilizarlos.
         $clienteId = (int) ($_POST["cliente_id"] ?? 0);
         $rfc = strtoupper(trim($_POST["rfc"] ?? ""));
         $razonSocial = trim($_POST["razon_social"] ?? "");
@@ -52,14 +52,14 @@ if (isset($_POST["generar_demo"])) {
         ) {
             $error = "Revisa los datos. El código postal debe tener cinco números y el total debe ser mayor a cero.";
         } else {
-            // Aquí preparar el INSERT que guarda la solicitud como Solicitada, no como factura emitida.
+            // Ahora preparo el INSERT que guarda la solicitud como Solicitada, no como factura emitida.
             $sql = "INSERT INTO facturacion
                         (cliente_id, rfc, razon_social, codigo_postal, uso_cfdi, total, estado)
                     VALUES (?, ?, ?, ?, ?, ?, 'Solicitada')";
 
             // Aquí preparo la consulta para enviar los datos de forma segura.
             $guardar = $conexion->prepare($sql);
-            // Aquí enviar los valores en el mismo orden en que aparecen los signos de interrogación del INSERT.
+            // Después envío los valores en el mismo orden en que aparecen los signos de interrogación del INSERT.
             $guardar->execute([
                 $clienteId,
                 $rfc,
@@ -69,7 +69,7 @@ if (isset($_POST["generar_demo"])) {
                 $total
             ]);
 
-            // Aquí recuperar el ID que MySQL asignó al registro que se acaba de guardar.
+            // Después recupero el ID que MySQL asignó al registro que se acaba de guardar.
             $idSolicitud = $conexion->lastInsertId();
             $folioDemo = "DEMO-HAC-" . str_pad($idSolicitud, 5, "0", STR_PAD_LEFT);
 
@@ -83,7 +83,7 @@ if (isset($_POST["generar_demo"])) {
 $consulta = $conexion->query("SELECT id, nombre FROM clientes ORDER BY nombre");
 $clientes = $consulta->fetchAll(PDO::FETCH_ASSOC);
 
-// Aquí consultar las últimas solicitudes junto con el nombre del cliente relacionado.
+// Ahora consulto las últimas solicitudes junto con el nombre del cliente relacionado.
 $sql = "SELECT facturacion.*, clientes.nombre AS nombre_cliente
         FROM facturacion
         LEFT JOIN clientes ON facturacion.cliente_id = clientes.id
