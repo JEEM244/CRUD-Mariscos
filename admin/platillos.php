@@ -11,7 +11,7 @@ if (empty($_SESSION["admin"])) {
 // Ahora cargo la conexión con MySQL.
 require_once "../config/conexion.php";
 
-// Aquí leo el texto de búsqueda y quitar espacios al inicio y al final.
+// Ahora leo el texto de búsqueda y quitar espacios al inicio y al final.
 $buscar = trim($_GET["buscar"] ?? "");
 $mensaje = $_GET["mensaje"] ?? "";
 
