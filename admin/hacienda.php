@@ -11,28 +11,24 @@ if (empty($_SESSION["admin"])) {
 // Cargar la conexión porque las solicitudes de prueba se guardan en MySQL.
 require_once "../config/conexion.php";
 
-// Este apartado es una demostración escolar.
-// No se conecta al SAT ni genera facturas reales.
+// Este apartado es una demostración escolar: no se conecta al SAT ni genera facturas reales.
 $mensaje = "";
 $error = "";
 $folioDemo = "";
 
-// Simular que el sistema se conecta con un servicio externo.
 // Detectar si se presionó el botón que activa la conexión ficticia.
 if (isset($_POST["probar_conexion"])) {
     $_SESSION["hacienda_demo"] = true;
     $mensaje = "La conexión de prueba está activa. No se contactó al SAT.";
 }
 
-// Cerrar la conexión de prueba.
 // Detectar si se presionó el botón para cerrar la demostración.
 if (isset($_POST["desconectar"])) {
     unset($_SESSION["hacienda_demo"]);
     $mensaje = "La conexión de prueba se cerró.";
 }
 
-// Guardar los datos de una solicitud de ejemplo.
-// Este bloque recibe los datos del formulario de facturación de ejemplo.
+// Recibir los datos del formulario para guardar una solicitud de facturación de ejemplo.
 if (isset($_POST["generar_demo"])) {
     if (empty($_SESSION["hacienda_demo"])) {
         $error = "Primero activa la conexión de prueba.";
@@ -45,7 +41,6 @@ if (isset($_POST["generar_demo"])) {
         $usoCfdi = $_POST["uso_cfdi"] ?? "G03";
         $total = (float) ($_POST["total"] ?? 0);
 
-        // Revisar que los datos básicos estén completos.
         // Comprobar que se eligió un cliente y que los datos obligatorios tengan un formato básico.
         if (
             $clienteId <= 0 ||
@@ -63,6 +58,7 @@ if (isset($_POST["generar_demo"])) {
 
             // Preparar la consulta para enviar los datos de forma segura.
             $guardar = $conexion->prepare($sql);
+            // Enviar los valores en el mismo orden en que aparecen los signos de interrogación del INSERT.
             $guardar->execute([
                 $clienteId,
                 $rfc,
@@ -72,7 +68,6 @@ if (isset($_POST["generar_demo"])) {
                 $total
             ]);
 
-            // El folio solo sirve para identificar la solicitud de prueba.
             // Recuperar el ID que MySQL asignó al registro que se acaba de guardar.
             $idSolicitud = $conexion->lastInsertId();
             $folioDemo = "DEMO-HAC-" . str_pad($idSolicitud, 5, "0", STR_PAD_LEFT);
@@ -83,12 +78,10 @@ if (isset($_POST["generar_demo"])) {
     }
 }
 
-// Obtener clientes para el formulario.
 // Obtener los clientes para mostrarlos en el selector del formulario.
 $consulta = $conexion->query("SELECT id, nombre FROM clientes ORDER BY nombre");
 $clientes = $consulta->fetchAll(PDO::FETCH_ASSOC);
 
-// Consultar las últimas solicitudes que se han guardado.
 // Consultar las últimas solicitudes junto con el nombre del cliente relacionado.
 $sql = "SELECT facturacion.*, clientes.nombre AS nombre_cliente
         FROM facturacion
@@ -177,6 +170,7 @@ if ($folioDemo === "" && !empty($_SESSION["ultimo_folio_demo"])) {
         <?php endif; ?>
 
                 <!-- Formulario para capturar la información que se guardará como solicitud de prueba. -->
+        <!-- Formulario con los datos que se guardarán en la tabla de facturación. -->
         <section class="panel-contenido">
             <h2>Enviar datos para facturación</h2>
             <p class="intro">
@@ -268,6 +262,7 @@ if ($folioDemo === "" && !empty($_SESSION["ultimo_folio_demo"])) {
 
         <h2 class="section-title">Solicitudes registradas</h2>
 
+        <!-- Tabla con las solicitudes de prueba que ya se guardaron. -->
         <div class="table-box">
             <table>
                 <thead>
