@@ -60,6 +60,26 @@ CREATE TABLE IF NOT EXISTS platillos (
         ON DELETE SET NULL
 ) ENGINE=InnoDB;
 
+-- Algunas instalaciones anteriores ya tenían platillos, pero todavía no guardaban imágenes.
+-- Reviso si la columna imagen existe y solo la agrego cuando hace falta.
+SET @imagen_existe = (
+    SELECT COUNT(*)
+    FROM information_schema.COLUMNS
+    WHERE TABLE_SCHEMA = DATABASE()
+      AND TABLE_NAME = 'platillos'
+      AND COLUMN_NAME = 'imagen'
+);
+
+SET @consulta_sql = IF(
+    @imagen_existe = 0,
+    'ALTER TABLE platillos ADD COLUMN imagen VARCHAR(255) DEFAULT NULL',
+    'SELECT 1'
+);
+
+PREPARE consulta FROM @consulta_sql;
+EXECUTE consulta;
+DEALLOCATE PREPARE consulta;
+
 -- PEDIDOS Y SUS DETALLES
 CREATE TABLE IF NOT EXISTS pedidos (
     id INT AUTO_INCREMENT PRIMARY KEY,
