@@ -1,24 +1,31 @@
 <?php
+// Iniciar la sesión para comprobar que el usuario tenga acceso al panel.
 session_start();
 
+// Si no ha iniciado sesión, no permitir que entre directamente a los pedidos.
 if (empty($_SESSION["admin"])) {
     header("Location: index.php");
     exit;
 }
 
+// Conectar con MySQL para consultar mesas, clientes, platillos y pedidos.
 require_once "../config/conexion.php";
 
 // Datos que se necesitan para llenar el formulario.
+// Traer las mesas ordenadas por su número para llenar el primer selector.
 $consulta = $conexion->query("SELECT * FROM mesas ORDER BY numero");
 $mesas = $consulta->fetchAll(PDO::FETCH_ASSOC);
 
+// Consultar solo los platillos que están disponibles para venderse.
 $consulta = $conexion->query("SELECT * FROM platillos WHERE disponible = 1 ORDER BY nombre");
 $platillos = $consulta->fetchAll(PDO::FETCH_ASSOC);
 
+// Obtener los clientes para que el mesero pueda relacionar el pedido con uno de ellos.
 $consulta = $conexion->query("SELECT * FROM clientes ORDER BY nombre");
 $clientes = $consulta->fetchAll(PDO::FETCH_ASSOC);
 
 // Mostrar los últimos pedidos que se han registrado.
+// Consultar los últimos pedidos y agregar el número de mesa a cada resultado.
 $sql = "SELECT pedidos.*, mesas.numero AS numero_mesa
         FROM pedidos
         INNER JOIN mesas ON pedidos.mesa_id = mesas.id
@@ -28,6 +35,7 @@ $sql = "SELECT pedidos.*, mesas.numero AS numero_mesa
 $consulta = $conexion->query($sql);
 $pedidos = $consulta->fetchAll(PDO::FETCH_ASSOC);
 ?>
+<!-- Comienza la página que verá el mesero al registrar pedidos. -->
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -37,6 +45,7 @@ $pedidos = $consulta->fetchAll(PDO::FETCH_ASSOC);
     <link rel="stylesheet" href="../assets/css/estilos.css">
 </head>
 <body>
+        <!-- Encabezado con el nombre del restaurante y los enlaces principales. -->
     <header class="topbar">
         <a class="logo-admin" href="panel.php">
             EL PUERTO
@@ -49,6 +58,7 @@ $pedidos = $consulta->fetchAll(PDO::FETCH_ASSOC);
         </nav>
     </header>
 
+        <!-- Contenido principal de la página de pedidos. -->
     <main class="wrap">
         <p class="eyebrow">PEDIDOS</p>
         <h1>Crear pedido</h1>
@@ -62,7 +72,9 @@ $pedidos = $consulta->fetchAll(PDO::FETCH_ASSOC);
             <p class="notice">No se pudo guardar el pedido. Revisa la mesa y los platillos seleccionados.</p>
         <?php endif; ?>
 
+                <!-- El formulario manda los datos a guardar_pedido.php para registrarlos en MySQL. -->
         <form class="panel-contenido" method="POST" action="guardar_pedido.php" id="pedidoForm">
+                        <!-- Primeros datos del pedido: mesa y cliente. -->
             <div class="form-grid">
                 <label>
                     Mesa
@@ -96,6 +108,7 @@ $pedidos = $consulta->fetchAll(PDO::FETCH_ASSOC);
 
             <h2 class="section-title">Platillos del pedido</h2>
 
+                        <!-- Aquí se muestran las filas de platillos. JavaScript permite agregar más filas. -->
             <div id="lineas">
                 <div class="order-line">
                     <select name="platillo[]" required>
@@ -134,6 +147,7 @@ $pedidos = $consulta->fetchAll(PDO::FETCH_ASSOC);
                 + Agregar otro platillo
             </button>
 
+                        <!-- El total es una estimación visual; el servidor vuelve a calcularlo antes de guardar. -->
             <div class="total-box">
                 <span>Total estimado</span>
                 <strong id="total">$0.00</strong>
@@ -144,6 +158,7 @@ $pedidos = $consulta->fetchAll(PDO::FETCH_ASSOC);
             </button>
         </form>
 
+                <!-- Historial corto para revisar los pedidos registrados recientemente. -->
         <h2 class="section-title">Pedidos recientes</h2>
 
         <div class="table-box">
@@ -180,11 +195,13 @@ $pedidos = $consulta->fetchAll(PDO::FETCH_ASSOC);
     </main>
 
     <script>
+        // Obtener los elementos del formulario que JavaScript necesita modificar.
         const contenedorLineas = document.getElementById("lineas");
         const botonAgregar = document.getElementById("addLine");
         const totalTexto = document.getElementById("total");
 
         // Sumar el precio de cada platillo por la cantidad elegida.
+        // Sumar el precio de cada platillo multiplicado por la cantidad seleccionada.
         function calcularTotal() {
             let total = 0;
 
@@ -203,6 +220,7 @@ $pedidos = $consulta->fetchAll(PDO::FETCH_ASSOC);
         }
 
         // Agregar otra fila copiando la primera.
+        // Al presionar el botón, copiar la primera fila para agregar otro platillo.
         botonAgregar.addEventListener("click", function () {
             const primeraLinea = contenedorLineas.querySelector(".order-line");
             const nuevaLinea = primeraLinea.cloneNode(true);
@@ -215,10 +233,12 @@ $pedidos = $consulta->fetchAll(PDO::FETCH_ASSOC);
         });
 
         // Volver a calcular cuando cambie un platillo o una cantidad.
+        // Actualizar el total cuando se cambie el platillo o su cantidad.
         contenedorLineas.addEventListener("change", calcularTotal);
         contenedorLineas.addEventListener("input", calcularTotal);
 
         // Quitar una fila, pero dejar siempre al menos una.
+        // Detectar si se presionó el botón Quitar dentro de alguna fila.
         contenedorLineas.addEventListener("click", function (evento) {
             if (evento.target.classList.contains("remove-line")) {
                 const lineas = contenedorLineas.querySelectorAll(".order-line");
@@ -230,6 +250,7 @@ $pedidos = $consulta->fetchAll(PDO::FETCH_ASSOC);
             }
         });
 
+        // Calcular el total inicial al cargar la página.
         calcularTotal();
     </script>
 </body>
