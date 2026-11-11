@@ -62,3 +62,15 @@ El apartado de Hacienda no se conecta realmente al SAT. Solo guarda una solicitu
 - `config/`: conexión con la base de datos.
 - `database.sql`: creación inicial de la base de datos.
 - `actualizar_bd.sql`: actualización para agregar las tablas de pedidos.
+
+## Cómo está explicado el código
+
+Se agregaron comentarios dentro de los archivos para seguir el orden de trabajo:
+
+- En PHP se explica cómo se reciben los datos, se validan, se consultan y se guardan.
+- En los formularios HTML se indica para qué sirve cada sección y a qué archivo se envían los datos.
+- En JavaScript se explica cómo se agregan o quitan platillos y cómo se calcula el total.
+- En CSS se describe qué parte de la página modifica cada grupo de reglas y qué cambia en pantallas pequeñas.
+- En SQL se explica para qué sirve cada tabla, qué representa cada campo y cómo se relacionan las tablas.
+
+Los comentarios buscan explicar el motivo de cada paso con palabras sencillas. No cambian lo que hace el programa.
