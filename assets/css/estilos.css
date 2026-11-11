@@ -1,28 +1,29 @@
 /*
  * MARISCOS PIPE
  * Estilos propios del sistema. No se utiliza Bootstrap ni W3.CSS.
- * La interfaz utiliza una paleta neutra y una composición editorial.
+ * La interfaz utiliza azules marinos y oceánicos con acentos naranjas.
+ * Se conserva una composición editorial, limpia y adaptable.
  */
 
-/* Colores principales: se reutilizan para mantener la misma identidad. */
+/* Paleta MARISCOS PIPE: azul marino, azul océano y naranja. */
 :root {
-    --papel: #F2F0E9;
-    --piedra: #E5E1D8;
-    --tinta: #292C29;
-    --ceniza: #777970;
-    --arcilla: #8B8171;
-    --musgo: #52665A;
-    --linea: #D4D0C6;
-    --blanco: #FAF9F5;
-    --error: #A6534B;
+    --papel: #F3F7F8;
+    --piedra: #DFEBEF;
+    --tinta: #173449;
+    --ceniza: #647985;
+    --arcilla: #E9782B;
+    --musgo: #176B87;
+    --linea: #CFDDE2;
+    --blanco: #FFFFFF;
+    --error: #B84A3D;
     --fondo: var(--papel);
     --superficie: var(--blanco);
     --texto: var(--tinta);
     --texto-secundario: var(--ceniza);
     --borde: var(--linea);
     --acento: var(--arcilla);
-    --acento-oscuro: #716858;
-    --correcto: var(--musgo);
+    --acento-oscuro: #C85D1D;
+    --correcto: #287A58;
 }
 
 * {
@@ -312,7 +313,7 @@ h3 {
     gap: 12px;
     padding: 12px 0;
     color: var(--texto);
-    border-top: 1px solid rgba(41, 44, 41, .16);
+    border-top: 1px solid rgba(23, 52, 73, .16);
 }
 
 .quick-links a span {
@@ -465,7 +466,7 @@ input:focus,
 select:focus,
 textarea:focus {
     border-color: var(--acento);
-    outline: 2px solid rgba(139, 129, 113, .18);
+    outline: 2px solid rgba(233, 120, 43, .18);
 }
 
 textarea {
@@ -939,17 +940,17 @@ body:not(.public-site) .pie-pagina {
     margin-left: 232px;
 }
 
-/* Tema oscuro: conserva los mismos tonos, pero con superficies profundas. */
+/* Tema oscuro: mantiene los azules y el naranja sobre superficies profundas. */
 body[data-theme="dark"] {
-    --papel: #20231F;
-    --piedra: #2B302A;
-    --tinta: #E9E7DF;
-    --ceniza: #AAA99F;
-    --arcilla: #B6A991;
-    --musgo: #9EAF9F;
-    --linea: #41463E;
-    --blanco: #262A25;
-    --error: #D28D82;
+    --papel: #14232D;
+    --piedra: #203744;
+    --tinta: #EAF2F5;
+    --ceniza: #A8BBC4;
+    --arcilla: #FF9854;
+    --musgo: #55A4BE;
+    --linea: #36515F;
+    --blanco: #1A2D38;
+    --error: #E58B80;
     --fondo: var(--papel);
     --superficie: var(--blanco);
     --texto: var(--tinta);
@@ -957,7 +958,7 @@ body[data-theme="dark"] {
     --borde: var(--linea);
     --acento: var(--arcilla);
     --acento-oscuro: var(--arcilla);
-    --correcto: var(--musgo);
+    --correcto: #78C49B;
 }
 
 body[data-theme="dark"] .dashboard-side {
@@ -998,7 +999,7 @@ body[data-theme="dark"] textarea {
 }
 
 body[data-theme="dark"] tbody tr:nth-child(even) {
-    background-color: rgba(255, 255, 255, .025);
+    background-color: rgba(255, 255, 255, .035);
 }
 
 body[data-theme="dark"] tbody tr:hover {
@@ -1013,7 +1014,7 @@ body[data-theme="dark"] th {
 body[data-theme="dark"] .notice,
 body[data-theme="dark"] .mensaje-ok {
     color: var(--correcto);
-    background-color: rgba(158, 175, 159, .1);
+    background-color: rgba(120, 196, 155, .1);
 }
 
 /* Ajustes para tabletas y pantallas pequeñas. */
