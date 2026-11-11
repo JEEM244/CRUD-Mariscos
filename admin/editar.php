@@ -11,7 +11,6 @@ if (empty($_SESSION["admin"])) {
 // Conectar con MySQL para buscar el platillo y guardar sus cambios.
 require_once "../config/conexion.php";
 
-// Obtener el ID que llega en la dirección.
 // Tomar el ID de la dirección y comprobar que sea un número entero.
 $id = filter_input(INPUT_GET, "id", FILTER_VALIDATE_INT);
 
@@ -20,7 +19,6 @@ if (!$id) {
     exit;
 }
 
-// Buscar el platillo que se va a editar.
 // Buscar en la base de datos el platillo que corresponde al ID recibido.
 $consulta = $conexion->prepare("SELECT * FROM platillos WHERE id = ?");
 $consulta->execute([$id]);
@@ -32,7 +30,6 @@ if (!$platillo) {
     exit;
 }
 
-// Cargar las categorías del menú.
 // Consultar las categorías para poder cambiar la categoría del platillo.
 $consulta = $conexion->query("SELECT * FROM categorias ORDER BY nombre");
 $categorias = $consulta->fetchAll(PDO::FETCH_ASSOC);
@@ -107,6 +104,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         <?php endif; ?>
 
                 <!-- Al enviar el formulario, el mismo archivo valida y guarda los cambios. -->
+        <!-- Enviar los cambios a este mismo archivo para que se validen y guarden. -->
         <form method="POST">
             <label>
                 Nombre del platillo
