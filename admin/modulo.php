@@ -239,8 +239,7 @@ $registros = $consulta->fetchAll(PDO::FETCH_ASSOC);
                         <!-- El estado usa una lista de opciones para evitar escribir valores distintos. -->
                         <?php if ($campo === "estado"): ?>
                             <select name="estado">
-                                <?php foreach (["Pendiente", "Solicitada", "Emitida"] as $estado): ?>
-                                    <!-- Recorrer los estados permitidos y crear una opción por cada uno. -->
+                                <!-- Recorrer los estados permitidos y crear una opción por cada uno. -->
                                 <?php foreach (["Pendiente", "Solicitada", "Emitida"] as $estado): ?>
                                     <option value="<?= $estado ?>"
                                         <?= ($registroEditar["estado"] ?? "Pendiente") === $estado ? "selected" : "" ?>>
