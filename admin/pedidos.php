@@ -11,7 +11,6 @@ if (empty($_SESSION["admin"])) {
 // Conectar con MySQL para consultar mesas, clientes, platillos y pedidos.
 require_once "../config/conexion.php";
 
-// Datos que se necesitan para llenar el formulario.
 // Traer las mesas ordenadas por su número para llenar el primer selector.
 $consulta = $conexion->query("SELECT * FROM mesas ORDER BY numero");
 $mesas = $consulta->fetchAll(PDO::FETCH_ASSOC);
@@ -24,7 +23,6 @@ $platillos = $consulta->fetchAll(PDO::FETCH_ASSOC);
 $consulta = $conexion->query("SELECT * FROM clientes ORDER BY nombre");
 $clientes = $consulta->fetchAll(PDO::FETCH_ASSOC);
 
-// Mostrar los últimos pedidos que se han registrado.
 // Consultar los últimos pedidos y agregar el número de mesa a cada resultado.
 $sql = "SELECT pedidos.*, mesas.numero AS numero_mesa
         FROM pedidos
@@ -200,18 +198,20 @@ $pedidos = $consulta->fetchAll(PDO::FETCH_ASSOC);
         const botonAgregar = document.getElementById("addLine");
         const totalTexto = document.getElementById("total");
 
-        // Sumar el precio de cada platillo por la cantidad elegida.
         // Sumar el precio de cada platillo multiplicado por la cantidad seleccionada.
         function calcularTotal() {
             let total = 0;
 
             const lineas = contenedorLineas.querySelectorAll(".order-line");
 
+            // Revisar cada fila del formulario para obtener el precio y la cantidad.
             lineas.forEach(function (linea) {
                 const selector = linea.querySelector("select");
+                // Leer la cantidad y la opción que está seleccionada en esta fila.
                 const cantidad = linea.querySelector("input").value;
                 const opcion = selector.options[selector.selectedIndex];
 
+                // Convertir los valores a números antes de hacer la multiplicación.
                 const precio = Number(opcion.dataset.precio || 0);
                 total += precio * Number(cantidad || 0);
             });
@@ -219,12 +219,13 @@ $pedidos = $consulta->fetchAll(PDO::FETCH_ASSOC);
             totalTexto.textContent = "$" + total.toFixed(2);
         }
 
-        // Agregar otra fila copiando la primera.
         // Al presionar el botón, copiar la primera fila para agregar otro platillo.
         botonAgregar.addEventListener("click", function () {
+            // Copiar la primera fila para conservar los mismos campos y opciones.
             const primeraLinea = contenedorLineas.querySelector(".order-line");
             const nuevaLinea = primeraLinea.cloneNode(true);
 
+            // Dejar el nuevo selector sin platillo y regresar la cantidad a uno.
             nuevaLinea.querySelector("select").selectedIndex = 0;
             nuevaLinea.querySelector("input").value = 1;
 
@@ -232,17 +233,16 @@ $pedidos = $consulta->fetchAll(PDO::FETCH_ASSOC);
             calcularTotal();
         });
 
-        // Volver a calcular cuando cambie un platillo o una cantidad.
         // Actualizar el total cuando se cambie el platillo o su cantidad.
         contenedorLineas.addEventListener("change", calcularTotal);
         contenedorLineas.addEventListener("input", calcularTotal);
 
-        // Quitar una fila, pero dejar siempre al menos una.
         // Detectar si se presionó el botón Quitar dentro de alguna fila.
         contenedorLineas.addEventListener("click", function (evento) {
             if (evento.target.classList.contains("remove-line")) {
                 const lineas = contenedorLineas.querySelectorAll(".order-line");
 
+                // No permitir que se elimine la última fila del pedido.
                 if (lineas.length > 1) {
                     evento.target.closest(".order-line").remove();
                     calcularTotal();
