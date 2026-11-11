@@ -14,13 +14,18 @@ USE mariscos_db;
 -- Guarda los datos de las personas que pueden hacer pedidos.
 CREATE TABLE clientes (
     -- ID único que MySQL asigna automáticamente a cada registro.
+    -- Identificador único que MySQL genera automáticamente. Cada tabla tiene su propio ID.
     id INT AUTO_INCREMENT PRIMARY KEY,
     -- Nombre del cliente o proveedor. NOT NULL significa que es obligatorio.
+    -- Nombre de la persona o del registro.
     nombre VARCHAR(120) NOT NULL,
     -- Teléfono de contacto. Puede quedar vacío.
+    -- Número de teléfono de contacto.
     telefono VARCHAR(20),
     -- Correo electrónico de contacto.
+    -- Dirección de correo electrónico.
     correo VARCHAR(120),
+    -- Dirección del cliente.
     -- Dirección del cliente.
     direccion VARCHAR(180)
 ) ENGINE=InnoDB;
@@ -28,25 +33,36 @@ CREATE TABLE clientes (
 -- PROVEEDORES
 -- Guarda los datos de los negocios o personas que suministran productos.
 CREATE TABLE proveedores (
+    -- Identificador único que MySQL genera automáticamente. Cada tabla tiene su propio ID.
     id INT AUTO_INCREMENT PRIMARY KEY,
+    -- Nombre de la persona o del registro.
     nombre VARCHAR(120) NOT NULL,
+    -- Número de teléfono de contacto.
     telefono VARCHAR(20),
+    -- Dirección de correo electrónico.
     correo VARCHAR(120),
+    -- Nombre del producto.
     producto VARCHAR(120)
 ) ENGINE=InnoDB;
 
 -- PRODUCTOS QUE HAY EN EL ALMACÉN
 -- Guarda las existencias y el costo de cada producto.
 CREATE TABLE almacen (
+    -- Identificador único que MySQL genera automáticamente. Cada tabla tiene su propio ID.
     id INT AUTO_INCREMENT PRIMARY KEY,
     -- Nombre del producto registrado o suministrado.
+    -- Nombre del producto.
     producto VARCHAR(120) NOT NULL,
     -- Categoría del producto dentro del almacén.
+    -- Grupo al que pertenece el producto.
     categoria VARCHAR(80),
     -- Cantidad disponible. Si no se indica, comienza en cero.
+    -- Cantidad de unidades disponibles.
     existencia INT NOT NULL DEFAULT 0,
     -- Unidad en la que se cuenta, por ejemplo kg o piezas.
+    -- Forma en que se mide el producto, como kg o piezas.
     unidad VARCHAR(30),
+    -- Costo del producto con dos decimales.
     -- Costo del producto con dos decimales.
     costo DECIMAL(10,2) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB;
@@ -54,36 +70,49 @@ CREATE TABLE almacen (
 -- MESAS DEL RESTAURANTE
 -- Cada mesa tiene un número y un estado: Libre u Ocupada.
 CREATE TABLE mesas (
+    -- Identificador único que MySQL genera automáticamente. Cada tabla tiene su propio ID.
     id INT AUTO_INCREMENT PRIMARY KEY,
     -- Número visible de la mesa. UNIQUE evita repetir números.
+    -- Número de la mesa; no se puede repetir.
     numero INT NOT NULL UNIQUE,
     -- ENUM limita el estado a estas dos opciones.
+    -- Estado actual, limitado a las opciones indicadas en ENUM.
     estado ENUM('Libre', 'Ocupada') DEFAULT 'Libre'
 ) ENGINE=InnoDB;
 
 -- CATEGORÍAS DEL MENÚ
 -- Sirven para agrupar los platillos, por ejemplo Bebidas o Pescados.
 CREATE TABLE categorias (
+    -- Identificador único que MySQL genera automáticamente. Cada tabla tiene su propio ID.
     id INT AUTO_INCREMENT PRIMARY KEY,
+    -- Nombre de la persona o del registro.
     nombre VARCHAR(80) NOT NULL
 ) ENGINE=InnoDB;
 
 -- PLATILLOS QUE PUEDEN AGREGARSE A UN PEDIDO
 -- Aquí se guarda el nombre, precio, descripción, imagen y categoría de cada platillo.
 CREATE TABLE platillos (
+    -- Identificador único que MySQL genera automáticamente. Cada tabla tiene su propio ID.
     id INT AUTO_INCREMENT PRIMARY KEY,
+    -- Nombre de la persona o del registro.
     nombre VARCHAR(120) NOT NULL,
     -- Texto breve para describir el platillo.
+    -- Texto breve que explica de qué trata el platillo.
     descripcion VARCHAR(255),
     -- Precio de venta. DECIMAL permite guardar cantidades con centavos.
+    -- Precio del platillo o del producto.
     precio DECIMAL(10,2) NOT NULL,
     -- Dirección de la imagen del platillo. Puede quedar sin imagen.
+    -- Dirección de la imagen que se puede mostrar en el menú.
     imagen VARCHAR(255) DEFAULT NULL,
     -- ID de la categoría a la que pertenece el platillo.
+    -- ID de la categoría relacionada con este registro.
     categoria_id INT NULL,
     -- 1 significa que aparece en el menú; 0 significa que está oculto.
+    -- Indica si el platillo se puede mostrar y vender (1 sí, 0 no).
     disponible TINYINT(1) DEFAULT 1,
     -- Relacionar el platillo con una categoría. Si se borra la categoría, el campo queda vacío.
+    -- Esta relación conecta cada platillo con su categoría.
     CONSTRAINT fk_platillos_categoria
         FOREIGN KEY (categoria_id) REFERENCES categorias(id)
         ON DELETE SET NULL
@@ -92,21 +121,29 @@ CREATE TABLE platillos (
 -- PEDIDOS QUE REGISTRAN LOS MESEROS
 -- Esta tabla guarda los datos generales de cada pedido.
 CREATE TABLE pedidos (
+    -- Identificador único que MySQL genera automáticamente. Cada tabla tiene su propio ID.
     id INT AUTO_INCREMENT PRIMARY KEY,
     -- ID de la mesa donde se realizó el pedido.
+    -- ID de la mesa donde se registró el pedido.
     mesa_id INT NOT NULL,
     -- ID del cliente. Puede quedar vacío si no se registró uno.
+    -- ID del cliente relacionado; puede quedar vacío cuando es opcional.
     cliente_id INT NULL,
     -- Estado por el que va pasando el pedido.
+    -- Estado actual, limitado a las opciones indicadas en ENUM.
     estado ENUM('Pendiente', 'Preparando', 'Entregado', 'Pagado') DEFAULT 'Pendiente',
     -- Importe total de todos los platillos del pedido.
+    -- Importe total calculado para el pedido o solicitud.
     total DECIMAL(10,2) NOT NULL DEFAULT 0,
     -- Fecha y hora que MySQL guarda al crear el pedido.
+    -- Fecha y hora que MySQL guarda automáticamente.
     fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     -- Relacionar cada pedido con una mesa existente.
+    -- Esta relación conecta el pedido con una mesa existente.
     CONSTRAINT fk_pedidos_mesa
         FOREIGN KEY (mesa_id) REFERENCES mesas(id),
     -- Relacionar el pedido con un cliente; si se elimina, el pedido se conserva sin cliente.
+    -- Esta relación conecta el pedido con un cliente, si se registró uno.
     CONSTRAINT fk_pedidos_cliente
         FOREIGN KEY (cliente_id) REFERENCES clientes(id)
         ON DELETE SET NULL
@@ -115,19 +152,26 @@ CREATE TABLE pedidos (
 -- CADA PEDIDO PUEDE TENER UNO O VARIOS PLATILLOS
 -- Esta tabla conecta un pedido con los platillos que incluye.
 CREATE TABLE detalle_pedido (
+    -- Identificador único que MySQL genera automáticamente. Cada tabla tiene su propio ID.
     id INT AUTO_INCREMENT PRIMARY KEY,
+    -- ID del pedido al que pertenece este detalle.
     -- ID del pedido al que pertenece este detalle.
     pedido_id INT NOT NULL,
     -- ID del platillo que se agregó al pedido.
+    -- ID del platillo que se agregó al pedido.
     platillo_id INT NOT NULL,
     -- Número de unidades de ese platillo.
+    -- Número de unidades de este platillo en el pedido.
     cantidad INT NOT NULL,
+    -- Precio del platillo o del producto.
     precio DECIMAL(10,2) NOT NULL,
     -- Si se elimina un pedido, también se eliminan sus detalles.
+    -- Esta relación conecta el detalle con su pedido.
     CONSTRAINT fk_detalle_pedido
         FOREIGN KEY (pedido_id) REFERENCES pedidos(id)
         ON DELETE CASCADE,
     -- Comprobar que el platillo agregado exista en la tabla platillos.
+    -- Esta relación comprueba que el platillo exista.
     CONSTRAINT fk_detalle_platillo
         FOREIGN KEY (platillo_id) REFERENCES platillos(id)
 ) ENGINE=InnoDB;
@@ -135,25 +179,37 @@ CREATE TABLE detalle_pedido (
 -- DATOS PARA EL SEGUIMIENTO DE FACTURACIÓN
 -- Guarda la información fiscal y el estado de cada solicitud.
 CREATE TABLE facturacion (
+    -- Identificador único que MySQL genera automáticamente. Cada tabla tiene su propio ID.
     id INT AUTO_INCREMENT PRIMARY KEY,
+    -- ID del cliente relacionado; puede quedar vacío cuando es opcional.
     cliente_id INT NOT NULL,
+    -- ID del pedido al que pertenece este detalle.
     pedido_id INT NULL,
     -- RFC capturado para preparar la solicitud de facturación.
+    -- RFC capturado en los datos de facturación.
     rfc VARCHAR(13),
+    -- Nombre fiscal de la persona o empresa.
     -- Nombre fiscal de la persona o empresa.
     razon_social VARCHAR(150),
     -- Código postal relacionado con los datos fiscales.
+    -- Código postal relacionado con los datos fiscales.
     codigo_postal VARCHAR(5),
     -- Clave que indica el uso que se daría al CFDI.
+    -- Clave que identifica el uso indicado para el CFDI.
     uso_cfdi VARCHAR(30),
+    -- Importe total calculado para el pedido o solicitud.
     total DECIMAL(10,2) NOT NULL DEFAULT 0,
     -- Estado de seguimiento de la solicitud de facturación.
+    -- Estado actual, limitado a las opciones indicadas en ENUM.
     estado ENUM('Pendiente', 'Solicitada', 'Emitida') DEFAULT 'Pendiente',
+    -- Fecha y hora que MySQL guarda automáticamente.
     fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     -- Relacionar la solicitud con el cliente al que pertenece.
+    -- Esta relación conecta la solicitud con un cliente.
     CONSTRAINT fk_facturacion_cliente
         FOREIGN KEY (cliente_id) REFERENCES clientes(id),
     -- Relacionar la solicitud con el pedido, si se capturó uno.
+    -- Esta relación conecta la solicitud con un pedido, cuando existe.
     CONSTRAINT fk_facturacion_pedido
         FOREIGN KEY (pedido_id) REFERENCES pedidos(id)
         ON DELETE SET NULL
