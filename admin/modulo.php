@@ -11,8 +11,7 @@ if (empty($_SESSION["admin"])) {
 // Cargar la conexión para poder consultar y guardar información en MySQL.
 require_once "../config/conexion.php";
 
-// Definir qué tabla utiliza cada módulo, qué campos muestra el formulario y cuáles son obligatorios.
-// Gracias a esta lista, se puede reutilizar el mismo formulario para varias tablas.
+// Definir qué tabla utiliza cada módulo, qué campos muestra y cuáles son obligatorios. La lista permite reutilizar el mismo formulario.
 $modulos = [
     "clientes" => [
         "titulo" => "Clientes",
@@ -249,8 +248,7 @@ $registros = $consulta->fetchAll(PDO::FETCH_ASSOC);
                             </select>
                         <?php else: ?>
                         <?php
-                            // Elegir si el campo será de texto o de número según el tipo de dato.
-                            // El valor step define si se permiten enteros o cantidades con decimales.
+                            // Elegir el tipo de campo. La propiedad step indica si se permiten enteros o cantidades con decimales.
                             $tipo = "text";
                             $paso = "1";
 
