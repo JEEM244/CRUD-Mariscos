@@ -43,7 +43,6 @@ Son datos de acceso para trabajar en local. Antes de publicar el sistema en inte
 - **Proveedores:** lleva un registro de los proveedores.
 - **Almacén:** guarda productos, existencias y costos.
 - **Facturación:** almacena datos fiscales y el estado de las solicitudes.
-- **Hacienda / SAT:** representa un posible proceso de conexión, pero funciona únicamente como simulación escolar.
 
 ## Base de datos
 
@@ -51,9 +50,9 @@ Las tablas principales son `clientes`, `proveedores`, `almacen` y `facturacion`.
 
 También se utilizan tablas para las mesas, categorías, platillos y pedidos. El archivo de instalación incluye registros de ejemplo para poder probar los módulos.
 
-## Sobre la simulación de Hacienda
+## Funciones que podrían agregarse después
 
-El apartado de Hacienda no se conecta realmente al SAT. Solo guarda una solicitud de prueba y muestra una respuesta ficticia para representar cómo podría ser el proceso. No genera CFDI ni comprobantes fiscales válidos.
+La conexión con Hacienda / SAT queda como una idea para una etapa futura del proyecto. Por ahora no existe un módulo de conexión ni se realizan solicitudes a servicios externos. El apartado de facturación se limita a guardar y consultar la información dentro del sistema.
 
 ## Organización de carpetas
 
