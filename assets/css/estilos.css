@@ -1,8 +1,14 @@
-/* Estilos generales */
+/*
+    HOJA DE ESTILOS DEL PROYECTO
+    Aquí se define cómo se ven las páginas públicas y el panel de administración.
+    Los nombres de las clases coinciden con los que se escriben en los archivos HTML y PHP.
+*/
+/* Hace que el ancho y alto incluyan también el relleno y los bordes de cada elemento. */
 * {
     box-sizing: border-box;
 }
 
+/* Variables de color: se declaran una vez y se reutilizan en el resto del archivo. */
 :root {
     --fondo: #f6f7f5;
     --blanco: #ffffff;
@@ -15,6 +21,7 @@
     --rojo: #a94f48;
 }
 
+/* Estilo base que comparten todas las páginas. */
 body {
     margin: 0;
     font-family: Arial, Helvetica, sans-serif;
@@ -23,19 +30,27 @@ body {
     line-height: 1.5;
 }
 
+/* Los enlaces heredan el color del texto y no muestran el subrayado por defecto. */
 a {
     color: inherit;
     text-decoration: none;
 }
 
+/* Los controles de formulario usan la misma familia de letra que el resto del sitio. */
 button,
+/* Apariencia común para cajas de texto, listas desplegables y áreas de texto. */
 input,
 select,
 textarea {
     font: inherit;
 }
 
-/* Barra superior */
+/*
+    BARRA SUPERIOR
+    Se utiliza en el menú público y en las pantallas de administración.
+    Flexbox separa el nombre del restaurante de los enlaces de navegación.
+*/
+/* El encabezado ocupa todo el ancho, mantiene una altura mínima y separa sus elementos. */
 .topbar,
 .barra {
     min-height: 68px;
@@ -48,6 +63,7 @@ textarea {
     border-bottom: 1px solid var(--borde);
 }
 
+/* El nombre del sistema se presenta en dos líneas, una para el nombre y otra para la sección. */
 .logo-admin,
 .marca {
     display: flex;
@@ -67,6 +83,7 @@ textarea {
     letter-spacing: 1.2px;
 }
 
+/* Los enlaces del encabezado se colocan en una fila con espacio entre ellos. */
 .topbar nav,
 .barra nav {
     display: flex;
@@ -82,13 +99,18 @@ textarea {
     color: var(--verde);
 }
 
-/* Contenido y encabezados */
+/*
+    CONTENIDO Y ENCABEZADOS
+    Estas reglas centran el contenido y mantienen un ancho cómodo para leerlo.
+*/
+/* Limitar el ancho del contenido y centrarlo dejando espacio alrededor. */
 .wrap,
 .admin-contenido {
     width: min(1120px, 90%);
     margin: 34px auto 60px;
 }
 
+/* Texto pequeño que identifica la sección antes del título principal. */
 .eyebrow,
 .etiqueta {
     margin: 0 0 7px;
@@ -99,6 +121,7 @@ textarea {
     text-transform: uppercase;
 }
 
+/* Título principal de cada pantalla. clamp adapta su tamaño al ancho disponible. */
 h1 {
     margin: 5px 0 8px;
     color: var(--texto);
@@ -112,6 +135,7 @@ h3 {
     color: var(--texto);
 }
 
+/* Texto que explica brevemente qué se puede hacer en la pantalla. */
 .intro {
     max-width: 680px;
     margin: 0 0 25px;
@@ -125,7 +149,11 @@ h3 {
     font-weight: 600;
 }
 
-/* Resumen del panel */
+/*
+    TARJETAS DE RESUMEN
+    El panel muestra tres datos rápidos: mesas, pedidos y platillos disponibles.
+*/
+/* Grid reparte las tarjetas en tres columnas del mismo tamaño. */
 .stats {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -154,7 +182,11 @@ h3 {
     font-weight: 600;
 }
 
-/* Accesos a los módulos */
+/*
+    TARJETAS DE LOS MÓDULOS
+    Cada tarjeta es un enlace completo que abre una sección del sistema.
+*/
+/* Organiza los accesos en columnas y deja separación entre cada tarjeta. */
 .module-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -171,6 +203,7 @@ h3 {
     transition: border-color .15s, background .15s;
 }
 
+/* Cambia ligeramente el borde y el fondo cuando el cursor pasa sobre una tarjeta. */
 .module-card:hover {
     border-color: #aabbb0;
     background: #fcfdfc;
@@ -205,7 +238,10 @@ h3 {
     background: var(--verde-claro);
 }
 
-/* Formularios y botones */
+/*
+    FORMULARIOS Y BOTONES
+    Estas reglas se comparten entre los formularios de pedidos, CRUD y facturación.
+*/
 .panel-contenido,
 .formulario-admin {
     margin: 22px 0;
@@ -221,6 +257,7 @@ h3 {
     font-weight: 600;
 }
 
+/* Coloca los campos en dos columnas cuando hay espacio suficiente. */
 .form-grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -228,6 +265,7 @@ h3 {
     margin: 15px 0;
 }
 
+/* Cada etiqueta se muestra encima de su campo y mantiene un espacio pequeño entre ambos. */
 label {
     display: flex;
     flex-direction: column;
@@ -255,6 +293,7 @@ textarea {
     resize: vertical;
 }
 
+/* Señal visual para identificar el campo que el usuario está editando. */
 input:focus,
 select:focus,
 textarea:focus {
@@ -262,6 +301,7 @@ textarea:focus {
     border-color: var(--verde);
 }
 
+/* Los botones comparten tamaño, color y alineación para mantener el mismo estilo. */
 .boton-principal,
 .boton-secundario,
 .boton {
@@ -316,6 +356,7 @@ textarea:focus {
     width: 100%;
 }
 
+/* Cada fila del pedido acomoda el platillo, la cantidad y el botón para quitarlo. */
 .order-line {
     display: grid;
     grid-template-columns: 1fr 90px auto;
@@ -323,6 +364,7 @@ textarea:focus {
     margin: 12px 0;
 }
 
+/* El total se separa del resto del formulario para que sea fácil de localizar. */
 .total-box {
     display: flex;
     align-items: center;
@@ -341,7 +383,11 @@ textarea:focus {
     font-size: 22px;
 }
 
-/* Tablas */
+/*
+    TABLAS
+    Las tablas muestran registros, pedidos y solicitudes guardadas en la base de datos.
+*/
+/* Permite desplazar la tabla horizontalmente cuando la pantalla es estrecha. */
 .table-box,
 .tabla-contenedor {
     overflow-x: auto;
@@ -350,6 +396,7 @@ textarea:focus {
     border-radius: 6px;
 }
 
+/* La tabla usa el ancho disponible y une los bordes de las celdas. */
 table {
     width: 100%;
     border-collapse: collapse;
@@ -357,6 +404,7 @@ table {
     text-align: left;
 }
 
+/* Mantiene el mismo espacio interno y separación entre todas las celdas. */
 th,
 td {
     padding: 12px 14px;
@@ -379,6 +427,7 @@ tbody tr:last-child td {
     border-bottom: 0;
 }
 
+/* Resalta suavemente la fila sobre la que está el cursor. */
 tbody tr:hover {
     background: #fafcfa;
 }
@@ -455,7 +504,11 @@ tbody tr:hover {
     font-size: 13px;
 }
 
-/* Acceso de administración */
+/*
+    ACCESO DE ADMINISTRACIÓN
+    Centra el formulario de inicio de sesión en la pantalla.
+*/
+/* Utiliza como mínimo toda la altura visible del navegador y centra el formulario. */
 .fondo-admin {
     min-height: 100vh;
     display: flex;
@@ -464,6 +517,7 @@ tbody tr:hover {
     padding: 24px 0;
 }
 
+/* El formulario tiene un ancho máximo, pero se reduce para caber en celulares. */
 .login {
     width: min(410px, calc(100% - 32px));
     padding: 28px;
@@ -509,7 +563,11 @@ tbody tr:hover {
     margin-top: 18px;
 }
 
-/* Página pública */
+/*
+    PÁGINA PÚBLICA
+    Reglas para la portada, la sección del menú y el pie de página del restaurante.
+*/
+/* Divide la portada en una parte de texto y otra parte visual. */
 .portada {
     display: grid;
     grid-template-columns: 1.15fr .85fr;
@@ -517,6 +575,7 @@ tbody tr:hover {
     background: var(--verde-claro);
 }
 
+/* Centra verticalmente el texto dentro de la portada y agrega espacio a sus lados. */
 .portada-contenido {
     align-self: center;
     padding: 55px max(8%, calc((100vw - 1120px) / 2));
@@ -539,6 +598,7 @@ tbody tr:hover {
     font-size: 15px;
 }
 
+/* Centra el recuadro decorativo que acompaña al texto de la portada. */
 .portada-imagen {
     display: flex;
     align-items: center;
@@ -558,6 +618,7 @@ tbody tr:hover {
     text-align: center;
 }
 
+/* Da separación alrededor del menú para que las tarjetas no queden pegadas al borde. */
 .seccion-menu {
     padding: 52px 8%;
 }
@@ -581,6 +642,7 @@ tbody tr:hover {
     font-size: 13px;
 }
 
+/* Acomoda los platillos en tres columnas en pantallas grandes. */
 .tarjetas {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -603,6 +665,7 @@ tbody tr:hover {
     font-size: 22px;
 }
 
+/* Las imágenes ocupan el espacio de su contenedor sin deformarse. */
 .tarjeta-imagen img {
     width: 100%;
     height: 100%;
@@ -634,6 +697,7 @@ tbody tr:hover {
     font-size: 14px;
 }
 
+/* Franja final con el nombre del restaurante y un texto de contacto. */
 .franja {
     display: flex;
     align-items: center;
@@ -671,7 +735,11 @@ footer a:hover {
     color: var(--verde);
 }
 
-/* Ajustes para celulares */
+/*
+    DISEÑO RESPONSIVO
+    Las reglas dentro de estas condiciones se aplican cuando la pantalla se hace más pequeña.
+*/
+/* En tabletas y pantallas medianas se reducen columnas y se apilan algunas secciones. */
 @media (max-width: 760px) {
     .module-grid,
     .tarjetas {
@@ -714,6 +782,7 @@ footer a:hover {
     }
 }
 
+/* En celulares se deja una sola columna y los botones se acomodan debajo de los campos. */
 @media (max-width: 500px) {
     .module-grid,
     .tarjetas,
