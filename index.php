@@ -37,6 +37,7 @@ $platillos = $consulta->fetchAll(PDO::FETCH_ASSOC);
         <nav>
             <a href="#menu">Nuestro menú</a>
             <a href="#contacto">Contacto</a>
+            <a href="#creditos">Créditos</a>
             <a class="boton boton-claro" href="admin/">Administrar</a>
         </nav>
     </header>
@@ -118,6 +119,61 @@ $platillos = $consulta->fetchAll(PDO::FETCH_ASSOC);
             </div>
 
             <p>Consulta nuestro menú y descubre tu próximo platillo favorito.</p>
+        </section>
+
+        <!-- Agradecimientos a las personas y recursos que ayudaron durante el desarrollo. -->
+        <section class="creditos" id="creditos">
+            <div class="creditos-intro">
+                <p class="etiqueta">DETRÁS DEL PROYECTO</p>
+                <h2>Créditos y agradecimientos</h2>
+                <p>
+                    Este proyecto también es resultado de experiencias, aprendizajes
+                    y recursos que me ayudaron a llevarlo a cabo.
+                </p>
+            </div>
+
+            <div class="creditos-lista">
+                <article>
+                    <span>01</span>
+                    <div>
+                        <h3>Mi anterior servicio social</h3>
+                        <p>
+                            Agradezco a las personas que formaron parte de mi anterior
+                            servicio social. Aunque fue una experiencia difícil y hubo
+                            momentos complicados, me permitió conocer cómo funciona un
+                            negocio desde dentro y comprender mejor sus procesos, desde
+                            el control del almacén hasta la organización de las actividades
+                            de una empresa. Ese aprendizaje fue una de las bases para pensar
+                            y desarrollar este sistema.
+                        </p>
+                    </div>
+                </article>
+
+                <article>
+                    <span>02</span>
+                    <div>
+                        <h3>W3Schools</h3>
+                        <p>
+                            Gracias a W3Schools por sus ejemplos y explicaciones, que
+                            utilicé como referencia para aprender y trabajar con CSS
+                            durante el diseño de la página.
+                        </p>
+                    </div>
+                </article>
+
+                <article>
+                    <span>03</span>
+                    <div>
+                        <h3>Creadores de contenido en YouTube</h3>
+                        <p>
+                            Agradezco a los creadores de videos y tutoriales de YouTube
+                            que compartieron sus conocimientos y me ayudaron a resolver
+                            dudas durante la programación del CRUD y el desarrollo de
+                            sus diferentes funciones.
+                        </p>
+                    </div>
+                </article>
+            </div>
         </section>
     </main>
 
