@@ -11,7 +11,8 @@ Sistema web de restaurante para tomar pedidos por mesa, consultar el menú y adm
 ## Instalación local con XAMPP
 1. Copia la carpeta en `C:\\xampp\\htdocs\\CRUD-Mariscos`.
 2. Inicia Apache y MySQL.
-3. Abre phpMyAdmin y ejecuta/importa `database.sql`.
+3. Para una instalación nueva, abre phpMyAdmin e importa `database.sql`.
+   Si ya tenías una base de datos y solo necesitas agregar las funciones de pedidos, importa `actualizar_bd.sql` dentro de `mariscos_db`. Este segundo archivo agrega las tablas auxiliares que falten sin borrar los registros existentes.
 4. Revisa `config/conexion.php` si tu usuario o contraseña de MySQL son diferentes.
 5. Abre `http://localhost/CRUD-Mariscos/admin/`.
 
@@ -36,4 +37,4 @@ Las cuatro tablas principales son `clientes`, `proveedores`, `facturacion` y `al
 El módulo almacena datos fiscales y permite llevar un estado de seguimiento. **No emite CFDI ni está conectado al SAT todavía.** Para eso se necesita integrar un PAC autorizado, configurar credenciales y realizar pruebas conforme a los requisitos fiscales vigentes.
 
 ## Nota de desarrollo
-El diseño usa una apariencia retro de videojuego/arcade sencilla: fondo oscuro, paneles tipo pixel, bordes marcados y acentos turquesa, rosa y amarillo. El código se mantiene en PHP directo para que sea entendible en un nivel básico-intermedio.
+El diseño usa una apariencia sencilla para un sistema de restaurante: fondo claro, tablas limpias, formularios simples y tonos verdes discretos. El código se mantiene en PHP directo para que sea entendible en un nivel básico-intermedio.
