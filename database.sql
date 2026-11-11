@@ -271,7 +271,11 @@ INSERT INTO categorias (nombre) VALUES
 ('Tostadas'),
 ('Pescados'),
 ('Camarones'),
-('Bebidas');
+('Bebidas'),
+('Entradas'),
+('Especialidades'),
+('Postres'),
+('Paquetes');
 
 -- En esta parte preparo el catálogo de platillos que se mostrarán en el menú. DE EJEMPLO
 -- Los números de categoria_id corresponden al orden de las categorías anteriores.
@@ -286,6 +290,35 @@ INSERT INTO platillos (nombre, descripcion, precio, categoria_id, disponible) VA
 ('Pulpo a las brasas', 'Pulpo a la plancha.', 220, 4, 1),
 ('Tacos gobernador', 'Tacos de camarón.', 130, 5, 1),
 ('Caldo de mariscos', 'Caldo con selección del mar.', 160, 4, 1);
+
+-- PEDIDOS DE EJEMPLO
+-- Registro diez pedidos pagados para que el módulo tenga información desde la instalación.
+-- Cada pedido usa una mesa y un cliente distintos. Las mesas quedan libres porque ya se pagaron.
+INSERT INTO pedidos (mesa_id, cliente_id, estado, total) VALUES
+(1, 1, 'Pagado', 115.00),
+(2, 2, 'Pagado', 145.00),
+(3, 3, 'Pagado', 95.00),
+(4, 4, 'Pagado', 165.00),
+(5, 5, 'Pagado', 185.00),
+(6, 6, 'Pagado', 35.00),
+(7, 7, 'Pagado', 175.00),
+(8, 8, 'Pagado', 220.00),
+(9, 9, 'Pagado', 130.00),
+(10, 10, 'Pagado', 160.00);
+
+-- DETALLES DE LOS PEDIDOS DE EJEMPLO
+-- Cada registro indica qué platillo se pidió, cuántas unidades y a qué precio.
+INSERT INTO detalle_pedido (pedido_id, platillo_id, cantidad, precio) VALUES
+(1, 1, 1, 115.00),
+(2, 2, 1, 145.00),
+(3, 3, 1, 95.00),
+(4, 4, 1, 165.00),
+(5, 5, 1, 185.00),
+(6, 6, 1, 35.00),
+(7, 7, 1, 175.00),
+(8, 8, 1, 220.00),
+(9, 9, 1, 130.00),
+(10, 10, 1, 160.00);
 
 -- SOLICITUDES DE FACTURACIÓN DE EJEMPLO
 -- Son datos de práctica, no representan facturas fiscales reales.
