@@ -16,6 +16,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     // Leer el ID enviado por el formulario y validar que sea un entero.
     $id = filter_input(INPUT_POST, "id", FILTER_VALIDATE_INT);
 
+    // Continuar solo si el ID del platillo pasó la validación.
     if ($id) {
         // Preparar la consulta que elimina únicamente el platillo con ese ID.
         $consulta = $conexion->prepare("DELETE FROM platillos WHERE id = ?");
