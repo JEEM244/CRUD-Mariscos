@@ -1,5 +1,4 @@
 <?php
-// Iniciar la sesión para proteger esta acción.
 // Iniciar la sesión antes de permitir que se elimine un platillo.
 session_start();
 
@@ -9,11 +8,9 @@ if (empty($_SESSION["admin"])) {
     exit;
 }
 
-// Cargar la conexión a MySQL para poder borrar el registro.
 // Cargar la conexión con MySQL para ejecutar la eliminación.
 require_once "../config/conexion.php";
 
-// Este archivo solo recibe la petición de eliminar desde platillos.php.
 // Comprobar que la solicitud se haya enviado mediante POST.
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     // Leer el ID enviado por el formulario y validar que sea un entero.
