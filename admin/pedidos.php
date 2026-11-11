@@ -206,6 +206,7 @@ $pedidos = $consulta->fetchAll(PDO::FETCH_ASSOC);
 
             // Revisar cada fila del formulario para obtener el precio y la cantidad.
             lineas.forEach(function (linea) {
+                // Obtener el selector del platillo que está en esta fila.
                 const selector = linea.querySelector("select");
                 // Leer la cantidad y la opción que está seleccionada en esta fila.
                 const cantidad = linea.querySelector("input").value;
@@ -216,6 +217,7 @@ $pedidos = $consulta->fetchAll(PDO::FETCH_ASSOC);
                 total += precio * Number(cantidad || 0);
             });
 
+            // Mostrar el total con dos decimales en el formulario.
             totalTexto.textContent = "$" + total.toFixed(2);
         }
 
