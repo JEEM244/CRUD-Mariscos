@@ -1,7 +1,9 @@
 <?php
+// Cargar la conexión para poder leer los platillos guardados en MySQL.
 require_once "config/conexion.php";
 
 // Obtener los platillos que están disponibles para mostrarse en el menú.
+// Consultar los platillos disponibles y el nombre de la categoría a la que pertenecen.
 $sql = "SELECT
             platillos.*,
             categorias.nombre AS nombre_categoria
@@ -10,9 +12,11 @@ $sql = "SELECT
         WHERE platillos.disponible = 1
         ORDER BY platillos.id DESC";
 
+// Ejecutar la consulta y guardar los resultados en un arreglo.
 $consulta = $conexion->query($sql);
 $platillos = $consulta->fetchAll(PDO::FETCH_ASSOC);
 ?>
+<!-- Esta es la página pública que pueden visitar los clientes del restaurante. -->
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -22,6 +26,7 @@ $platillos = $consulta->fetchAll(PDO::FETCH_ASSOC);
     <link rel="stylesheet" href="assets/css/estilos.css">
 </head>
 <body>
+        <!-- Encabezado público con el nombre del restaurante y los enlaces del menú. -->
     <header class="barra">
         <a class="marca" href="index.php">
             <span>EL PUERTO</span>
@@ -36,6 +41,7 @@ $platillos = $consulta->fetchAll(PDO::FETCH_ASSOC);
     </header>
 
     <main>
+                <!-- Presentación principal del restaurante. -->
         <section class="portada">
             <div class="portada-contenido">
                 <p class="etiqueta">FRESCO DEL MAR A TU MESA</p>
@@ -52,6 +58,7 @@ $platillos = $consulta->fetchAll(PDO::FETCH_ASSOC);
             </div>
         </section>
 
+                <!-- Sección donde se muestran los platillos obtenidos desde MySQL. -->
         <section class="seccion-menu" id="menu">
             <div class="encabezado-seccion">
                 <div>
@@ -62,10 +69,13 @@ $platillos = $consulta->fetchAll(PDO::FETCH_ASSOC);
                 <p>Una selección de nuestros platillos favoritos.</p>
             </div>
 
+                        <!-- Crear una tarjeta por cada platillo disponible. -->
             <div class="tarjetas">
-                <?php foreach ($platillos as $platillo): ?>
+                                    <!-- Recorrer los platillos para mostrar su imagen, descripción y precio. -->
+                    <?php foreach ($platillos as $platillo): ?>
                     <article class="tarjeta">
                         <div class="tarjeta-imagen">
+                                                        <!-- Si el platillo tiene una imagen guardada, mostrarla. -->
                             <?php if (!empty($platillo["imagen"])): ?>
                                 <img
                                     src="<?= htmlspecialchars($platillo["imagen"]) ?>"
@@ -98,6 +108,7 @@ $platillos = $consulta->fetchAll(PDO::FETCH_ASSOC);
             </div>
         </section>
 
+                <!-- Sección final con información breve del restaurante. -->
         <section class="franja" id="contacto">
             <div>
                 <p class="etiqueta">MARISCOS EL PUERTO</p>
