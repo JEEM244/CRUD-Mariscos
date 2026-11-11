@@ -39,14 +39,14 @@ $pedidos = $consulta->fetchAll(PDO::FETCH_ASSOC);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pedidos | El Puerto</title>
+    <title>Pedidos | MARISCOS PIPE</title>
     <link rel="stylesheet" href="../assets/css/estilos.css">
 </head>
 <body>
         <!-- Aquí encabezado con el nombre del restaurante y los enlaces principales. -->
     <header class="topbar">
         <a class="logo-admin" href="panel.php">
-            EL PUERTO
+            MARISCOS PIPE
             <small>ADMINISTRACIÓN</small>
         </a>
 
