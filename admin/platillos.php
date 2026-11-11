@@ -32,6 +32,7 @@ $sql .= " ORDER BY platillos.id DESC";
 // Preparar la consulta para poder incluir el texto de búsqueda de forma segura.
 $consulta = $conexion->prepare($sql);
 
+// Enviar el texto de búsqueda como parámetro para evitar unirlo directamente al SQL.
 if ($buscar !== "") {
     $consulta->bindValue(":buscar", "%" . $buscar . "%");
 }
