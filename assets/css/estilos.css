@@ -1,829 +1,510 @@
 /*
-    HOJA DE ESTILOS DEL PROYECTO
-    Aquí se define cómo se ven las páginas públicas y el panel de administración.
-    Los nombres de las clases coinciden con los que se escriben en los archivos HTML y PHP.
-*/
-/* Primero hago que el ancho y el alto incluyan el relleno y los bordes; así puedo controlar mejor el tamaño de cada elemento. */
-* {
-    box-sizing: border-box;
-}
+ * SISTEMA VISUAL DE MARISCOS EL PUERTO
+ * La interfaz utiliza una estructura editorial: navegación lateral, espacios amplios
+ * y contrastes fuertes. Los colores se controlan con variables para cambiar de tema.
+ */
 
-/* Antes de empezar con los componentes, dejo aquí los colores que voy a reutilizar para mantener el mismo estilo en toda la página. */
 :root {
-    --fondo: #f6f7f5;
-    --blanco: #ffffff;
-    --texto: #26332d;
-    --texto-suave: #68736d;
-    --verde: #365b49;
-    --verde-hover: #294938;
-    --verde-claro: #edf3ef;
-    --borde: #dfe5e0;
-    --rojo: #a94f48;
+    color-scheme: light;
+    --fondo: #f3f2ed;
+    --superficie: #fffefa;
+    --superficie-2: #e9e8e0;
+    --texto: #172b29;
+    --texto-suave: #687875;
+    --principal: #145b53;
+    --principal-hover: #0d463f;
+    --acento: #e9a45b;
+    --borde: #d9ddd5;
+    --peligro: #b64c43;
+    --sombra: 0 16px 45px rgba(20, 43, 39, .07);
+    --radio: 18px;
 }
 
-/* Estilo base que comparten todas las páginas. */
+* { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
 body {
     margin: 0;
-    font-family: Arial, Helvetica, sans-serif;
-    background: var(--fondo);
+    min-height: 100vh;
+    background:
+        radial-gradient(circle at 90% 0%, rgba(233, 164, 91, .12), transparent 28rem),
+        var(--fondo);
     color: var(--texto);
-    line-height: 1.5;
+    font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    line-height: 1.55;
+    transition: background .25s ease, color .25s ease;
 }
 
-/* Los enlaces heredan el color del texto y no muestran el subrayado por defecto. */
-a {
-    color: inherit;
-    text-decoration: none;
-}
+a { color: inherit; text-decoration: none; }
+button, input, select, textarea { font: inherit; }
+button { cursor: pointer; }
 
-/* Los controles de formulario usan la misma familia de letra que el resto del sitio. */
-button,
-/* Apariencia común para cajas de texto, listas desplegables y áreas de texto. */
-input,
-select,
-textarea {
-    font: inherit;
-}
-
-/*
-    BARRA SUPERIOR
-    Se utiliza en el menú público y en las pantallas de administración.
-    Flexbox separa el nombre del restaurante de los enlaces de navegación.
-*/
-/* El encabezado ocupa todo el ancho, mantiene una altura mínima y separa sus elementos. */
-.topbar,
-.barra {
-    min-height: 68px;
-    padding: 14px max(5%, calc((100% - 1120px) / 2));
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 20px;
-    background: var(--blanco);
-    border-bottom: 1px solid var(--borde);
-}
-
-/* El nombre del sistema se presenta en dos líneas, una para el nombre y otra para la sección. */
-.logo-admin,
-.marca {
+/* Navegación lateral de las pantallas administrativas. */
+body:not(.public-site) .topbar,
+body:not(.public-site) .barra {
+    position: fixed;
+    z-index: 20;
+    inset: 0 auto 0 0;
+    width: 246px;
+    min-height: 100vh;
+    padding: 30px 20px;
     display: flex;
     flex-direction: column;
-    color: var(--verde);
-    font-size: 17px;
-    font-weight: 700;
-    letter-spacing: .4px;
+    align-items: stretch;
+    justify-content: flex-start;
+    gap: 38px;
+    background: var(--superficie);
+    border: 0;
+    border-right: 1px solid var(--borde);
 }
 
-.logo-admin small,
-.marca small {
-    margin-top: 2px;
-    color: var(--texto-suave);
-    font-size: 10px;
-    font-weight: 400;
-    letter-spacing: 1.2px;
-}
-
-/* Los enlaces del encabezado se colocan en una fila con espacio entre ellos. */
-.topbar nav,
-.barra nav {
+.logo-admin, .marca {
     display: flex;
-    align-items: center;
-    gap: 22px;
-    color: var(--texto-suave);
-    font-size: 13px;
-}
-
-.topbar nav a:hover,
-.barra nav a:hover,
-.text-link:hover {
-    color: var(--verde);
-}
-
-/*
-    CONTENIDO Y ENCABEZADOS
-    Estas reglas centran el contenido y mantienen un ancho cómodo para leerlo.
-*/
-/* Limitar el ancho del contenido y centrarlo dejando espacio alrededor. */
-.wrap,
-.admin-contenido {
-    width: min(1120px, 90%);
-    margin: 34px auto 60px;
-}
-
-/* Texto pequeño que identifica la sección antes del título principal. */
-.eyebrow,
-.etiqueta {
-    margin: 0 0 7px;
-    color: var(--verde);
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: .8px;
-    text-transform: uppercase;
-}
-
-/* Título principal de cada pantalla. clamp adapta su tamaño al ancho disponible. */
-h1 {
-    margin: 5px 0 8px;
+    flex-direction: column;
     color: var(--texto);
-    font-size: clamp(27px, 4vw, 36px);
-    font-weight: 700;
-    line-height: 1.2;
+    font-size: 19px;
+    font-weight: 850;
+    letter-spacing: .12em;
+    line-height: 1.15;
 }
 
-h2,
-h3 {
-    color: var(--texto);
-}
-
-/* Texto que explica brevemente qué se puede hacer en la pantalla. */
-.intro {
-    max-width: 680px;
-    margin: 0 0 25px;
-    color: var(--texto-suave);
+.logo-admin::before, .marca::before {
+    content: "EP";
+    width: 42px;
+    height: 42px;
+    margin-bottom: 15px;
+    display: grid;
+    place-items: center;
+    color: #132c29;
+    background: var(--acento);
+    border-radius: 13px 13px 13px 4px;
     font-size: 14px;
+    letter-spacing: 0;
 }
 
-.section-title {
-    margin: 30px 0 14px;
-    font-size: 18px;
-    font-weight: 600;
-}
-
-/*
-    TARJETAS DE RESUMEN
-    El panel muestra tres datos rápidos: mesas, pedidos y platillos disponibles.
-*/
-/* Grid reparte las tarjetas en tres columnas del mismo tamaño. */
-.stats {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 14px;
-    margin: 26px 0 34px;
-}
-
-.stats article {
-    padding: 17px 19px;
-    background: var(--blanco);
-    border: 1px solid var(--borde);
-    border-radius: 6px;
-}
-
-.stats small {
-    display: block;
+.logo-admin small, .marca small {
+    margin-top: 7px;
     color: var(--texto-suave);
-    font-size: 11px;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: .2em;
 }
 
-.stats strong {
-    display: block;
-    margin-top: 5px;
-    color: var(--texto);
-    font-size: 27px;
-    font-weight: 600;
-}
-
-/*
-    TARJETAS DE LOS MÓDULOS
-    Cada tarjeta es un enlace completo que abre una sección del sistema.
-*/
-/* Organiza los accesos en columnas y deja separación entre cada tarjeta. */
-.module-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 14px;
-}
-
-.module-card {
-    display: block;
-    min-height: 145px;
-    padding: 18px;
-    background: var(--blanco);
-    border: 1px solid var(--borde);
-    border-radius: 6px;
-    transition: border-color .15s, background .15s;
-}
-
-/* Cambia ligeramente el borde y el fondo cuando el cursor pasa sobre una tarjeta. */
-.module-card:hover {
-    border-color: #aabbb0;
-    background: #fcfdfc;
-}
-
-.module-card > span {
-    color: var(--texto-suave);
-    font-size: 11px;
-}
-
-.module-card h2 {
-    margin: 8px 0 5px;
-    font-size: 17px;
-    font-weight: 600;
-}
-
-.module-card p {
-    min-height: 36px;
-    margin: 0 0 12px;
-    color: var(--texto-suave);
-    font-size: 13px;
-}
-
-.module-card b {
-    color: var(--verde);
-    font-size: 12px;
-    font-weight: 600;
-}
-
-.module-card.highlight {
-    border-color: #b8c9bd;
-    background: var(--verde-claro);
-}
-
-/*
-    FORMULARIOS Y BOTONES
-    Estas reglas se comparten entre los formularios de pedidos, CRUD y facturación.
-*/
-.panel-contenido,
-.formulario-admin {
-    margin: 22px 0;
-    padding: 22px;
-    background: var(--blanco);
-    border: 1px solid var(--borde);
-    border-radius: 6px;
-}
-
-.panel-contenido h2 {
-    margin: 0 0 15px;
-    font-size: 17px;
-    font-weight: 600;
-}
-
-/* Coloca los campos en dos columnas cuando hay espacio suficiente. */
-.form-grid {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 15px;
-    margin: 15px 0;
-}
-
-/* Cada etiqueta se muestra encima de su campo y mantiene un espacio pequeño entre ambos. */
-label {
+body:not(.public-site) .topbar nav,
+body:not(.public-site) .barra nav {
     display: flex;
     flex-direction: column;
-    gap: 6px;
-    color: var(--texto);
-    font-size: 13px;
-    font-weight: 600;
-}
-
-input,
-select,
-textarea {
-    width: 100%;
-    min-height: 40px;
-    padding: 9px 11px;
-    color: var(--texto);
-    background: var(--blanco);
-    border: 1px solid #cfd8d1;
-    border-radius: 4px;
+    align-items: stretch;
+    gap: 7px;
+    color: var(--texto-suave);
     font-size: 13px;
 }
 
-textarea {
-    min-height: 90px;
-    resize: vertical;
+body:not(.public-site) .topbar nav a,
+body:not(.public-site) .barra nav a {
+    padding: 12px 14px;
+    border-radius: 11px;
+    transition: color .18s ease, background .18s ease, transform .18s ease;
 }
 
-/* Señal visual para identificar el campo que el usuario está editando. */
-input:focus,
-select:focus,
-textarea:focus {
-    outline: 2px solid #d7e5dc;
-    border-color: var(--verde);
+body:not(.public-site) .topbar nav a:hover,
+body:not(.public-site) .barra nav a:hover {
+    color: var(--principal);
+    background: var(--superficie-2);
+    transform: translateX(3px);
 }
 
-/* Los botones comparten tamaño, color y alineación para mantener el mismo estilo. */
-.boton-principal,
-.boton-secundario,
-.boton {
+.theme-toggle {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-height: 38px;
-    padding: 9px 15px;
-    color: var(--blanco);
-    background: var(--verde);
-    border: 1px solid var(--verde);
-    border-radius: 4px;
-    font-size: 13px;
-    font-weight: 600;
-    cursor: pointer;
-}
-
-.boton-principal:hover,
-.boton-secundario:hover,
-.boton:hover {
-    background: var(--verde-hover);
-    border-color: var(--verde-hover);
-}
-
-.boton-secundario {
-    min-height: 34px;
-    padding: 7px 11px;
+    gap: 9px;
+    min-height: 42px;
+    padding: 10px 13px;
+    color: var(--texto);
+    background: var(--superficie-2);
+    border: 1px solid var(--borde);
+    border-radius: 12px;
     font-size: 12px;
+    font-weight: 750;
+    transition: .2s ease;
+}
+.theme-toggle:hover { border-color: var(--acento); transform: translateY(-1px); }
+body:not(.public-site) .theme-toggle { margin-top: auto; width: 100%; }
+
+/* Área de trabajo. El margen deja libre la navegación fija. */
+.wrap, .admin-contenido, .formulario-admin {
+    width: min(1180px, calc(100% - 310px));
+    margin: 0 0 70px calc(246px + max(32px, (100vw - 1450px) / 2));
+    padding-top: 52px;
 }
 
-.boton-claro,
-.boton-azul {
-    color: var(--verde);
-    background: var(--verde-claro);
-    border-color: #d7e3da;
+.eyebrow, .etiqueta {
+    margin: 0 0 10px;
+    color: var(--principal);
+    font-size: 10px;
+    font-weight: 850;
+    letter-spacing: .2em;
+    text-transform: uppercase;
 }
 
-.boton-claro:hover,
-.boton-azul:hover {
-    color: var(--verde-hover);
-    background: #e2ece5;
-    border-color: #c8d8cd;
+h1 {
+    margin: 0;
+    color: var(--texto);
+    font-size: clamp(34px, 4.2vw, 58px);
+    font-weight: 780;
+    letter-spacing: -.055em;
+    line-height: 1.02;
 }
 
-.boton-coral {
-    color: var(--blanco);
-    background: var(--verde);
-    border-color: var(--verde);
+h2, h3 { color: var(--texto); letter-spacing: -.025em; }
+.intro {
+    max-width: 650px;
+    margin: 15px 0 0;
+    color: var(--texto-suave);
+    font-size: 14px;
+}
+.section-title {
+    margin: 38px 0 16px;
+    font-size: 19px;
+    font-weight: 780;
 }
 
-.ancho {
-    width: 100%;
-}
-
-/* Cada fila del pedido acomoda el platillo, la cantidad y el botón para quitarlo. */
-.order-line {
+/* Panel principal y tarjetas. */
+.stats {
     display: grid;
-    grid-template-columns: 1fr 90px auto;
-    gap: 10px;
-    margin: 12px 0;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
+    margin: 32px 0 42px;
 }
+.stats article {
+    position: relative;
+    min-height: 145px;
+    overflow: hidden;
+    padding: 23px;
+    background: var(--superficie);
+    border: 1px solid var(--borde);
+    border-radius: var(--radio);
+    box-shadow: var(--sombra);
+}
+.stats article::after {
+    content: "";
+    position: absolute;
+    right: -22px;
+    bottom: -42px;
+    width: 120px;
+    height: 120px;
+    border: 1px solid var(--acento);
+    border-radius: 50%;
+    opacity: .65;
+}
+.stats small { display: block; color: var(--texto-suave); font-size: 12px; font-weight: 650; }
+.stats strong { display: block; margin-top: 13px; color: var(--texto); font-size: 39px; font-weight: 800; letter-spacing: -.06em; }
 
-/* El total se separa del resto del formulario para que sea fácil de localizar. */
+.module-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
+}
+.module-card {
+    position: relative;
+    min-height: 190px;
+    padding: 22px;
+    overflow: hidden;
+    background: var(--superficie);
+    border: 1px solid var(--borde);
+    border-radius: var(--radio);
+    box-shadow: var(--sombra);
+    transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease;
+}
+.module-card:hover { transform: translateY(-5px); border-color: var(--acento); box-shadow: 0 22px 45px rgba(20,43,39,.12); }
+.module-card > span { color: var(--acento); font-size: 11px; font-weight: 900; letter-spacing: .15em; }
+.module-card h2 { margin: 23px 0 7px; font-size: 19px; }
+.module-card p { min-height: 40px; margin: 0 0 16px; color: var(--texto-suave); font-size: 12px; }
+.module-card b { color: var(--principal); font-size: 11px; letter-spacing: .04em; text-transform: uppercase; }
+.module-card.highlight { background: var(--principal); border-color: var(--principal); }
+.module-card.highlight h2, .module-card.highlight p, .module-card.highlight b { color: #fffefa; }
+.module-card.highlight > span { color: var(--acento); }
+
+/* Formularios y superficies de trabajo. */
+.panel-contenido, .formulario-admin, .login {
+    padding: 27px;
+    background: var(--superficie);
+    border: 1px solid var(--borde);
+    border-radius: var(--radio);
+    box-shadow: var(--sombra);
+}
+.panel-contenido, .formulario-admin { margin-top: 28px; }
+.panel-contenido h2 { margin: 0 0 18px; font-size: 18px; }
+.form-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; margin: 18px 0; }
+label { display: flex; flex-direction: column; gap: 8px; color: var(--texto); font-size: 12px; font-weight: 750; }
+input, select, textarea {
+    width: 100%;
+    min-height: 46px;
+    padding: 11px 13px;
+    color: var(--texto);
+    background: var(--fondo);
+    border: 1px solid var(--borde);
+    border-radius: 11px;
+    outline: none;
+    font-size: 13px;
+    transition: border-color .18s ease, box-shadow .18s ease, background .18s ease;
+}
+textarea { min-height: 110px; resize: vertical; }
+input:focus, select:focus, textarea:focus {
+    border-color: var(--principal);
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--principal) 14%, transparent);
+}
+input[type="checkbox"] { width: 18px; min-height: 18px; accent-color: var(--principal); }
+.check-line { flex-direction: row; align-items: center; }
+
+.boton-principal, .boton-secundario, .boton {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 43px;
+    padding: 10px 17px;
+    color: #fffefa;
+    background: var(--principal);
+    border: 1px solid var(--principal);
+    border-radius: 11px;
+    font-size: 12px;
+    font-weight: 800;
+    transition: transform .18s ease, background .18s ease, box-shadow .18s ease;
+}
+.boton-principal:hover, .boton-secundario:hover, .boton:hover {
+    background: var(--principal-hover);
+    box-shadow: 0 8px 20px color-mix(in srgb, var(--principal) 22%, transparent);
+    transform: translateY(-1px);
+}
+.boton-secundario, .boton-claro, .boton-azul {
+    color: var(--principal);
+    background: var(--superficie-2);
+    border-color: var(--borde);
+}
+.boton-coral { color: #172b29; background: var(--acento); border-color: var(--acento); }
+.boton-coral:hover { color: #172b29; background: #f0b879; border-color: #f0b879; }
+.ancho { width: 100%; }
+.order-line { display: grid; grid-template-columns: minmax(0,1fr) 100px auto; gap: 11px; margin: 12px 0; }
 .total-box {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 15px;
-    margin: 22px 0;
-    padding: 15px 17px;
-    background: var(--verde-claro);
-    border: 1px solid #d7e3da;
-    border-radius: 5px;
+    gap: 16px;
+    margin: 24px 0;
+    padding: 20px 22px;
     color: var(--texto);
+    background: var(--superficie-2);
+    border: 1px solid var(--borde);
+    border-radius: 14px;
     font-size: 13px;
+    font-weight: 700;
 }
+.total-box strong { font-size: 27px; letter-spacing: -.04em; }
 
-.total-box strong {
-    font-size: 22px;
-}
-
-/*
-    TABLAS
-    Las tablas muestran registros, pedidos y solicitudes guardadas en la base de datos.
-*/
-/* Permite desplazar la tabla horizontalmente cuando la pantalla es estrecha. */
-.table-box,
-.tabla-contenedor {
+/* Tablas con cabecera contrastada y desplazamiento horizontal en móvil. */
+.table-box, .tabla-contenedor {
     overflow-x: auto;
-    background: var(--blanco);
+    margin-top: 16px;
+    background: var(--superficie);
     border: 1px solid var(--borde);
-    border-radius: 6px;
+    border-radius: var(--radio);
+    box-shadow: var(--sombra);
 }
-
-/* La tabla usa el ancho disponible y une los bordes de las celdas. */
-table {
-    width: 100%;
-    border-collapse: collapse;
-    min-width: 650px;
-    text-align: left;
-}
-
-/* Mantiene el mismo espacio interno y separación entre todas las celdas. */
-th,
-td {
-    padding: 12px 14px;
-    border-bottom: 1px solid #e8ece9;
-    font-size: 13px;
-}
-
-th {
-    color: #4e5c54;
-    background: #f3f6f3;
-    font-size: 12px;
-    font-weight: 600;
-}
-
-td {
-    color: var(--texto);
-}
-
-tbody tr:last-child td {
-    border-bottom: 0;
-}
-
-/* Resalta suavemente la fila sobre la que está el cursor. */
-tbody tr:hover {
-    background: #fafcfa;
-}
-
-.acciones {
-    display: flex;
-    align-items: center;
-    gap: 13px;
-}
-
-.acciones a,
-.text-link {
-    color: var(--verde);
-    font-size: 13px;
-}
-
-.acciones form {
-    margin: 0;
-}
-
-.enlace-eliminar,
-.danger-link {
-    padding: 0;
-    color: var(--rojo);
-    background: none;
-    border: 0;
-    font-size: 13px;
-    cursor: pointer;
-}
-
-.inline-form {
-    display: inline;
-    margin-left: 10px;
-}
-
-.notice {
-    margin: 16px 0;
-    padding: 12px 14px;
-    color: #365b49;
-    background: var(--verde-claro);
-    border: 1px solid #d7e3da;
-    border-radius: 4px;
-    font-size: 13px;
-}
-
-.mensaje-error {
-    color: var(--rojo);
-}
-
-.mensaje-ok {
-    color: var(--verde);
-}
-
-.nota-admin {
-    color: var(--texto-suave);
+table { width: 100%; min-width: 650px; border-collapse: collapse; text-align: left; }
+th, td { padding: 15px 17px; border-bottom: 1px solid var(--borde); font-size: 12px; }
+th { color: var(--texto-suave); background: var(--superficie-2); font-size: 10px; font-weight: 850; letter-spacing: .1em; text-transform: uppercase; }
+td { color: var(--texto); }
+tbody tr:last-child td { border-bottom: 0; }
+tbody tr:hover { background: color-mix(in srgb, var(--principal) 5%, var(--superficie)); }
+.acciones { display: flex; align-items: center; gap: 13px; }
+.acciones a, .text-link, .volver { color: var(--principal); font-size: 12px; font-weight: 750; }
+.acciones form { margin: 0; }
+.enlace-eliminar, .danger-link { padding: 0; color: var(--peligro); background: none; border: 0; font-size: 12px; font-weight: 750; }
+.inline-form { display: inline; margin-left: 8px; }
+.notice, .mensaje-ok {
+    margin: 18px 0;
+    padding: 14px 17px;
+    color: var(--principal);
+    background: color-mix(in srgb, var(--principal) 9%, var(--superficie));
+    border: 1px solid color-mix(in srgb, var(--principal) 22%, var(--borde));
+    border-radius: 12px;
     font-size: 12px;
 }
+.mensaje-error { color: var(--peligro); font-size: 12px; }
+.nota-admin { color: var(--texto-suave); font-size: 11px; }
+.buscador { display: flex; gap: 10px; max-width: 620px; margin: 24px 0; }
+.buscador input { flex: 1; }
+.volver { display: inline-block; margin-top: 14px; }
 
-.buscador {
-    display: flex;
-    gap: 9px;
-    max-width: 560px;
-    margin: 20px 0;
-}
+/* Acceso al panel. */
+.fondo-admin { display: grid; place-items: center; padding: 30px; }
+.login { position: relative; width: min(440px, 100%); padding: 34px; }
+.login h1 { margin-top: 34px; font-size: 38px; }
+.login p { color: var(--texto-suave); font-size: 13px; }
+.login form, .formulario-admin form { display: flex; flex-direction: column; gap: 16px; margin-top: 24px; }
+.login .volver { margin-top: 22px; }
+.login .theme-toggle { position: absolute; top: 25px; right: 25px; }
 
-.buscador input {
-    flex: 1;
-}
-
-.volver {
-    display: inline-block;
-    margin-top: 12px;
-    color: var(--verde);
-    font-size: 13px;
-}
-
-/*
-    ACCESO DE ADMINISTRACIÓN
-    Centra el formulario de inicio de sesión en la pantalla.
-*/
-/* Utiliza como mínimo toda la altura visible del navegador y centra el formulario. */
-.fondo-admin {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 24px 0;
-}
-
-/* El formulario tiene un ancho máximo, pero se reduce para caber en celulares. */
-.login {
-    width: min(410px, calc(100% - 32px));
-    padding: 28px;
-    background: var(--blanco);
-    border: 1px solid var(--borde);
-    border-radius: 7px;
-}
-
-.login h1 {
-    margin-top: 24px;
-    font-size: 28px;
-}
-
-.login p {
-    color: var(--texto-suave);
-    font-size: 13px;
-}
-
-.login form,
-.formulario-admin form {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    margin-top: 20px;
-}
-
-.login label {
-    margin-top: 3px;
-}
-
-.check-line {
+/* Portada pública: conserva la parte comercial separada de la administración. */
+.public-site { background: var(--fondo); }
+.public-site .barra {
+    position: relative;
+    min-height: 86px;
+    padding: 16px max(5%, calc((100% - 1240px) / 2));
     display: flex;
     flex-direction: row;
     align-items: center;
-    gap: 10px;
+    justify-content: space-between;
+    gap: 24px;
+    background: var(--superficie);
+    border-bottom: 1px solid var(--borde);
 }
-
-.check-line input {
-    width: auto;
-}
-
-.login .volver {
-    margin-top: 18px;
-}
-
-/*
-    PÁGINA PÚBLICA
-    Reglas para la portada, la sección del menú y el pie de página del restaurante.
-*/
-/* Divide la portada en una parte de texto y otra parte visual. */
+.public-site .marca { font-size: 17px; }
+.public-site .marca::before { display: none; }
+.public-site .marca small { letter-spacing: .16em; }
+.public-site .barra nav { display: flex; align-items: center; gap: 24px; color: var(--texto-suave); font-size: 12px; }
+.public-site .barra nav a:hover { color: var(--principal); }
+.public-site .theme-toggle { margin-left: 8px; }
 .portada {
     display: grid;
-    grid-template-columns: 1.15fr .85fr;
-    min-height: 370px;
-    background: var(--verde-claro);
-}
-
-/* Centra verticalmente el texto dentro de la portada y agrega espacio a sus lados. */
-.portada-contenido {
-    align-self: center;
-    padding: 55px max(8%, calc((100vw - 1120px) / 2));
-}
-
-.portada h1 {
-    margin: 12px 0;
-    font-size: clamp(36px, 5vw, 52px);
-    line-height: 1.08;
-}
-
-.portada h1 em {
-    color: var(--verde);
-    font-style: normal;
-}
-
-.portada-contenido > p:not(.etiqueta) {
-    max-width: 460px;
-    color: var(--texto-suave);
-    font-size: 15px;
-}
-
-/* Centra el recuadro decorativo que acompaña al texto de la portada. */
-.portada-imagen {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 280px;
-    background: #e3ebe5;
-}
-
-.circulo {
-    padding: 25px 34px;
-    color: var(--verde);
-    border: 1px solid #bdcfc1;
-    border-radius: 5px;
-    font-size: 17px;
-    font-weight: 700;
-    letter-spacing: 2px;
-    text-align: center;
-}
-
-/* Da separación alrededor del menú para que las tarjetas no queden pegadas al borde. */
-.seccion-menu {
-    padding: 52px 8%;
-}
-
-.encabezado-seccion {
-    display: flex;
-    align-items: end;
-    justify-content: space-between;
-    gap: 20px;
-    margin-bottom: 22px;
-}
-
-.encabezado-seccion h1,
-.encabezado-seccion h2 {
-    margin: 6px 0;
-    font-size: 27px;
-}
-
-.encabezado-seccion > p {
-    color: var(--texto-suave);
-    font-size: 13px;
-}
-
-/* Acomoda los platillos en tres columnas en pantallas grandes. */
-.tarjetas {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 16px;
-}
-
-.tarjeta {
+    grid-template-columns: 1.1fr .9fr;
+    min-height: 530px;
     overflow: hidden;
-    background: var(--blanco);
-    border: 1px solid var(--borde);
-    border-radius: 6px;
+    background: var(--principal);
 }
-
-.tarjeta-imagen {
-    height: 125px;
+.portada-contenido { align-self: center; padding: 70px max(8%, calc((100vw - 1240px) / 2)); }
+.portada .etiqueta { color: var(--acento); }
+.portada h1 { max-width: 650px; color: #fffefa; font-size: clamp(48px, 6vw, 82px); }
+.portada h1 em { color: var(--acento); font-style: normal; }
+.portada-contenido > p:not(.etiqueta) { max-width: 460px; margin: 22px 0 28px; color: rgba(255,254,250,.76); font-size: 15px; }
+.portada-imagen {
+    position: relative;
     display: grid;
     place-items: center;
-    color: var(--texto-suave);
-    background: #edf1ed;
-    font-size: 22px;
+    min-height: 390px;
+    background:
+        radial-gradient(circle at 50% 45%, rgba(233,164,91,.38), transparent 30%),
+        repeating-linear-gradient(135deg, rgba(255,255,255,.055) 0 1px, transparent 1px 17px),
+        #0e4942;
 }
-
-/* Las imágenes ocupan el espacio de su contenedor sin deformarse. */
-.tarjeta-imagen img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+.portada-imagen::before, .portada-imagen::after {
+    content: "";
+    position: absolute;
+    width: min(26vw, 310px);
+    aspect-ratio: 1;
+    border: 1px solid rgba(233,164,91,.55);
+    border-radius: 50%;
 }
-
-.tarjeta-info {
-    padding: 15px;
-}
-
-.tarjeta-info small {
-    color: var(--verde);
-    font-size: 11px;
-}
-
-.tarjeta-info h3 {
-    margin: 7px 0;
-    font-size: 16px;
-}
-
-.tarjeta-info p {
-    min-height: 38px;
-    color: var(--texto-suave);
-    font-size: 13px;
-}
-
-.tarjeta-info strong {
-    color: var(--verde);
-    font-size: 14px;
-}
-
-/* Franja final con el nombre del restaurante y un texto de contacto. */
-.franja {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 25px;
-    padding: 30px 8%;
-    background: var(--verde-claro);
-}
-
-.franja h2 {
-    margin: 5px 0;
-    font-size: 21px;
-}
-
-.franja > p {
-    max-width: 330px;
-    color: var(--texto-suave);
-    font-size: 13px;
-}
-
-footer,
-.pie-pagina {
+.portada-imagen::after { width: min(19vw, 225px); border-style: dashed; }
+.circulo { z-index: 1; color: var(--acento); font-size: 17px; font-weight: 900; letter-spacing: .25em; text-align: center; }
+.seccion-menu { width: min(1240px, 90%); margin: 0 auto; padding: 80px 0; }
+.encabezado-seccion { display: flex; align-items: end; justify-content: space-between; gap: 20px; margin-bottom: 26px; }
+.encabezado-seccion h1, .encabezado-seccion h2 { margin: 5px 0; font-size: 32px; }
+.encabezado-seccion > p { color: var(--texto-suave); font-size: 12px; }
+.tarjetas { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 18px; }
+.tarjeta { overflow: hidden; background: var(--superficie); border: 1px solid var(--borde); border-radius: var(--radio); box-shadow: var(--sombra); }
+.tarjeta-imagen { height: 190px; display: grid; place-items: center; color: var(--texto-suave); background: var(--superficie-2); font-size: 12px; }
+.tarjeta-imagen img { width: 100%; height: 100%; object-fit: cover; }
+.tarjeta-info { padding: 20px; }
+.tarjeta-info small { color: var(--principal); font-size: 10px; font-weight: 850; letter-spacing: .12em; text-transform: uppercase; }
+.tarjeta-info h3 { margin: 9px 0; font-size: 18px; }
+.tarjeta-info p { min-height: 38px; color: var(--texto-suave); font-size: 12px; }
+.tarjeta-info strong { color: var(--principal); font-size: 15px; }
+.franja { display: flex; align-items: center; justify-content: space-between; gap: 25px; padding: 44px max(5%, calc((100% - 1240px) / 2)); background: var(--superficie-2); }
+.franja h2 { max-width: 550px; margin: 5px 0; font-size: 25px; }
+.franja > p { max-width: 330px; color: var(--texto-suave); font-size: 12px; }
+footer, .pie-pagina {
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 15px;
-    padding: 20px 8%;
+    padding: 22px max(5%, calc((100% - 1240px) / 2));
     color: var(--texto-suave);
-    background: var(--blanco);
+    background: var(--superficie);
     border-top: 1px solid var(--borde);
-    font-size: 12px;
+    font-size: 11px;
 }
+body:not(.public-site) .pie-pagina { margin-left: 246px; }
 
-footer a:hover {
-    color: var(--verde);
+/* Tema oscuro. El selector se cambia desde tema.js y la preferencia queda guardada. */
+body[data-theme="dark"] {
+    color-scheme: dark;
+    --fondo: #101918;
+    --superficie: #172321;
+    --superficie-2: #202e2b;
+    --texto: #edf2eb;
+    --texto-suave: #a1b1aa;
+    --principal: #71b8a8;
+    --principal-hover: #8acbbb;
+    --acento: #e9ad69;
+    --borde: #30413c;
+    --peligro: #f08d83;
+    --sombra: 0 16px 45px rgba(0,0,0,.18);
 }
+body[data-theme="dark"] .logo-admin::before,
+body[data-theme="dark"] .marca::before { color: #172321; }
+body[data-theme="dark"] .module-card.highlight { background: #1b5149; border-color: #1b5149; }
+body[data-theme="dark"] .module-card.highlight h2,
+body[data-theme="dark"] .module-card.highlight p,
+body[data-theme="dark"] .module-card.highlight b { color: #f2f5ef; }
+body[data-theme="dark"] .portada { background: #173d38; }
+body[data-theme="dark"] .portada-imagen { background-color: #102f2b; }
+body[data-theme="dark"] .boton-coral { color: #172321; }
+body[data-theme="dark"] .boton-coral:hover { color: #172321; }
+body[data-theme="dark"] .notice, body[data-theme="dark"] .mensaje-ok { color: #a8d9cb; }
+body[data-theme="dark"] tbody tr:hover { background: rgba(255,255,255,.035); }
 
-/*
-    DISEÑO RESPONSIVO
-    Las reglas dentro de estas condiciones se aplican cuando la pantalla se hace más pequeña.
-*/
-/* En tabletas y pantallas medianas se reducen columnas y se apilan algunas secciones. */
+/* Ajustes para tabletas y celulares. */
+@media (max-width: 1050px) {
+    .module-grid, .tarjetas { grid-template-columns: repeat(2, minmax(0,1fr)); }
+    .wrap, .admin-contenido, .formulario-admin {
+        width: calc(100% - 290px);
+        margin-left: 270px;
+    }
+}
 @media (max-width: 760px) {
-    .module-grid,
-    .tarjetas {
-        grid-template-columns: repeat(2, 1fr);
+    body:not(.public-site) .topbar, body:not(.public-site) .barra {
+        position: relative;
+        width: 100%;
+        min-height: auto;
+        padding: 17px 20px;
+        gap: 15px;
+        border-right: 0;
+        border-bottom: 1px solid var(--borde);
     }
-
-    .stats {
-        grid-template-columns: 1fr;
-    }
-
-    .portada {
-        grid-template-columns: 1fr;
-    }
-
-    .portada-contenido {
-        padding: 45px 7%;
-    }
-
-    .portada-imagen {
-        min-height: 180px;
-    }
-
-    .encabezado-seccion,
-    .franja {
-        align-items: flex-start;
-        flex-direction: column;
-    }
-
-    .topbar,
-    .barra {
-        padding: 14px 5%;
-        align-items: flex-start;
-    }
-
-    .topbar nav,
-    .barra nav {
-        gap: 12px;
+    body:not(.public-site) .topbar nav, body:not(.public-site) .barra nav {
+        flex-direction: row;
         flex-wrap: wrap;
-        justify-content: flex-end;
+        gap: 5px;
     }
+    body:not(.public-site) .topbar nav a, body:not(.public-site) .barra nav a { padding: 9px 10px; }
+    body:not(.public-site) .theme-toggle { margin-top: 0; width: auto; align-self: flex-start; }
+    .wrap, .admin-contenido, .formulario-admin {
+        width: min(100% - 34px, 680px);
+        margin: 0 auto 45px;
+        padding-top: 35px;
+    }
+    body:not(.public-site) .pie-pagina { margin-left: 0; }
+    .stats { grid-template-columns: 1fr; }
+    .stats article { min-height: 115px; }
+    .portada { grid-template-columns: 1fr; }
+    .portada-contenido { padding: 55px 7%; }
+    .portada-imagen { min-height: 230px; }
+    .encabezado-seccion, .franja { align-items: flex-start; flex-direction: column; }
+    .public-site .barra { flex-wrap: wrap; padding: 17px 5%; }
+    .public-site .barra nav { flex-wrap: wrap; gap: 13px; }
+    .public-site .theme-toggle { margin-left: 0; }
 }
-
-/* En celulares se deja una sola columna y los botones se acomodan debajo de los campos. */
-@media (max-width: 500px) {
-    .module-grid,
-    .tarjetas,
-    .form-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .order-line {
-        grid-template-columns: 1fr 75px;
-    }
-
-    .order-line .boton-secundario {
-        grid-column: 1 / -1;
-    }
-
-    .buscador {
-        flex-wrap: wrap;
-    }
-
-    .buscador input {
-        flex-basis: 100%;
-    }
-
-    footer,
-    .pie-pagina {
-        align-items: flex-start;
-        flex-direction: column;
-    }
-
-    .barra,
-    .topbar {
-        flex-direction: column;
-    }
-}
-
-
-/* Estado de la conexión de demostración. */
-.estado-conectado {
-    color: #365b49;
-}
-
-.estado-desconectado {
-    color: #a94f48;
+@media (max-width: 520px) {
+    .module-grid, .tarjetas, .form-grid { grid-template-columns: 1fr; }
+    .order-line { grid-template-columns: minmax(0,1fr) 78px; }
+    .order-line .boton-secundario { grid-column: 1 / -1; }
+    .buscador { flex-wrap: wrap; }
+    .buscador input { flex-basis: 100%; }
+    footer, .pie-pagina { align-items: flex-start; flex-direction: column; }
+    .login { padding: 25px; }
+    .login .theme-toggle { position: static; margin-bottom: 20px; }
 }
