@@ -1,26 +1,30 @@
 /*
- * Selector de tema de El Puerto.
- * El botón se agrega desde JavaScript para no repetirlo en cada página PHP.
+ * Selector de tema de MARISCOS PIPE.
+ * El tema elegido se guarda en el navegador para conservarlo al cambiar de página.
  */
 (function () {
-    const clave = "el-puerto-tema";
+    const clave = "mariscos-pipe-tema";
     const temaGuardado = localStorage.getItem(clave);
     const temaInicial = temaGuardado === "dark" ? "dark" : "light";
 
+    // Aplico el tema antes de crear el botón para evitar mostrar colores incorrectos.
     document.body.dataset.theme = temaInicial;
 
-    const contenedor = document.querySelector("header") || document.querySelector(".login");
+    // En el panel el botón queda al final del menú lateral; en el acceso va dentro del formulario.
+    const contenedor = document.querySelector(".sidebar-note")
+        || document.querySelector("header")
+        || document.querySelector(".login");
+
     if (!contenedor) return;
 
     const boton = document.createElement("button");
     boton.type = "button";
     boton.className = "theme-toggle";
     boton.setAttribute("aria-label", "Cambiar tema de color");
-    boton.setAttribute("aria-pressed", String(temaInicial === "dark"));
 
     function actualizarBoton(tema) {
         const oscuro = tema === "dark";
-        boton.textContent = oscuro ? "☀  Cambiar a tema claro" : "◐  Cambiar a tema oscuro";
+        boton.textContent = oscuro ? "Cambiar a tema claro" : "Cambiar a tema oscuro";
         boton.setAttribute("aria-pressed", String(oscuro));
     }
 
