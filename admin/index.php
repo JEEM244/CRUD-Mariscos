@@ -44,14 +44,14 @@ if (!empty($_SESSION["admin"])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Acceso | El Puerto</title>
+    <title>Acceso | MARISCOS PIPE</title>
     <link rel="stylesheet" href="../assets/css/estilos.css">
 </head>
 <body class="fondo-admin">
         <!-- Aquí contenedor central del formulario de inicio de sesión. -->
     <main class="login">
         <a class="marca" href="../index.php">
-            <span>EL PUERTO</span>
+            <span>MARISCOS PIPE</span>
             <small>ADMINISTRACIÓN</small>
         </a>
 
