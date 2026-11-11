@@ -25,7 +25,7 @@ Es una cuenta de prueba para desarrollo local. Antes de publicar el sistema se d
 - **Pedidos:** elegir mesa, cliente opcional, platillos y cantidades. El total se calcula y guarda.
 - **Clientes:** alta, consulta, actualización y eliminación.
 - **Proveedores:** alta, consulta, actualización y eliminación.
-- **Facturación:** captura de datos fiscales y estado de la factura.
+- **Facturación:** captura de datos fiscales y estado de la factura.\n- **Hacienda / SAT (simulación):** botón de conexión, captura de datos y respuesta ficticia para representar el flujo que un estudiante imagina. No realiza conexión real ni emite CFDI.
 - **Almacén:** control básico de existencias y costos.
 - **Menú:** administración de platillos y precios.
 
