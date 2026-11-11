@@ -1,11 +1,14 @@
 <?php
+// Iniciar la sesión para conservar el estado de la demostración entre páginas.
 session_start();
 
+// Comprobar que el usuario haya iniciado sesión como administrador.
 if (empty($_SESSION["admin"])) {
     header("Location: index.php");
     exit;
 }
 
+// Cargar la conexión porque las solicitudes de prueba se guardan en MySQL.
 require_once "../config/conexion.php";
 
 // Este apartado es una demostración escolar.
@@ -15,22 +18,26 @@ $error = "";
 $folioDemo = "";
 
 // Simular que el sistema se conecta con un servicio externo.
+// Detectar si se presionó el botón que activa la conexión ficticia.
 if (isset($_POST["probar_conexion"])) {
     $_SESSION["hacienda_demo"] = true;
     $mensaje = "La conexión de prueba está activa. No se contactó al SAT.";
 }
 
 // Cerrar la conexión de prueba.
+// Detectar si se presionó el botón para cerrar la demostración.
 if (isset($_POST["desconectar"])) {
     unset($_SESSION["hacienda_demo"]);
     $mensaje = "La conexión de prueba se cerró.";
 }
 
 // Guardar los datos de una solicitud de ejemplo.
+// Este bloque recibe los datos del formulario de facturación de ejemplo.
 if (isset($_POST["generar_demo"])) {
     if (empty($_SESSION["hacienda_demo"])) {
         $error = "Primero activa la conexión de prueba.";
     } else {
+        // Leer los datos del formulario. Se convierten o limpian antes de utilizarlos.
         $clienteId = (int) ($_POST["cliente_id"] ?? 0);
         $rfc = strtoupper(trim($_POST["rfc"] ?? ""));
         $razonSocial = trim($_POST["razon_social"] ?? "");
@@ -39,6 +46,7 @@ if (isset($_POST["generar_demo"])) {
         $total = (float) ($_POST["total"] ?? 0);
 
         // Revisar que los datos básicos estén completos.
+        // Comprobar que se eligió un cliente y que los datos obligatorios tengan un formato básico.
         if (
             $clienteId <= 0 ||
             $rfc === "" ||
@@ -48,10 +56,12 @@ if (isset($_POST["generar_demo"])) {
         ) {
             $error = "Revisa los datos. El código postal debe tener cinco números y el total debe ser mayor a cero.";
         } else {
+            // Preparar el INSERT que guarda la solicitud como Solicitada, no como factura emitida.
             $sql = "INSERT INTO facturacion
                         (cliente_id, rfc, razon_social, codigo_postal, uso_cfdi, total, estado)
                     VALUES (?, ?, ?, ?, ?, ?, 'Solicitada')";
 
+            // Preparar la consulta para enviar los datos de forma segura.
             $guardar = $conexion->prepare($sql);
             $guardar->execute([
                 $clienteId,
@@ -63,6 +73,7 @@ if (isset($_POST["generar_demo"])) {
             ]);
 
             // El folio solo sirve para identificar la solicitud de prueba.
+            // Recuperar el ID que MySQL asignó al registro que se acaba de guardar.
             $idSolicitud = $conexion->lastInsertId();
             $folioDemo = "DEMO-HAC-" . str_pad($idSolicitud, 5, "0", STR_PAD_LEFT);
 
@@ -73,10 +84,12 @@ if (isset($_POST["generar_demo"])) {
 }
 
 // Obtener clientes para el formulario.
+// Obtener los clientes para mostrarlos en el selector del formulario.
 $consulta = $conexion->query("SELECT id, nombre FROM clientes ORDER BY nombre");
 $clientes = $consulta->fetchAll(PDO::FETCH_ASSOC);
 
 // Consultar las últimas solicitudes que se han guardado.
+// Consultar las últimas solicitudes junto con el nombre del cliente relacionado.
 $sql = "SELECT facturacion.*, clientes.nombre AS nombre_cliente
         FROM facturacion
         LEFT JOIN clientes ON facturacion.cliente_id = clientes.id
@@ -90,6 +103,7 @@ if ($folioDemo === "" && !empty($_SESSION["ultimo_folio_demo"])) {
     $folioDemo = $_SESSION["ultimo_folio_demo"];
 }
 ?>
+<!-- Desde aquí comienza la estructura HTML que se muestra en el navegador. -->
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -99,6 +113,7 @@ if ($folioDemo === "" && !empty($_SESSION["ultimo_folio_demo"])) {
     <link rel="stylesheet" href="../assets/css/estilos.css">
 </head>
 <body>
+        <!-- Encabezado con enlaces para volver al panel o cerrar sesión. -->
     <header class="topbar">
         <a class="logo-admin" href="panel.php">
             EL PUERTO
@@ -112,6 +127,7 @@ if ($folioDemo === "" && !empty($_SESSION["ultimo_folio_demo"])) {
         </nav>
     </header>
 
+        <!-- Contenido principal del módulo de simulación. -->
     <main class="wrap">
         <p class="eyebrow">FACTURACIÓN</p>
         <h1>Conexión con Hacienda</h1>
@@ -125,6 +141,7 @@ if ($folioDemo === "" && !empty($_SESSION["ultimo_folio_demo"])) {
             no genera CFDI y no tiene validez fiscal.
         </div>
 
+                <!-- Panel que muestra si la conexión ficticia está activa o apagada. -->
         <section class="panel-contenido">
             <h2>Estado de la conexión</h2>
             <p>Servicio: Hacienda / SAT (representación)</p>
@@ -159,6 +176,7 @@ if ($folioDemo === "" && !empty($_SESSION["ultimo_folio_demo"])) {
             <p class="notice"><?= htmlspecialchars($error) ?></p>
         <?php endif; ?>
 
+                <!-- Formulario para capturar la información que se guardará como solicitud de prueba. -->
         <section class="panel-contenido">
             <h2>Enviar datos para facturación</h2>
             <p class="intro">
@@ -172,6 +190,7 @@ if ($folioDemo === "" && !empty($_SESSION["ultimo_folio_demo"])) {
                         <select name="cliente_id" required>
                             <option value="">Selecciona un cliente</option>
 
+                                                        <!-- Llenar el selector con los clientes que existen en la base de datos. -->
                             <?php foreach ($clientes as $cliente): ?>
                                 <option value="<?= (int) $cliente["id"] ?>">
                                     <?= htmlspecialchars($cliente["nombre"]) ?>
@@ -236,6 +255,7 @@ if ($folioDemo === "" && !empty($_SESSION["ultimo_folio_demo"])) {
             </form>
         </section>
 
+                <!-- La respuesta solo aparece cuando ya se generó una solicitud de prueba. -->
         <?php if ($folioDemo !== ""): ?>
             <section class="panel-contenido">
                 <h2>Respuesta de la prueba</h2>
@@ -262,6 +282,7 @@ if ($folioDemo === "" && !empty($_SESSION["ultimo_folio_demo"])) {
                 </thead>
 
                 <tbody>
+                                        <!-- Mostrar cada solicitud guardada con su folio interno. -->
                     <?php foreach ($solicitudes as $solicitud): ?>
                         <tr>
                             <td>DEMO-HAC-<?= str_pad($solicitud["id"], 5, "0", STR_PAD_LEFT) ?></td>
