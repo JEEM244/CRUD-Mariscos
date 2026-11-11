@@ -1,14 +1,18 @@
 <?php
+// Iniciar la sesión antes de permitir cambios en el menú.
 session_start();
 
+// Comprobar que el administrador haya iniciado sesión.
 if (empty($_SESSION["admin"])) {
     header("Location: index.php");
     exit;
 }
 
+// Conectar con MySQL para buscar el platillo y guardar sus cambios.
 require_once "../config/conexion.php";
 
 // Obtener el ID que llega en la dirección.
+// Tomar el ID de la dirección y comprobar que sea un número entero.
 $id = filter_input(INPUT_GET, "id", FILTER_VALIDATE_INT);
 
 if (!$id) {
@@ -17,37 +21,44 @@ if (!$id) {
 }
 
 // Buscar el platillo que se va a editar.
+// Buscar en la base de datos el platillo que corresponde al ID recibido.
 $consulta = $conexion->prepare("SELECT * FROM platillos WHERE id = ?");
 $consulta->execute([$id]);
 $platillo = $consulta->fetch(PDO::FETCH_ASSOC);
 
+// Si el ID no corresponde a ningún platillo, regresar al listado.
 if (!$platillo) {
     header("Location: platillos.php");
     exit;
 }
 
 // Cargar las categorías del menú.
+// Consultar las categorías para poder cambiar la categoría del platillo.
 $consulta = $conexion->query("SELECT * FROM categorias ORDER BY nombre");
 $categorias = $consulta->fetchAll(PDO::FETCH_ASSOC);
 
 $error = "";
 
+// Este bloque se ejecuta al presionar el botón Guardar cambios.
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $nombre = trim($_POST["nombre"] ?? "");
     $descripcion = trim($_POST["descripcion"] ?? "");
     $precio = $_POST["precio"] ?? "";
     $imagen = trim($_POST["imagen"] ?? "");
     $categoriaId = $_POST["categoria"] ?? "";
+    // Un checkbox marcado vale 1; si no se marca, el platillo queda oculto con valor 0.
     $disponible = isset($_POST["disponible"]) ? 1 : 0;
 
     if ($nombre === "" || !is_numeric($precio) || (float) $precio < 0) {
         $error = "Escribe el nombre del platillo y un precio válido.";
     } else {
+        // Preparar la consulta UPDATE con todos los campos que se pueden modificar.
         $sql = "UPDATE platillos
                 SET nombre = ?, descripcion = ?, precio = ?,
                     imagen = ?, categoria_id = ?, disponible = ?
                 WHERE id = ?";
 
+        // Preparar la consulta y enviar los valores en el mismo orden de los signos de interrogación.
         $actualizar = $conexion->prepare($sql);
         $actualizar->execute([
             $nombre,
@@ -64,6 +75,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     }
 }
 ?>
+<!-- Formulario para modificar los datos de un platillo existente. -->
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -85,6 +97,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         </nav>
     </header>
 
+        <!-- Área principal que contiene los campos del platillo. -->
     <main class="formulario-admin">
         <p class="etiqueta">MENÚ</p>
         <h1>Editar platillo</h1>
@@ -93,6 +106,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             <p class="mensaje-error"><?= htmlspecialchars($error) ?></p>
         <?php endif; ?>
 
+                <!-- Al enviar el formulario, el mismo archivo valida y guarda los cambios. -->
         <form method="POST">
             <label>
                 Nombre del platillo
@@ -147,6 +161,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 >
             </label>
 
+                        <!-- La casilla controla si el platillo aparece o no en el menú público. -->
             <label class="check-line">
                 <input
                     type="checkbox"
