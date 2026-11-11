@@ -2,7 +2,6 @@
 // Iniciar o recuperar la sesión del navegador.
 session_start();
 
-// Datos de acceso para probar el sistema en local.
 // Datos de acceso de prueba para utilizar el panel en la computadora local.
 $usuarioCorrecto = "admin";
 $contrasenaCorrecta = "mariscos123";
