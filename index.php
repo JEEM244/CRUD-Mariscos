@@ -50,7 +50,7 @@ $platillos = $consulta->fetchAll(PDO::FETCH_ASSOC);
                             <?php if (!empty($platillo["imagen"])): ?>
                                 <img src="<?= htmlspecialchars($platillo["imagen"]) ?>" alt="<?= htmlspecialchars($platillo["nombre"]) ?>">
                             <?php else: ?>
-                                <span>✦</span>
+                                <span>Sin imagen</span>
                             <?php endif; ?>
                         </div>
                         <div class="tarjeta-info">
