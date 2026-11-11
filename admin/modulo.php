@@ -101,6 +101,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     if ($accion === "eliminar") {
         $id = (int) ($_POST["id"] ?? 0);
 
+        // Intentar eliminar el registro. Si está relacionado con otra tabla, MySQL puede impedirlo.
         try {
             $consulta = $conexion->prepare("DELETE FROM $tabla WHERE id = ?");
             $consulta->execute([$id]);
@@ -131,13 +132,16 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
         // Revisar uno por uno los campos obligatorios antes de guardar.
         $faltanDatos = false;
+        // Revisar los campos obligatorios definidos para el módulo actual.
         foreach ($obligatorios as $campo) {
+            // Si un campo obligatorio llegó vacío, marcar que faltan datos.
             if (trim($_POST[$campo] ?? "") === "") {
                 $faltanDatos = true;
                 break;
             }
         }
 
+        // No guardar el registro mientras falte alguno de los datos obligatorios.
         if ($faltanDatos) {
             $mensaje = "Completa los campos obligatorios.";
         } else {
@@ -252,6 +256,7 @@ $registros = $consulta->fetchAll(PDO::FETCH_ASSOC);
                             $tipo = "text";
                             $paso = "1";
 
+                            // Los IDs y las existencias son números enteros.
                             if (in_array($campo, ["cliente_id", "existencia"], true)) {
                                 $tipo = "number";
                                 $paso = "1";
