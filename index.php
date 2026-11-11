@@ -2,7 +2,6 @@
 // Cargar la conexión para poder leer los platillos guardados en MySQL.
 require_once "config/conexion.php";
 
-// Obtener los platillos que están disponibles para mostrarse en el menú.
 // Consultar los platillos disponibles y el nombre de la categoría a la que pertenecen.
 $sql = "SELECT
             platillos.*,
@@ -12,7 +11,6 @@ $sql = "SELECT
         WHERE platillos.disponible = 1
         ORDER BY platillos.id DESC";
 
-// Ejecutar la consulta y guardar los resultados en un arreglo.
 // Ejecutar la consulta que se preparó arriba.
 $consulta = $conexion->query($sql);
 // Guardar todos los resultados en un arreglo para recorrerlos en el HTML.
