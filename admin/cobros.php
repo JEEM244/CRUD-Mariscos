@@ -2,7 +2,7 @@
 // Primero inicio la sesión para comprobar que el administrador tenga acceso.
 session_start();
 
-// Aquí enviar al inicio de sesión a cualquier persona que no esté autenticada.
+// Después envío al inicio de sesión a cualquier persona que no esté autenticada.
 if (empty($_SESSION["admin"])) {
     header("Location: index.php");
     exit;
@@ -36,7 +36,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
         // Aquí solo cambiar el estado si se encontró un pedido que todavía no estaba pagado.
         if ($mesaId) {
-            // Aquí cambiar el estado del pedido a Pagado.
+            // Ahora cambio el estado del pedido a Pagado.
             $actualizarPedido = $conexion->prepare(
                 "UPDATE pedidos SET estado = 'Pagado' WHERE id = ?"
             );
@@ -49,7 +49,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             $liberarMesa->execute([$mesaId]);
         }
 
-        // Aquí confirmar los dos cambios en la base de datos.
+        // Por último, confirmo los dos cambios en la base de datos.
         $conexion->commit();
 
         header("Location: cobros.php?ok=1");
@@ -66,7 +66,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     }
 }
 
-// Aquí consultar solamente los pedidos que todavía no están marcados como pagados.
+// Ahora consulto solamente los pedidos que todavía no están marcados como pagados.
 $sql = "SELECT
             pedidos.id,
             pedidos.total,
