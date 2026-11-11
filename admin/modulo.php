@@ -118,9 +118,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $id = (int) ($_POST["id"] ?? 0);
         $valores = [];
 
-        // Recorrer los campos del módulo y tomar el valor que escribió el usuario.
-        // Crear una condición para cada columna que se va a actualizar.
-                foreach ($columnas as $columna) {
+        // Recorrer los campos del módulo y tomar los valores que escribió el usuario.
+        foreach ($columnas as $columna) {
             $valor = trim($_POST[$columna] ?? "");
 
             // Los campos numéricos pueden quedar como null cuando no se escribió ningún valor.
@@ -147,6 +146,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             if ($id > 0) {
                 $partes = [];
 
+                // Preparar una condición por cada columna que se va a actualizar.
                 foreach ($columnas as $columna) {
                     $partes[] = "$columna = ?";
                 }
@@ -240,6 +240,8 @@ $registros = $consulta->fetchAll(PDO::FETCH_ASSOC);
                         <?php if ($campo === "estado"): ?>
                             <select name="estado">
                                 <?php foreach (["Pendiente", "Solicitada", "Emitida"] as $estado): ?>
+                                    <!-- Recorrer los estados permitidos y crear una opción por cada uno. -->
+                                <?php foreach (["Pendiente", "Solicitada", "Emitida"] as $estado): ?>
                                     <option value="<?= $estado ?>"
                                         <?= ($registroEditar["estado"] ?? "Pendiente") === $estado ? "selected" : "" ?>>
                                         <?= $estado ?>
@@ -248,8 +250,8 @@ $registros = $consulta->fetchAll(PDO::FETCH_ASSOC);
                             </select>
                         <?php else: ?>
                         <?php
-                            // Elegir el tipo de entrada de acuerdo con el dato que se va a capturar.
-                            // Los campos empiezan como texto. Más abajo se cambia el tipo cuando deben recibir números.
+                            // Elegir si el campo será de texto o de número según el tipo de dato.
+                            // El valor step define si se permiten enteros o cantidades con decimales.
                             $tipo = "text";
                             $paso = "1";
 
@@ -262,6 +264,7 @@ $registros = $consulta->fetchAll(PDO::FETCH_ASSOC);
                             }
                             ?>
 
+                            <!-- Mostrar el campo con su tipo, valor actual y validaciones básicas. -->
                             <input
                                 type="<?= $tipo ?>"
                                 name="<?= $campo ?>"
@@ -296,6 +299,7 @@ $registros = $consulta->fetchAll(PDO::FETCH_ASSOC);
                 <thead>
                     <tr>
                         <th>ID</th>
+                                <!-- Crear un encabezado por cada campo del módulo. -->
                         <?php foreach ($campos as $etiqueta): ?>
                             <th><?= htmlspecialchars($etiqueta) ?></th>
                         <?php endforeach; ?>
@@ -310,6 +314,7 @@ $registros = $consulta->fetchAll(PDO::FETCH_ASSOC);
                         <tr>
                             <td><?= (int) $registro["id"] ?></td>
 
+                            <!-- Mostrar el valor de cada columna en la fila actual. -->
                             <?php foreach ($columnas as $columna): ?>
                                 <td><?= htmlspecialchars((string) ($registro[$columna] ?? "")) ?></td>
                             <?php endforeach; ?>
