@@ -18,9 +18,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     // Obtener el ID del pedido enviado desde el botón de registrar pago.
     $pedidoId = (int) ($_POST["pedido_id"] ?? 0);
 
-    // Intentar registrar el pago y liberar la mesa dentro de una sola operación.
+    // Abrir una transacción para registrar el pago y liberar la mesa como una sola operación.
     try {
-        // Abrir una transacción para actualizar el pedido y liberar la mesa como una sola operación.
         $conexion->beginTransaction();
 
         // Buscar el ID de la mesa y bloquear el pedido mientras se comprueba que siga pendiente.
