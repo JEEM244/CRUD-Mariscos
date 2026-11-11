@@ -30,9 +30,11 @@ El proyecto está desarrollado con PHP directo, sin utilizar un framework de bac
 
 La identidad visual del sistema se llama **MARISCOS PIPE**. Su diseño toma como referencia el minimalismo editorial japonés, pero no pretende representar un restaurante japonés.
 
-La interfaz busca ser clara, ordenada y profesional. Para lograrlo utiliza:
+La interfaz busca ser clara, ordenada y profesional, con una identidad relacionada con el ambiente marino y los colores habituales de un restaurante de mariscos. Para lograrlo utiliza:
 
-- Una paleta de colores neutros y cálidos.
+- Una paleta de azul marino, azul océano y naranja, acompañada de fondos claros.
+- Azul marino para dar estructura y contraste; azul océano para elementos secundarios; naranja para acciones y detalles destacados.
+- En el tema oscuro se conservan los mismos acentos sobre fondos azulados profundos.
 - Tipografía serif para algunos títulos y sans-serif para los datos y controles.
 - Espacios y líneas divisorias para separar la información.
 - Una navegación lateral en el panel administrativo.
