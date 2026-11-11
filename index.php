@@ -23,14 +23,14 @@ $platillos = $consulta->fetchAll(PDO::FETCH_ASSOC);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mariscos El Puerto</title>
+    <title>MARISCOS PIPE</title>
     <link rel="stylesheet" href="assets/css/estilos.css">
 </head>
 <body class="public-site">
         <!-- Encabezado público con el nombre del restaurante y los enlaces del menú. -->
     <header class="barra">
         <a class="marca" href="index.php">
-            <span>EL PUERTO</span>
+            <span>MARISCOS PIPE</span>
             <small>MARISCOS</small>
         </a>
 
@@ -113,7 +113,7 @@ $platillos = $consulta->fetchAll(PDO::FETCH_ASSOC);
                 <!-- Sección final con información breve del restaurante. -->
         <section class="franja" id="contacto">
             <div>
-                <p class="etiqueta">MARISCOS EL PUERTO</p>
+                <p class="etiqueta">MARISCOS PIPE</p>
                 <h2>Un buen día comienza con algo del mar.</h2>
             </div>
 
@@ -123,7 +123,7 @@ $platillos = $consulta->fetchAll(PDO::FETCH_ASSOC);
 
         <!-- Pie de página con el año actual y el acceso al panel administrativo. -->
     <footer>
-        <span>© <?= date("Y") ?> Mariscos El Puerto</span>
+        <span>© <?= date("Y") ?> MARISCOS PIPE</span>
         <a href="admin/">Panel administrativo</a>
     </footer>
     <script src="assets/js/tema.js" defer></script>
