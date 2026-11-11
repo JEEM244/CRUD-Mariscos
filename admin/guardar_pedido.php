@@ -2,7 +2,7 @@
 // Primero inicio la sesión para confirmar que la petición viene de un administrador conectado.
 session_start();
 
-// Aquí bloqueo el acceso si no hay una sesión activa.
+// Ahora bloqueo el acceso si no hay una sesión activa.
 if (empty($_SESSION["admin"])) {
     header("Location: index.php");
     exit;
@@ -11,13 +11,13 @@ if (empty($_SESSION["admin"])) {
 // Ahora cargo la conexión con la base de datos.
 require_once "../config/conexion.php";
 
-// Aquí leo la mesa que seleccionó el mesero y convertir su ID a número entero.
+// Ahora leo la mesa que seleccionó el mesero y convertir su ID a número entero.
 $mesaId = (int) ($_POST["mesa_id"] ?? 0);
-// Aquí el cliente es opcional: si el selector viene vacío, guardar null.
+// El cliente es opcional: si el selector viene vacío, guardar null.
 $clienteId = $_POST["cliente_id"] ?? "";
 $clienteId = $clienteId === "" ? null : (int) $clienteId;
 
-// Aquí recibo las listas de platillos y cantidades que llegaron desde el formulario.
+// Ahora recibo las listas de platillos y cantidades que llegaron desde el formulario.
 $platillos = $_POST["platillo"] ?? [];
 $cantidades = $_POST["cantidad"] ?? [];
 
@@ -32,7 +32,7 @@ try {
     // Aquí abro una transacción. Así, si una parte falla, se pueden cancelar todos los cambios.
     $conexion->beginTransaction();
 
-    // Aquí bloqueo la fila de la mesa mientras se revisa que todavía esté libre.
+    // Ahora bloqueo la fila de la mesa mientras se revisa que todavía esté libre.
     $consulta = $conexion->prepare("SELECT estado FROM mesas WHERE id = ? FOR UPDATE");
     $consulta->execute([$mesaId]);
     $estadoMesa = $consulta->fetchColumn();
@@ -52,7 +52,7 @@ try {
     $pedidoId = $conexion->lastInsertId();
     $total = 0;
 
-    // Aquí estas consultas se preparan una sola vez y se usan para cada platillo.
+    // Estas consultas se preparan una sola vez y se usan para cada platillo.
     $buscarPlatillo = $conexion->prepare(
         "SELECT precio FROM platillos WHERE id = ? AND disponible = 1"
     );
@@ -65,10 +65,10 @@ try {
     // Ahora recorro los platillos que eligió el mesero, junto con su cantidad.
     foreach ($platillos as $posicion => $idPlatillo) {
         $idPlatillo = (int) $idPlatillo;
-        // Aquí obtener la cantidad que corresponde a este platillo.
+        // Ahora obtengo la cantidad que corresponde a este platillo.
         $cantidad = (int) ($cantidades[$posicion] ?? 1);
 
-        // Aquí evitar IDs inválidos y cantidades fuera del rango permitido por el formulario.
+        // Con esta validación evito IDs inválidos y cantidades fuera del rango permitido por el formulario.
         if ($idPlatillo <= 0 || $cantidad < 1 || $cantidad > 30) {
             throw new Exception("Revisa los platillos y las cantidades.");
         }
@@ -94,7 +94,7 @@ try {
         $total += (float) $precio * $cantidad;
     }
 
-    // Aquí evitar guardar un pedido si no se pudo agregar ningún platillo válido.
+    // Con esta validación evito guardar un pedido si no se pudo agregar ningún platillo válido.
     if ($total <= 0) {
         throw new Exception("El pedido no tiene platillos válidos.");
     }
@@ -105,13 +105,13 @@ try {
     );
     $actualizarPedido->execute([$total, $pedidoId]);
 
-    // Aquí cambiar el estado de la mesa para que ya no aparezca como disponible.
+    // Ahora cambio el estado de la mesa para que ya no aparezca como disponible.
     $actualizarMesa = $conexion->prepare(
         "UPDATE mesas SET estado = 'Ocupada' WHERE id = ?"
     );
     $actualizarMesa->execute([$mesaId]);
 
-    // Aquí confirmar la transacción: pedido, detalles y estado de la mesa quedan guardados.
+    // Por último, confirmo la transacción: pedido, detalles y estado de la mesa quedan guardados.
     $conexion->commit();
 
     header("Location: pedidos.php?ok=1");
