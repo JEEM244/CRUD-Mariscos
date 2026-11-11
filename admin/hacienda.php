@@ -30,6 +30,7 @@ if (isset($_POST["desconectar"])) {
 
 // Recibir los datos del formulario para guardar una solicitud de facturación de ejemplo.
 if (isset($_POST["generar_demo"])) {
+    // Comprobar que primero se haya activado la conexión simulada.
     if (empty($_SESSION["hacienda_demo"])) {
         $error = "Primero activa la conexión de prueba.";
     } else {
@@ -92,6 +93,7 @@ $sql = "SELECT facturacion.*, clientes.nombre AS nombre_cliente
 $consulta = $conexion->query($sql);
 $solicitudes = $consulta->fetchAll(PDO::FETCH_ASSOC);
 
+// Si se actualizó la página, recuperar el último folio guardado en la sesión.
 if ($folioDemo === "" && !empty($_SESSION["ultimo_folio_demo"])) {
     $folioDemo = $_SESSION["ultimo_folio_demo"];
 }
