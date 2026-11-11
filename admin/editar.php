@@ -14,6 +14,7 @@ require_once "../config/conexion.php";
 // Tomar el ID de la dirección y comprobar que sea un número entero.
 $id = filter_input(INPUT_GET, "id", FILTER_VALIDATE_INT);
 
+// Si el ID no es válido, no hay un platillo que se pueda editar.
 if (!$id) {
     header("Location: platillos.php");
     exit;
@@ -46,6 +47,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     // Un checkbox marcado vale 1; si no se marca, el platillo queda oculto con valor 0.
     $disponible = isset($_POST["disponible"]) ? 1 : 0;
 
+    // Comprobar que el nombre tenga texto y que el precio sea un número igual o mayor a cero.
     if ($nombre === "" || !is_numeric($precio) || (float) $precio < 0) {
         $error = "Escribe el nombre del platillo y un precio válido.";
     } else {
