@@ -13,8 +13,7 @@ require_once "../config/conexion.php";
 
 $error = "";
 
-// Cuando se confirma un pago, se actualiza el pedido y se libera la mesa.
-// Este bloque se ejecuta cuando el usuario confirma que recibió un pago.
+// Cuando el usuario confirma el pago, se actualiza el pedido y se libera su mesa.
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     // Obtener el ID del pedido enviado desde el botón de registrar pago.
     $pedidoId = (int) ($_POST["pedido_id"] ?? 0);
@@ -24,6 +23,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $conexion->beginTransaction();
 
         // Consultar la mesa del pedido y bloquear ese registro mientras se procesa el pago.
+        // Buscar el ID de la mesa y comprobar que el pedido siga pendiente.
         $consulta = $conexion->prepare(
             "SELECT mesa_id
              FROM pedidos
@@ -32,6 +32,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         );
         $consulta->execute([$pedidoId]);
 
+        // Obtener el ID de la mesa que está relacionada con ese pedido.
         $mesaId = $consulta->fetchColumn();
 
         // Solo cambiar el estado si se encontró un pedido que todavía no estaba pagado.
@@ -65,8 +66,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     }
 }
 
-// Mostrar los pedidos que todavía no se han pagado.
-// Preparar la consulta que muestra únicamente los pedidos que siguen pendientes de pago.
+// Consultar solamente los pedidos que todavía no están marcados como pagados.
 $sql = "SELECT
             pedidos.id,
             pedidos.total,
