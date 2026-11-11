@@ -1,40 +1,64 @@
-# Mariscos El Puerto — Sistema de pedidos
+# Mariscos El Puerto
 
-Sistema web de restaurante para tomar pedidos por mesa, consultar el menú y administrar clientes, proveedores, facturación y almacén.
+Sistema web para administrar un restaurante de mariscos. Permite consultar el menú, registrar pedidos por mesa y llevar el control de clientes, proveedores, almacén y facturación.
 
-## Tecnologías
-- PHP básico a intermedio (sin framework)
-- MySQL / MariaDB
-- HTML, CSS y JavaScript básico
-- PDO para conexión y consultas preparadas
+## Herramientas utilizadas
 
-## Instalación local con XAMPP
-1. Copia la carpeta en `C:\\xampp\\htdocs\\CRUD-Mariscos`.
-2. Inicia Apache y MySQL.
-3. Para una instalación nueva, abre phpMyAdmin e importa `database.sql`.
-   Si ya tenías una base de datos y solo necesitas agregar las funciones de pedidos, importa `actualizar_bd.sql` dentro de `mariscos_db`. Este segundo archivo agrega las tablas auxiliares que falten sin borrar los registros existentes.
-4. Revisa `config/conexion.php` si tu usuario o contraseña de MySQL son diferentes.
-5. Abre `http://localhost/CRUD-Mariscos/admin/`.
+- PHP para la parte del servidor.
+- MySQL para guardar la información.
+- HTML para la estructura de las páginas.
+- CSS para el diseño.
+- JavaScript para calcular el total de los pedidos.
+- PDO para conectar PHP con MySQL.
 
-## Acceso local
-- Usuario: `admin`
-- Contraseña: `mariscos123`
+El proyecto está hecho con PHP directo, sin utilizar un framework.
 
-Es una cuenta de prueba para desarrollo local. Antes de publicar el sistema se debe implementar autenticación con contraseñas cifradas, roles y protección CSRF.
+## Cómo instalarlo en XAMPP
 
-## Módulos
-- **Pedidos:** elegir mesa, cliente opcional, platillos y cantidades. El total se calcula y guarda.
-- **Clientes:** alta, consulta, actualización y eliminación.
-- **Proveedores:** alta, consulta, actualización y eliminación.
-- **Facturación:** captura de datos fiscales y estado de la factura.\n- **Hacienda / SAT (simulación):** botón de conexión, captura de datos y respuesta ficticia para representar el flujo que un estudiante imagina. No realiza conexión real ni emite CFDI.
-- **Almacén:** control básico de existencias y costos.
-- **Menú:** administración de platillos y precios.
+1. Copia la carpeta del proyecto en \`C:\\xampp\\htdocs\\CRUD-Mariscos\`.
+2. Abre el panel de XAMPP e inicia Apache y MySQL.
+3. Entra a phpMyAdmin.
+4. Si es la primera instalación, crea la base de datos importando el archivo \`database.sql\`.
+5. Si ya tenías una base de datos y solo necesitas agregar las funciones de pedidos, selecciona \`mariscos_db\` e importa \`actualizar_bd.sql\`.
+6. Revisa los datos de conexión en \`config/conexion.php\`.
+7. Abre \`http://localhost/CRUD-Mariscos/\` para ver el menú.
+
+El archivo \`database.sql\` se utiliza para una instalación desde cero. No lo importes encima de una base de datos que ya tenga información, porque sus tablas se crearán nuevamente y pueden aparecer errores de tablas existentes.
+
+El archivo \`actualizar_bd.sql\` agrega las tablas que necesita el módulo de pedidos sin borrar los registros que ya están guardados.
+
+## Acceso al panel
+
+- Usuario: \`admin\`
+- Contraseña: \`mariscos123\`
+
+Son datos de acceso para trabajar en local. Antes de publicar el sistema en internet se necesita mejorar el inicio de sesión y agregar permisos.
+
+## Módulos del sistema
+
+- **Pedidos:** permite elegir una mesa, seleccionar platillos y registrar cantidades.
+- **Cobros:** muestra los pedidos pendientes y permite marcarlos como pagados.
+- **Menú y precios:** permite agregar, editar, buscar y eliminar platillos.
+- **Clientes:** guarda los datos de los clientes.
+- **Proveedores:** lleva un registro de los proveedores.
+- **Almacén:** guarda productos, existencias y costos.
+- **Facturación:** almacena datos fiscales y el estado de las solicitudes.
+- **Hacienda / SAT:** representa un posible proceso de conexión, pero funciona únicamente como simulación escolar.
 
 ## Base de datos
-Las cuatro tablas principales son `clientes`, `proveedores`, `facturacion` y `almacen`. Se agregan tablas auxiliares para mesas, categorías, platillos, pedidos y detalles del pedido. Hay al menos 10 registros de ejemplo en cada tabla principal.
 
-## Facturación electrónica
-El módulo almacena datos fiscales y permite llevar un estado de seguimiento. **No emite CFDI ni está conectado al SAT todavía.** Para eso se necesita integrar un PAC autorizado, configurar credenciales y realizar pruebas conforme a los requisitos fiscales vigentes.
+Las tablas principales son \`clientes\`, \`proveedores\`, \`almacen\` y \`facturacion\`.
 
-## Nota de desarrollo
-El diseño usa una apariencia sencilla para un sistema de restaurante: fondo claro, tablas limpias, formularios simples y tonos verdes discretos. El código se mantiene en PHP directo para que sea entendible en un nivel básico-intermedio.
+También se utilizan tablas para las mesas, categorías, platillos y pedidos. El archivo de instalación incluye registros de ejemplo para poder probar los módulos.
+
+## Sobre la simulación de Hacienda
+
+El apartado de Hacienda no se conecta realmente al SAT. Solo guarda una solicitud de prueba y muestra una respuesta ficticia para representar cómo podría ser el proceso. No genera CFDI ni comprobantes fiscales válidos.
+
+## Organización de carpetas
+
+- \`admin/\`: páginas para administrar el restaurante.
+- \`assets/css/\`: estilos del sitio.
+- \`config/\`: conexión con la base de datos.
+- \`database.sql\`: creación inicial de la base de datos.
+- \`actualizar_bd.sql\`: actualización para agregar las tablas de pedidos.
