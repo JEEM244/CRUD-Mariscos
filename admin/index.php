@@ -11,7 +11,7 @@ if (isset($_POST["entrar"])) {
 
     if ($usuario === $usuarioCorrecto && $contrasena === $contrasenaCorrecta) {
         $_SESSION["admin"] = true;
-        header("Location: platillos.php");
+        header("Location: panel.php");
         exit;
     }
 
