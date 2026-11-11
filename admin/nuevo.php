@@ -11,7 +11,6 @@ if (empty($_SESSION["admin"])) {
 // Cargar la conexión para consultar las categorías y guardar el nuevo platillo.
 require_once "../config/conexion.php";
 
-// Cargar las categorías para mostrarlas en la lista.
 // Consultar las categorías para llenar el selector del formulario.
 $consulta = $conexion->query("SELECT * FROM categorias ORDER BY nombre");
 $categorias = $consulta->fetchAll(PDO::FETCH_ASSOC);
@@ -83,6 +82,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         <?php endif; ?>
 
                 <!-- Los datos se envían a este mismo archivo mediante POST. -->
+        <!-- Enviar los datos a este mismo archivo para validarlos y guardarlos. -->
         <form method="POST">
             <label>
                 Nombre del platillo
@@ -94,6 +94,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 <textarea name="descripcion" rows="4"></textarea>
             </label>
 
+            <!-- El precio admite decimales para poder capturar centavos. -->
             <label>
                 Precio (MXN)
                 <input type="number" name="precio" min="0" step="0.01" required>
