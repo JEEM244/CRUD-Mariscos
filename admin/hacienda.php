@@ -71,7 +71,7 @@ if ($folioDemo === "" && !empty($_SESSION["ultimo_folio_demo"])) {
 </head>
 <body class="pixel-bg">
 <header class="topbar">
-    <a class="pixel-logo" href="panel.php">EL PUERTO <small>HACIENDA LINK / DEMO</small></a>
+    <a class="pixel-logo" href="panel.php">EL PUERTO <small>ADMINISTRACIÓN</small></a>
     <nav><a href="panel.php">Panel</a><a href="modulo.php?tabla=facturacion">Facturación</a><a href="index.php?salir=1">Salir</a></nav>
 </header>
 
