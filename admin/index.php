@@ -25,7 +25,6 @@ if (isset($_POST["entrar"])) {
     $error = "El usuario o la contraseña no son correctos.";
 }
 
-// Cerrar la sesión cuando se presiona el enlace de salida.
 // Si la dirección contiene salir, cerrar la sesión actual.
 if (isset($_GET["salir"])) {
     session_destroy();
@@ -34,7 +33,6 @@ if (isset($_GET["salir"])) {
     exit;
 }
 
-// Si ya se inició sesión, no hace falta mostrar el formulario.
 // Si ya existe una sesión, llevar al usuario directamente al panel.
 if (!empty($_SESSION["admin"])) {
     header("Location: panel.php");
