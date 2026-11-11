@@ -8,13 +8,13 @@ $contrasenaCorrecta = "mariscos123";
 
 // Ahora compruebo si se presionó el botón Entrar.
 if (isset($_POST["entrar"])) {
-    // Aquí recibo el usuario y la contraseña escritos en el formulario.
+    // Ahora recibo el usuario y la contraseña escritos en el formulario.
     $usuario = $_POST["usuario"] ?? "";
     $contrasena = $_POST["contrasena"] ?? "";
 
     // Aquí comparo los datos recibidos con los datos de acceso definidos arriba.
     if ($usuario === $usuarioCorrecto && $contrasena === $contrasenaCorrecta) {
-        // Aquí guardar en la sesión que el administrador ya inició sesión.
+        // Ahora guardo en la sesión que el administrador ya inició sesión.
         $_SESSION["admin"] = true;
 
         header("Location: panel.php");
@@ -62,7 +62,7 @@ if (!empty($_SESSION["admin"])) {
             <p class="mensaje-error"><?= htmlspecialchars($error) ?></p>
         <?php endif; ?>
 
-                <!-- Aquí enviar usuario y contraseña a este mismo archivo para validarlos. -->
+                <!-- Después envío usuario y contraseña a este mismo archivo para validarlos. -->
         <form method="POST">
             <label>
                 Usuario
