@@ -1,20 +1,20 @@
 <?php
-// Iniciar o recuperar la sesión del navegador.
+// Primero inicio o recupero la sesión del navegador.
 session_start();
 
-// Datos de acceso de prueba para utilizar el panel en la computadora local.
+// Aquí datos de acceso de prueba para utilizar el panel en la computadora local.
 $usuarioCorrecto = "admin";
 $contrasenaCorrecta = "mariscos123";
 
-// Comprobar si se presionó el botón Entrar.
+// Ahora compruebo si se presionó el botón Entrar.
 if (isset($_POST["entrar"])) {
-    // Recibir el usuario y la contraseña escritos en el formulario.
+    // Aquí recibo el usuario y la contraseña escritos en el formulario.
     $usuario = $_POST["usuario"] ?? "";
     $contrasena = $_POST["contrasena"] ?? "";
 
-    // Comparar los datos recibidos con los datos de acceso definidos arriba.
+    // Aquí comparo los datos recibidos con los datos de acceso definidos arriba.
     if ($usuario === $usuarioCorrecto && $contrasena === $contrasenaCorrecta) {
-        // Guardar en la sesión que el administrador ya inició sesión.
+        // Aquí guardar en la sesión que el administrador ya inició sesión.
         $_SESSION["admin"] = true;
 
         header("Location: panel.php");
@@ -38,7 +38,7 @@ if (!empty($_SESSION["admin"])) {
     exit;
 }
 ?>
-<!-- Esta parte contiene el formulario de acceso que se muestra en el navegador. -->
+<!-- Aquí esta parte contiene el formulario de acceso que se muestra en el navegador. -->
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -48,7 +48,7 @@ if (!empty($_SESSION["admin"])) {
     <link rel="stylesheet" href="../assets/css/estilos.css">
 </head>
 <body class="fondo-admin">
-        <!-- Contenedor central del formulario de inicio de sesión. -->
+        <!-- Aquí contenedor central del formulario de inicio de sesión. -->
     <main class="login">
         <a class="marca" href="../index.php">
             <span>EL PUERTO</span>
@@ -62,7 +62,7 @@ if (!empty($_SESSION["admin"])) {
             <p class="mensaje-error"><?= htmlspecialchars($error) ?></p>
         <?php endif; ?>
 
-                <!-- Enviar usuario y contraseña a este mismo archivo para validarlos. -->
+                <!-- Aquí enviar usuario y contraseña a este mismo archivo para validarlos. -->
         <form method="POST">
             <label>
                 Usuario
