@@ -11,8 +11,7 @@ if (empty($_SESSION["admin"])) {
 // Cargar la conexión con la base de datos.
 require_once "../config/conexion.php";
 
-// Recibir los datos que vienen del formulario.
-// Leer el número de la mesa que seleccionó el mesero y convertirlo a entero.
+// Leer la mesa que seleccionó el mesero y convertir su ID a número entero.
 $mesaId = (int) ($_POST["mesa_id"] ?? 0);
 // El cliente es opcional: si el selector viene vacío, guardar null.
 $clienteId = $_POST["cliente_id"] ?? "";
@@ -22,7 +21,6 @@ $clienteId = $clienteId === "" ? null : (int) $clienteId;
 $platillos = $_POST["platillo"] ?? [];
 $cantidades = $_POST["cantidad"] ?? [];
 
-// Comprobar que se haya elegido una mesa y por lo menos un platillo.
 // Revisar que exista una mesa válida y que se haya agregado al menos un platillo.
 if ($mesaId <= 0 || !is_array($platillos) || count($platillos) === 0) {
     header("Location: pedidos.php?error=1");
@@ -30,13 +28,10 @@ if ($mesaId <= 0 || !is_array($platillos) || count($platillos) === 0) {
 }
 
 try {
-    // Empezar una transacción para que todos los cambios se guarden juntos.
-    // Si algo falla, se pueden cancelar para no dejar un pedido incompleto.
-    // La transacción evita guardar un pedido a medias.
+    // Empezar una transacción. Así, si una parte falla, se pueden cancelar todos los cambios.
     $conexion->beginTransaction();
 
-    // Revisar que la mesa siga libre antes de ocuparla.
-    // Bloquear temporalmente la fila de la mesa y consultar si continúa libre.
+    // Bloquear la fila de la mesa mientras se revisa que todavía esté libre.
     $consulta = $conexion->prepare("SELECT estado FROM mesas WHERE id = ? FOR UPDATE");
     $consulta->execute([$mesaId]);
     $estadoMesa = $consulta->fetchColumn();
@@ -46,8 +41,7 @@ try {
         throw new Exception("La mesa no está disponible.");
     }
 
-    // Crear el pedido. El total se calcula más adelante.
-    // Crear primero el pedido principal. El total se actualizará cuando se sumen los platillos.
+    // Crear el pedido principal. El total se actualizará cuando se sumen sus platillos.
     $consulta = $conexion->prepare(
         "INSERT INTO pedidos (mesa_id, cliente_id, total)
          VALUES (?, ?, 0)"
@@ -70,13 +64,14 @@ try {
     // Recorrer los platillos que eligió el mesero, junto con su cantidad.
     foreach ($platillos as $posicion => $idPlatillo) {
         $idPlatillo = (int) $idPlatillo;
+        // Obtener la cantidad que corresponde a este platillo.
         $cantidad = (int) ($cantidades[$posicion] ?? 1);
 
+        // Evitar IDs inválidos y cantidades fuera del rango permitido por el formulario.
         if ($idPlatillo <= 0 || $cantidad < 1 || $cantidad > 30) {
             throw new Exception("Revisa los platillos y las cantidades.");
         }
 
-        // El precio se toma de la base de datos para evitar alterarlo desde el formulario.
         // Consultar el precio real desde MySQL; no confiar en el precio enviado por el navegador.
         $buscarPlatillo->execute([$idPlatillo]);
         $precio = $buscarPlatillo->fetchColumn();
@@ -101,8 +96,7 @@ try {
         throw new Exception("El pedido no tiene platillos válidos.");
     }
 
-    // Guardar el total y marcar la mesa como ocupada.
-    // Guardar el total final en el registro principal del pedido.
+    // Guardar el total final y marcar la mesa como ocupada.
     $actualizarPedido = $conexion->prepare(
         "UPDATE pedidos SET total = ? WHERE id = ?"
     );
