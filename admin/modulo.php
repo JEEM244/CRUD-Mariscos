@@ -130,11 +130,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             $valores[] = $valor;
         }
 
-        // Revisar uno por uno los campos obligatorios antes de guardar.
+        // Empezar suponiendo que no faltan datos y revisar los campos obligatorios del módulo.
         $faltanDatos = false;
-        // Revisar los campos obligatorios definidos para el módulo actual.
         foreach ($obligatorios as $campo) {
             // Si un campo obligatorio llegó vacío, marcar que faltan datos.
+            // Si el campo está vacío, indicar que hace falta información.
             if (trim($_POST[$campo] ?? "") === "") {
                 $faltanDatos = true;
                 break;
