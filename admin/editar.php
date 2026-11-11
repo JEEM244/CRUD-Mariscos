@@ -175,5 +175,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             <a class="volver" href="platillos.php">Cancelar</a>
         </form>
     </main>
+    <script src="../assets/js/tema.js" defer></script>
 </body>
 </html>
