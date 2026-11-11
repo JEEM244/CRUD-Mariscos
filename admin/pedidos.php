@@ -258,5 +258,6 @@ $pedidos = $consulta->fetchAll(PDO::FETCH_ASSOC);
         // Aquí calcular el total inicial al cargar la página.
         calcularTotal();
     </script>
+    <script src="../assets/js/tema.js" defer></script>
 </body>
 </html>
