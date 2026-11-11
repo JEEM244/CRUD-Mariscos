@@ -25,7 +25,7 @@ if (isset($_GET["salir"])) {
 }
 
 if (!empty($_SESSION["admin"])) {
-    header("Location: platillos.php");
+    header("Location: panel.php");
     exit;
 }
 ?>
@@ -41,7 +41,7 @@ if (!empty($_SESSION["admin"])) {
     <main class="login">
         <a class="marca" href="../index.php"><span>EL PUERTO</span><small>ADMINISTRACIÓN</small></a>
         <h1>Bienvenido</h1>
-        <p>Ingresa para administrar los platillos del menú.</p>
+        <p>Ingresa para administrar los pedidos y la información del restaurante.</p>
         <?php if (isset($error)): ?><p class="mensaje-error"><?= htmlspecialchars($error) ?></p><?php endif; ?>
         <form method="POST">
             <label>Usuario</label>
