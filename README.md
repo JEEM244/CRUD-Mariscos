@@ -1,36 +1,39 @@
-# Mariscos El Puerto
+# Mariscos El Puerto — Sistema de pedidos
 
-Sistema web para una marisquería con catálogo público y panel de administración CRUD.
+Sistema web de restaurante para tomar pedidos por mesa, consultar el menú y administrar clientes, proveedores, facturación y almacén.
 
 ## Tecnologías
-- PHP 8+
+- PHP básico a intermedio (sin framework)
 - MySQL / MariaDB
-- HTML5 y CSS3
+- HTML, CSS y JavaScript básico
+- PDO para conexión y consultas preparadas
 
-## Instalación con XAMPP
-1. Copia el proyecto dentro de `C:\\xampp\\htdocs\\CRUD-Mariscos`.
-2. Inicia Apache y MySQL desde XAMPP.
-3. Abre phpMyAdmin en `http://localhost/phpmyadmin`.
-4. Importa el archivo `database.sql`.
-5. Revisa los datos de conexión en `config/conexion.php`.
-6. Abre `http://localhost/CRUD-Mariscos/`.
+## Instalación local con XAMPP
+1. Copia la carpeta en `C:\\xampp\\htdocs\\CRUD-Mariscos`.
+2. Inicia Apache y MySQL.
+3. Abre phpMyAdmin y ejecuta/importa `database.sql`.
+4. Revisa `config/conexion.php` si tu usuario o contraseña de MySQL son diferentes.
+5. Abre `http://localhost/CRUD-Mariscos/admin/`.
 
-## Panel de administración
-- Dirección: `http://localhost/CRUD-Mariscos/admin/`
+## Acceso local
 - Usuario: `admin`
-- Contraseña inicial: `mariscos123`
+- Contraseña: `mariscos123`
 
-Cambia la contraseña antes de publicar el sitio en internet. Este acceso inicial es para desarrollo local.
+Es una cuenta de prueba para desarrollo local. Antes de publicar el sistema se debe implementar autenticación con contraseñas cifradas, roles y protección CSRF.
 
-## Funciones
-- Consultar platillos en el menú público.
-- Crear, editar y eliminar platillos.
-- Activar o desactivar platillos.
-- Buscar platillos por nombre.
-- Registrar nombre, descripción, categoría, precio e imagen (URL).
+## Módulos
+- **Pedidos:** elegir mesa, cliente opcional, platillos y cantidades. El total se calcula y guarda.
+- **Clientes:** alta, consulta, actualización y eliminación.
+- **Proveedores:** alta, consulta, actualización y eliminación.
+- **Facturación:** captura de datos fiscales y estado de la factura.
+- **Almacén:** control básico de existencias y costos.
+- **Menú:** administración de platillos y precios.
 
-## Estructura
-- `config/`: conexión a la base de datos.
-- `admin/`: inicio de sesión y administración.
-- `assets/css/`: estilos.
-- `database.sql`: base de datos y datos de ejemplo.
+## Base de datos
+Las cuatro tablas principales son `clientes`, `proveedores`, `facturacion` y `almacen`. Se agregan tablas auxiliares para mesas, categorías, platillos, pedidos y detalles del pedido. Hay al menos 10 registros de ejemplo en cada tabla principal.
+
+## Facturación electrónica
+El módulo almacena datos fiscales y permite llevar un estado de seguimiento. **No emite CFDI ni está conectado al SAT todavía.** Para eso se necesita integrar un PAC autorizado, configurar credenciales y realizar pruebas conforme a los requisitos fiscales vigentes.
+
+## Nota de desarrollo
+El diseño usa una apariencia retro de videojuego/arcade sencilla: fondo oscuro, paneles tipo pixel, bordes marcados y acentos turquesa, rosa y amarillo. El código se mantiene en PHP directo para que sea entendible en un nivel básico-intermedio.
