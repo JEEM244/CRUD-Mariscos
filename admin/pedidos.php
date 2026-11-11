@@ -239,11 +239,14 @@ $pedidos = $consulta->fetchAll(PDO::FETCH_ASSOC);
 
         // Detectar si se presionó el botón Quitar dentro de alguna fila.
         contenedorLineas.addEventListener("click", function (evento) {
+            // Revisar si el clic se hizo sobre el botón que quita una fila.
             if (evento.target.classList.contains("remove-line")) {
+                // Contar cuántas filas hay antes de quitar la seleccionada.
                 const lineas = contenedorLineas.querySelectorAll(".order-line");
 
                 // No permitir que se elimine la última fila del pedido.
                 if (lineas.length > 1) {
+                    // Buscar la fila del botón presionado y quitarla del formulario.
                     evento.target.closest(".order-line").remove();
                     calcularTotal();
                 }
