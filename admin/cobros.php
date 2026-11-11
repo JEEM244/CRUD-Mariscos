@@ -1,28 +1,28 @@
 <?php
-// Iniciar la sesión para comprobar que el administrador tenga acceso.
+// Primero inicio la sesión para comprobar que el administrador tenga acceso.
 session_start();
 
-// Enviar al inicio de sesión a cualquier persona que no esté autenticada.
+// Aquí enviar al inicio de sesión a cualquier persona que no esté autenticada.
 if (empty($_SESSION["admin"])) {
     header("Location: index.php");
     exit;
 }
 
-// Cargar la conexión a MySQL para consultar y actualizar pedidos.
+// Ahora cargo la conexión a MySQL para consultar y actualizar pedidos.
 require_once "../config/conexion.php";
 
 $error = "";
 
 // Cuando el usuario confirma el pago, se actualiza el pedido y se libera su mesa.
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    // Obtener el ID del pedido enviado desde el botón de registrar pago.
+    // Ahora obtengo el ID del pedido enviado desde el botón de registrar pago.
     $pedidoId = (int) ($_POST["pedido_id"] ?? 0);
 
-    // Abrir una transacción para registrar el pago y liberar la mesa como una sola operación.
+    // Aquí abrir una transacción para registrar el pago y liberar la mesa como una sola operación.
     try {
         $conexion->beginTransaction();
 
-        // Buscar el ID de la mesa y bloquear el pedido mientras se comprueba que siga pendiente.
+        // Aquí buscar el ID de la mesa y bloquear el pedido mientras se comprueba que siga pendiente.
         $consulta = $conexion->prepare(
             "SELECT mesa_id
              FROM pedidos
@@ -31,25 +31,25 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         );
         $consulta->execute([$pedidoId]);
 
-        // Obtener el ID de la mesa que está relacionada con ese pedido.
+        // Ahora obtengo el ID de la mesa que está relacionada con ese pedido.
         $mesaId = $consulta->fetchColumn();
 
-        // Solo cambiar el estado si se encontró un pedido que todavía no estaba pagado.
+        // Aquí solo cambiar el estado si se encontró un pedido que todavía no estaba pagado.
         if ($mesaId) {
-            // Cambiar el estado del pedido a Pagado.
+            // Aquí cambiar el estado del pedido a Pagado.
             $actualizarPedido = $conexion->prepare(
                 "UPDATE pedidos SET estado = 'Pagado' WHERE id = ?"
             );
             $actualizarPedido->execute([$pedidoId]);
 
-            // Liberar la mesa para que pueda utilizarse en otro pedido.
+            // Aquí liberar la mesa para que pueda utilizarse en otro pedido.
             $liberarMesa = $conexion->prepare(
                 "UPDATE mesas SET estado = 'Libre' WHERE id = ?"
             );
             $liberarMesa->execute([$mesaId]);
         }
 
-        // Confirmar los dos cambios en la base de datos.
+        // Aquí confirmar los dos cambios en la base de datos.
         $conexion->commit();
 
         header("Location: cobros.php?ok=1");
@@ -57,7 +57,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     // Si ocurre un error, deshacer los cambios y mostrar un mensaje.
     } catch (Throwable $error) {
-        // Deshacer los cambios únicamente si la transacción sigue abierta.
+        // Aquí deshacer los cambios únicamente si la transacción sigue abierta.
         if ($conexion->inTransaction()) {
             $conexion->rollBack();
         }
@@ -66,7 +66,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     }
 }
 
-// Consultar solamente los pedidos que todavía no están marcados como pagados.
+// Aquí consultar solamente los pedidos que todavía no están marcados como pagados.
 $sql = "SELECT
             pedidos.id,
             pedidos.total,
@@ -82,7 +82,7 @@ $sql = "SELECT
 $consulta = $conexion->query($sql);
 $pedidos = $consulta->fetchAll(PDO::FETCH_ASSOC);
 ?>
-<!-- Comienza la parte visual del módulo de cobros. -->
+<!-- Aquí comienza la parte visual del módulo de cobros. -->
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -104,7 +104,7 @@ $pedidos = $consulta->fetchAll(PDO::FETCH_ASSOC);
         </nav>
     </header>
 
-        <!-- El contenido principal muestra las cuentas que faltan por cobrar. -->
+        <!-- Aquí el contenido principal muestra las cuentas que faltan por cobrar. -->
     <main class="wrap">
         <p class="eyebrow">CAJA</p>
         <h1>Cobro de pedidos</h1>
@@ -120,7 +120,7 @@ $pedidos = $consulta->fetchAll(PDO::FETCH_ASSOC);
             <p class="notice"><?= htmlspecialchars($error) ?></p>
         <?php endif; ?>
 
-                <!-- La tabla muestra el total, la mesa y el cliente de cada pedido. -->
+                <!-- Aquí la tabla muestra el total, la mesa y el cliente de cada pedido. -->
         <div class="table-box">
             <table>
                 <thead>
@@ -135,7 +135,7 @@ $pedidos = $consulta->fetchAll(PDO::FETCH_ASSOC);
                 </thead>
 
                 <tbody>
-                                        <!-- Crear una fila por cada pedido que todavía no se ha pagado. -->
+                                        <!-- Aquí crear una fila por cada pedido que todavía no se ha pagado. -->
                     <?php foreach ($pedidos as $pedido): ?>
                         <tr>
                             <td>#<?= (int) $pedido["id"] ?></td>
