@@ -48,7 +48,7 @@ textarea {
     border-bottom: 1px solid var(--borde);
 }
 
-.pixel-logo,
+.logo-admin,
 .marca {
     display: flex;
     flex-direction: column;
@@ -58,7 +58,7 @@ textarea {
     letter-spacing: .4px;
 }
 
-.pixel-logo small,
+.logo-admin small,
 .marca small {
     margin-top: 2px;
     color: var(--texto-suave);
@@ -206,7 +206,7 @@ h3 {
 }
 
 /* Formularios y botones */
-.pixel-panel,
+.panel-contenido,
 .formulario-admin {
     margin: 22px 0;
     padding: 22px;
@@ -215,7 +215,7 @@ h3 {
     border-radius: 6px;
 }
 
-.pixel-panel h2 {
+.panel-contenido h2 {
     margin: 0 0 15px;
     font-size: 17px;
     font-weight: 600;
@@ -262,7 +262,7 @@ textarea:focus {
     border-color: var(--verde);
 }
 
-.pixel-button,
+.boton-principal,
 .small-btn,
 .boton {
     display: inline-flex;
@@ -279,7 +279,7 @@ textarea:focus {
     cursor: pointer;
 }
 
-.pixel-button:hover,
+.boton-principal:hover,
 .small-btn:hover,
 .boton:hover {
     background: var(--verde-hover);
@@ -655,7 +655,7 @@ tbody tr:hover {
 }
 
 footer,
-.pixel-footer {
+.pie-pagina {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -738,7 +738,7 @@ footer a:hover {
     }
 
     footer,
-    .pixel-footer {
+    .pie-pagina {
         align-items: flex-start;
         flex-direction: column;
     }
@@ -747,4 +747,14 @@ footer a:hover {
     .topbar {
         flex-direction: column;
     }
+}
+
+
+/* Estado de la conexión de demostración. */
+.estado-conectado {
+    color: #365b49;
+}
+
+.estado-desconectado {
+    color: #a94f48;
 }
