@@ -1,29 +1,29 @@
 <?php
-// Iniciar la sesión para comprobar que el usuario tenga acceso al panel.
+// Primero inicio la sesión para comprobar que el usuario tenga acceso al panel.
 session_start();
 
-// Si no ha iniciado sesión, no permitir que entre directamente a los pedidos.
+// Si todavía no inició sesión, no le permito que entre directamente a los pedidos.
 if (empty($_SESSION["admin"])) {
     header("Location: index.php");
     exit;
 }
 
-// Conectar con MySQL para consultar mesas, clientes, platillos y pedidos.
+// Aquí me conecto con MySQL para consultar mesas, clientes, platillos y pedidos.
 require_once "../config/conexion.php";
 
-// Traer las mesas ordenadas por su número para llenar el primer selector.
+// Primero traigo las mesas ordenadas por su número para llenar el primer selector.
 $consulta = $conexion->query("SELECT * FROM mesas ORDER BY numero");
 $mesas = $consulta->fetchAll(PDO::FETCH_ASSOC);
 
-// Consultar solo los platillos que están disponibles para venderse.
+// Después consulto solamente los platillos que están disponibles para venderse.
 $consulta = $conexion->query("SELECT * FROM platillos WHERE disponible = 1 ORDER BY nombre");
 $platillos = $consulta->fetchAll(PDO::FETCH_ASSOC);
 
-// Obtener los clientes para que el mesero pueda relacionar el pedido con uno de ellos.
+// Ahora obtengo los clientes para que el mesero pueda relacionar el pedido con uno de ellos.
 $consulta = $conexion->query("SELECT * FROM clientes ORDER BY nombre");
 $clientes = $consulta->fetchAll(PDO::FETCH_ASSOC);
 
-// Consultar los últimos pedidos y agregar el número de mesa a cada resultado.
+// Ahora consulto los últimos pedidos y agregar el número de mesa a cada resultado.
 $sql = "SELECT pedidos.*, mesas.numero AS numero_mesa
         FROM pedidos
         INNER JOIN mesas ON pedidos.mesa_id = mesas.id
@@ -33,7 +33,7 @@ $sql = "SELECT pedidos.*, mesas.numero AS numero_mesa
 $consulta = $conexion->query($sql);
 $pedidos = $consulta->fetchAll(PDO::FETCH_ASSOC);
 ?>
-<!-- Comienza la página que verá el mesero al registrar pedidos. -->
+<!-- Aquí comienza la página que verá el mesero al registrar pedidos. -->
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -43,7 +43,7 @@ $pedidos = $consulta->fetchAll(PDO::FETCH_ASSOC);
     <link rel="stylesheet" href="../assets/css/estilos.css">
 </head>
 <body>
-        <!-- Encabezado con el nombre del restaurante y los enlaces principales. -->
+        <!-- Aquí encabezado con el nombre del restaurante y los enlaces principales. -->
     <header class="topbar">
         <a class="logo-admin" href="panel.php">
             EL PUERTO
@@ -56,7 +56,7 @@ $pedidos = $consulta->fetchAll(PDO::FETCH_ASSOC);
         </nav>
     </header>
 
-        <!-- Contenido principal de la página de pedidos. -->
+        <!-- Aquí contenido principal de la página de pedidos. -->
     <main class="wrap">
         <p class="eyebrow">PEDIDOS</p>
         <h1>Crear pedido</h1>
@@ -70,7 +70,7 @@ $pedidos = $consulta->fetchAll(PDO::FETCH_ASSOC);
             <p class="notice">No se pudo guardar el pedido. Revisa la mesa y los platillos seleccionados.</p>
         <?php endif; ?>
 
-                <!-- El formulario manda los datos a guardar_pedido.php para registrarlos en MySQL. -->
+                <!-- Aquí el formulario manda los datos a guardar_pedido.php para registrarlos en MySQL. -->
         <form class="panel-contenido" method="POST" action="guardar_pedido.php" id="pedidoForm">
                         <!-- Primeros datos del pedido: mesa y cliente. -->
             <div class="form-grid">
@@ -145,7 +145,7 @@ $pedidos = $consulta->fetchAll(PDO::FETCH_ASSOC);
                 + Agregar otro platillo
             </button>
 
-                        <!-- El total es una estimación visual; el servidor vuelve a calcularlo antes de guardar. -->
+                        <!-- Aquí el total es una estimación visual; el servidor vuelve a calcularlo antes de guardar. -->
             <div class="total-box">
                 <span>Total estimado</span>
                 <strong id="total">$0.00</strong>
@@ -156,7 +156,7 @@ $pedidos = $consulta->fetchAll(PDO::FETCH_ASSOC);
             </button>
         </form>
 
-                <!-- Historial corto para revisar los pedidos registrados recientemente. -->
+                <!-- Aquí historial corto para revisar los pedidos registrados recientemente. -->
         <h2 class="section-title">Pedidos recientes</h2>
 
         <div class="table-box">
@@ -193,41 +193,41 @@ $pedidos = $consulta->fetchAll(PDO::FETCH_ASSOC);
     </main>
 
     <script>
-        // Obtener los elementos del formulario que JavaScript necesita modificar.
+        // Ahora obtengo los elementos del formulario que JavaScript necesita modificar.
         const contenedorLineas = document.getElementById("lineas");
         const botonAgregar = document.getElementById("addLine");
         const totalTexto = document.getElementById("total");
 
-        // Sumar el precio de cada platillo multiplicado por la cantidad seleccionada.
+        // Aquí sumo el precio de cada platillo multiplicado por la cantidad seleccionada.
         function calcularTotal() {
             let total = 0;
 
             const lineas = contenedorLineas.querySelectorAll(".order-line");
 
-            // Revisar cada fila del formulario para obtener el precio y la cantidad.
+            // Aquí revisar cada fila del formulario para obtener el precio y la cantidad.
             lineas.forEach(function (linea) {
-                // Obtener el selector del platillo que está en esta fila.
+                // Ahora obtengo el selector del platillo que está en esta fila.
                 const selector = linea.querySelector("select");
-                // Leer la cantidad y la opción que está seleccionada en esta fila.
+                // Aquí leo la cantidad y la opción que está seleccionada en esta fila.
                 const cantidad = linea.querySelector("input").value;
                 const opcion = selector.options[selector.selectedIndex];
 
-                // Convertir los valores a números antes de hacer la multiplicación.
+                // Aquí convertir los valores a números antes de hacer la multiplicación.
                 const precio = Number(opcion.dataset.precio || 0);
                 total += precio * Number(cantidad || 0);
             });
 
-            // Mostrar el total con dos decimales en el formulario.
+            // Aquí muestro el total con dos decimales en el formulario.
             totalTexto.textContent = "$" + total.toFixed(2);
         }
 
-        // Al presionar el botón, copiar la primera fila para agregar otro platillo.
+        // Aquí al presionar el botón, copiar la primera fila para agregar otro platillo.
         botonAgregar.addEventListener("click", function () {
-            // Copiar la primera fila para conservar los mismos campos y opciones.
+            // Aquí copiar la primera fila para conservar los mismos campos y opciones.
             const primeraLinea = contenedorLineas.querySelector(".order-line");
             const nuevaLinea = primeraLinea.cloneNode(true);
 
-            // Dejar el nuevo selector sin platillo y regresar la cantidad a uno.
+            // Aquí dejar el nuevo selector sin platillo y regresar la cantidad a uno.
             nuevaLinea.querySelector("select").selectedIndex = 0;
             nuevaLinea.querySelector("input").value = 1;
 
@@ -235,27 +235,27 @@ $pedidos = $consulta->fetchAll(PDO::FETCH_ASSOC);
             calcularTotal();
         });
 
-        // Actualizar el total cuando se cambie el platillo o su cantidad.
+        // Aquí actualizo el total cuando se cambie el platillo o su cantidad.
         contenedorLineas.addEventListener("change", calcularTotal);
         contenedorLineas.addEventListener("input", calcularTotal);
 
-        // Detectar si se presionó el botón Quitar dentro de alguna fila.
+        // Aquí reviso si se presionó el botón Quitar dentro de alguna fila.
         contenedorLineas.addEventListener("click", function (evento) {
-            // Revisar si el clic se hizo sobre el botón que quita una fila.
+            // Ahora reviso si el clic se hizo sobre el botón que quita una fila.
             if (evento.target.classList.contains("remove-line")) {
-                // Contar cuántas filas hay antes de quitar la seleccionada.
+                // Primero cuento cuántas filas hay antes de quitar la seleccionada.
                 const lineas = contenedorLineas.querySelectorAll(".order-line");
 
-                // No permitir que se elimine la última fila del pedido.
+                // Aquí no permitir que se elimine la última fila del pedido.
                 if (lineas.length > 1) {
-                    // Buscar la fila del botón presionado y quitarla del formulario.
+                    // Aquí buscar la fila del botón presionado y quitarla del formulario.
                     evento.target.closest(".order-line").remove();
                     calcularTotal();
                 }
             }
         });
 
-        // Calcular el total inicial al cargar la página.
+        // Aquí calcular el total inicial al cargar la página.
         calcularTotal();
     </script>
 </body>
