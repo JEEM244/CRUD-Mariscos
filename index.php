@@ -26,7 +26,7 @@ $platillos = $consulta->fetchAll(PDO::FETCH_ASSOC);
     <title>Mariscos El Puerto</title>
     <link rel="stylesheet" href="assets/css/estilos.css">
 </head>
-<body>
+<body class="public-site">
         <!-- Encabezado público con el nombre del restaurante y los enlaces del menú. -->
     <header class="barra">
         <a class="marca" href="index.php">
@@ -126,5 +126,6 @@ $platillos = $consulta->fetchAll(PDO::FETCH_ASSOC);
         <span>© <?= date("Y") ?> Mariscos El Puerto</span>
         <a href="admin/">Panel administrativo</a>
     </footer>
+    <script src="assets/js/tema.js" defer></script>
 </body>
 </html>
