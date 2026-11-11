@@ -73,7 +73,7 @@ $modulos = [
     ]
 ];
 
-// Aquí leo el nombre del módulo que viene en la dirección. Si no viene, abrir Clientes.
+// Ahora leo el nombre del módulo que viene en la dirección. Si no viene, abrir Clientes.
 $nombreModulo = $_GET["tabla"] ?? "clientes";
 
 // Ahora compruebo que el módulo solicitado esté dentro de la lista permitida.
@@ -101,14 +101,14 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     if ($accion === "eliminar") {
         $id = (int) ($_POST["id"] ?? 0);
 
-        // Aquí intentar eliminar el registro. Si está relacionado con otra tabla, MySQL puede impedirlo.
+        // Ahora intento eliminar el registro. Si está relacionado con otra tabla, MySQL puede impedirlo.
         try {
             $consulta = $conexion->prepare("DELETE FROM $tabla WHERE id = ?");
             $consulta->execute([$id]);
 
             $mensaje = "El registro se eliminó correctamente.";
         } catch (PDOException $error) {
-            // Aquí puede pasar si otro registro todavía utiliza este dato.
+            // Esto puede pasar si otro registro todavía utiliza este dato.
             $mensaje = "No se puede eliminar porque el registro está relacionado con otra información.";
         }
     }
@@ -122,7 +122,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         foreach ($columnas as $columna) {
             $valor = trim($_POST[$columna] ?? "");
 
-            // Aquí los campos numéricos pueden quedar como null cuando no se escribió ningún valor.
+            // En este punto, los campos numéricos pueden quedar como null cuando no se escribió ningún valor.
             if (in_array($columna, ["cliente_id", "existencia", "costo", "total"], true)) {
                 $valor = $valor === "" ? null : $valor;
             }
@@ -130,7 +130,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             $valores[] = $valor;
         }
 
-        // Aquí empezar suponiendo que no faltan datos y revisar los campos obligatorios del módulo.
+        // Primero empiezo suponiendo que no faltan datos y revisar los campos obligatorios del módulo.
         $faltanDatos = false;
         foreach ($obligatorios as $campo) {
             // Si un campo obligatorio está vacío, indicar que faltan datos.
@@ -148,7 +148,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             if ($id > 0) {
                 $partes = [];
 
-                // Aquí preparar una condición por cada columna que se va a actualizar.
+                // Ahora preparo una condición por cada columna que se va a actualizar.
                 foreach ($columnas as $columna) {
                     $partes[] = "$columna = ?";
                 }
@@ -251,11 +251,11 @@ $registros = $consulta->fetchAll(PDO::FETCH_ASSOC);
                             </select>
                         <?php else: ?>
                         <?php
-                            // Aquí elegir el tipo de campo. La propiedad step indica si se permiten enteros o cantidades con decimales.
+                            // Ahora elijo el tipo de campo. La propiedad step indica si se permiten enteros o cantidades con decimales.
                             $tipo = "text";
                             $paso = "1";
 
-                            // Aquí los IDs y las existencias son números enteros.
+                            // En este caso, los IDs y las existencias son números enteros.
                             if (in_array($campo, ["cliente_id", "existencia"], true)) {
                                 $tipo = "number";
                                 $paso = "1";
